@@ -91,3 +91,9 @@ client mock_client_9 connected
 10:26:33 PM send success.
 ```
 then check EMQX broker rule dashboard and TDengine database, to check if dataflow work successfully.
+
+## if develop in mainland China, need add use domestic mirror:
+```shell
+$ go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
+$ go env | grep GOPROXY
+```
