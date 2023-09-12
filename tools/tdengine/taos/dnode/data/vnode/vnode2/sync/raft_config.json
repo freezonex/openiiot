@@ -1,0 +1,24 @@
+{
+	"RaftCfg":	{
+		"SSyncCfg":	{
+			"replicaNum":	1,
+			"myIndex":	0,
+			"changeVersion":	1,
+			"nodeInfo":	[{
+					"nodePort":	6030,
+					"nodeFqdn":	"00e810e44cc2",
+					"nodeId":	"1",
+					"clusterId":	"1316534211179621937",
+					"isReplica":	"true"
+				}]
+		},
+		"isStandBy":	0,
+		"snapshotStrategy":	2,
+		"batchSize":	1,
+		"lastConfigIndex":	"0",
+		"configIndexCount":	1,
+		"configIndexArr":	[{
+				"index":	"-1"
+			}]
+	}
+}

@@ -1,0 +1,177 @@
+==================================================
+                new log file                      
+==================================================
+09/12 06:26:37.947585 00000065 UTL apoll url not load
+09/12 06:26:37.947714 00000065 UTL load from cfg file /etc/taos//taos.cfg success
+09/12 06:26:37.947719 00000065 UTL env file:.env not load
+09/12 06:26:37.947721 00000065 UTL load from env variables cfg success
+09/12 06:26:37.948627 00000065 UTL                      global config
+09/12 06:26:37.948640 00000065 UTL =================================================================
+09/12 06:26:37.948642 00000065 UTL default      firstEp                  00e810e44cc2:6030
+09/12 06:26:37.948643 00000065 UTL default      secondEp                 00e810e44cc2:6030
+09/12 06:26:37.948644 00000065 UTL default      fqdn                     00e810e44cc2
+09/12 06:26:37.948646 00000065 UTL default      serverPort               6030
+09/12 06:26:37.948647 00000065 UTL default      tempDir                  /tmp/
+09/12 06:26:37.948648 00000065 UTL default      minimalTmpDirGB          1.00
+09/12 06:26:37.948652 00000065 UTL default      shellActivityTimer       3
+09/12 06:26:37.948653 00000065 UTL default      compressMsgSize          -1
+09/12 06:26:37.948654 00000065 UTL default      compressColData          -1
+09/12 06:26:37.948655 00000065 UTL default      queryPolicy              1
+09/12 06:26:37.948656 00000065 UTL default      enableQueryHb            1
+09/12 06:26:37.948657 00000065 UTL default      enableScience            0
+09/12 06:26:37.948658 00000065 UTL default      querySmaOptimize         0
+09/12 06:26:37.948659 00000065 UTL default      queryPlannerTrace        0
+09/12 06:26:37.948660 00000065 UTL default      queryNodeChunkSize       32768
+09/12 06:26:37.948661 00000065 UTL default      queryUseNodeAllocator    1
+09/12 06:26:37.948662 00000065 UTL default      keepColumnName           0
+09/12 06:26:37.948663 00000065 UTL default      smlChildTableName        
+09/12 06:26:37.948664 00000065 UTL default      smlTagName               _tag_null
+09/12 06:26:37.948665 00000065 UTL default      smlTsDefaultName         _ts
+09/12 06:26:37.948665 00000065 UTL default      smlDot2Underline         1
+09/12 06:26:37.948666 00000065 UTL default      maxInsertBatchRows       1000000
+09/12 06:26:37.948667 00000065 UTL default      maxRetryWaitTime         10000
+09/12 06:26:37.948668 00000065 UTL default      useAdapter               0
+09/12 06:26:37.948669 00000065 UTL default      crashReporting           1
+09/12 06:26:37.948670 00000065 UTL default      queryMaxConcurrentTable  200
+09/12 06:26:37.948671 00000065 UTL default      metaCacheMaxSize         -1
+09/12 06:26:37.948673 00000065 UTL default      slowLogThreshold         3
+09/12 06:26:37.948674 00000065 UTL default      slowLogScope             
+09/12 06:26:37.948675 00000065 UTL default      numOfRpcThreads          2
+09/12 06:26:37.948676 00000065 UTL default      numOfRpcSessions         10000
+09/12 06:26:37.948677 00000065 UTL default      timeToGetAvailableConn   500000
+09/12 06:26:37.948678 00000065 UTL default      keepAliveIdle            60
+09/12 06:26:37.948679 00000065 UTL default      numOfTaskQueueThreads    4
+09/12 06:26:37.948679 00000065 UTL default      dataDir                  /var/lib/taos/
+09/12 06:26:37.948680 00000065 UTL default      minimalDataDirGB         2.00
+09/12 06:26:37.948682 00000065 UTL default      supportVnodes            8
+09/12 06:26:37.948683 00000065 UTL default      maxShellConns            50000
+09/12 06:26:37.948683 00000065 UTL default      statusInterval           1
+09/12 06:26:37.948684 00000065 UTL default      minSlidingTime           1
+09/12 06:26:37.948685 00000065 UTL default      minIntervalTime          1
+09/12 06:26:37.948686 00000065 UTL default      maxNumOfDistinctRes      10000000
+09/12 06:26:37.948687 00000065 UTL default      countAlwaysReturnValue   1
+09/12 06:26:37.948688 00000065 UTL default      queryBufferSize          -1
+09/12 06:26:37.948689 00000065 UTL default      printAuth                0
+09/12 06:26:37.948690 00000065 UTL default      queryRspPolicy           0
+09/12 06:26:37.948691 00000065 UTL default      numOfRpcThreads          2
+09/12 06:26:37.948692 00000065 UTL default      numOfRpcSessions         10000
+09/12 06:26:37.948694 00000065 UTL default      timeToGetAvailableConn   10000
+09/12 06:26:37.948695 00000065 UTL default      keepAliveIdle            60
+09/12 06:26:37.948696 00000065 UTL default      numOfCommitThreads       2
+09/12 06:26:37.948698 00000065 UTL default      numOfMnodeReadThreads    1
+09/12 06:26:37.948699 00000065 UTL default      numOfVnodeQueryThreads   8
+09/12 06:26:37.948699 00000065 UTL default      ratioOfVnodeStreamThrea  4.00
+09/12 06:26:37.948701 00000065 UTL default      numOfVnodeFetchThreads   4
+09/12 06:26:37.948701 00000065 UTL default      numOfVnodeRsmaThreads    4
+09/12 06:26:37.948702 00000065 UTL default      numOfQnodeQueryThreads   8
+09/12 06:26:37.948703 00000065 UTL default      numOfSnodeSharedThreads  2
+09/12 06:26:37.948704 00000065 UTL default      numOfSnodeUniqueThreads  2
+09/12 06:26:37.948705 00000065 UTL default      rpcQueueMemoryAllowed    833653555
+09/12 06:26:37.948706 00000065 UTL default      syncElectInterval        25000
+09/12 06:26:37.948707 00000065 UTL default      syncHeartbeatInterval    1000
+09/12 06:26:37.948708 00000065 UTL default      syncHeartbeatTimeout     20000
+09/12 06:26:37.948709 00000065 UTL default      vndCommitMaxInterval     600000
+09/12 06:26:37.948710 00000065 UTL default      mndSdbWriteDelta         200
+09/12 06:26:37.948711 00000065 UTL default      mndLogRetention          2000
+09/12 06:26:37.948712 00000065 UTL default      grantMode                0
+09/12 06:26:37.948713 00000065 UTL default      skipGrant                0
+09/12 06:26:37.948714 00000065 UTL default      monitor                  1
+09/12 06:26:37.948715 00000065 UTL default      monitorInterval          30
+09/12 06:26:37.948716 00000065 UTL default      monitorFqdn              
+09/12 06:26:37.948717 00000065 UTL default      monitorPort              6043
+09/12 06:26:37.948718 00000065 UTL default      monitorMaxLogs           100
+09/12 06:26:37.948719 00000065 UTL default      monitorComp              0
+09/12 06:26:37.948720 00000065 UTL default      audit                    0
+09/12 06:26:37.948721 00000065 UTL default      auditFqdn                
+09/12 06:26:37.948722 00000065 UTL default      auditPort                6043
+09/12 06:26:37.948723 00000065 UTL default      crashReporting           1
+09/12 06:26:37.948724 00000065 UTL default      telemetryReporting       1
+09/12 06:26:37.948725 00000065 UTL default      telemetryInterval        43200
+09/12 06:26:37.948726 00000065 UTL default      telemetryServer          telemetry.tdengine.com
+09/12 06:26:37.948727 00000065 UTL default      telemetryPort            80
+09/12 06:26:37.948728 00000065 UTL default      tmqMaxTopicNum           20
+09/12 06:26:37.948729 00000065 UTL default      transPullupInterval      2
+09/12 06:26:37.948730 00000065 UTL default      mqRebalanceInterval      2
+09/12 06:26:37.948731 00000065 UTL default      ttlUnit                  86400
+09/12 06:26:37.948732 00000065 UTL default      ttlPushInterval          10
+09/12 06:26:37.948733 00000065 UTL default      ttlBatchDropNum          10000
+09/12 06:26:37.948734 00000065 UTL default      ttlChangeOnWrite         0
+09/12 06:26:37.948735 00000065 UTL default      ttlFlushThreshold        100
+09/12 06:26:37.948736 00000065 UTL default      trimVDbIntervalSec       3600
+09/12 06:26:37.948736 00000065 UTL default      uptimeInterval           300
+09/12 06:26:37.948737 00000065 UTL default      queryRsmaTolerance       1000
+09/12 06:26:37.948738 00000065 UTL default      walFsyncDataSizeLimit    104857600
+09/12 06:26:37.948739 00000065 UTL default      udf                      1
+09/12 06:26:37.948740 00000065 UTL default      udfdResFuncs             
+09/12 06:26:37.948741 00000065 UTL default      udfdLdLibPath            
+09/12 06:26:37.948742 00000065 UTL default      disableStream            0
+09/12 06:26:37.948743 00000065 UTL default      streamBufferSize         134217728
+09/12 06:26:37.948744 00000065 UTL default      checkpointInterval       20
+09/12 06:26:37.948745 00000065 UTL default      cacheLazyLoadThreshold   500
+09/12 06:26:37.948757 00000065 UTL default      filterScalarMode         0
+09/12 06:26:37.948758 00000065 UTL default      keepTimeOffset           0
+09/12 06:26:37.948759 00000065 UTL default      maxStreamBackendCache    128
+09/12 06:26:37.948760 00000065 UTL default      pqSortMemThreshold       16
+09/12 06:26:37.948761 00000065 UTL default      resolveFQDNRetryTime     100
+09/12 06:26:37.948762 00000065 UTL default      s3Accesskey              <accesskey>
+09/12 06:26:37.948763 00000065 UTL default      s3Endpoint               <endpoint>
+09/12 06:26:37.948764 00000065 UTL default      s3BucketName             <bucketname>
+09/12 06:26:37.948765 00000065 UTL default      minDiskFreeSize          52428800
+09/12 06:26:37.948766 00000065 UTL default      configDir                /etc/taos/
+09/12 06:26:37.948767 00000065 UTL default      scriptDir                /etc/taos/
+09/12 06:26:37.948768 00000065 UTL default      logDir                   /var/log/taos/
+09/12 06:26:37.948768 00000065 UTL default      minimalLogDirGB          1.00
+09/12 06:26:37.948770 00000065 UTL default      numOfLogLines            10000000
+09/12 06:26:37.948770 00000065 UTL default      asyncLog                 1
+09/12 06:26:37.948771 00000065 UTL default      logKeepDays              0
+09/12 06:26:37.948772 00000065 UTL default      debugFlag                0
+09/12 06:26:37.948773 00000065 UTL default      simDebugFlag             143
+09/12 06:26:37.948774 00000065 UTL default      tmrDebugFlag             131
+09/12 06:26:37.948775 00000065 UTL default      uDebugFlag               131
+09/12 06:26:37.948776 00000065 UTL default      rpcDebugFlag             131
+09/12 06:26:37.948777 00000065 UTL default      jniDebugFlag             131
+09/12 06:26:37.948778 00000065 UTL default      qDebugFlag               131
+09/12 06:26:37.948779 00000065 UTL default      cDebugFlag               131
+09/12 06:26:37.948780 00000065 UTL default      dDebugFlag               131
+09/12 06:26:37.948781 00000065 UTL default      vDebugFlag               131
+09/12 06:26:37.948782 00000065 UTL default      mDebugFlag               131
+09/12 06:26:37.948783 00000065 UTL default      wDebugFlag               131
+09/12 06:26:37.948784 00000065 UTL default      sDebugFlag               131
+09/12 06:26:37.948785 00000065 UTL default      tsdbDebugFlag            131
+09/12 06:26:37.948786 00000065 UTL default      tqDebugFlag              131
+09/12 06:26:37.948787 00000065 UTL default      fsDebugFlag              131
+09/12 06:26:37.948787 00000065 UTL default      udfDebugFlag             131
+09/12 06:26:37.948788 00000065 UTL default      smaDebugFlag             131
+09/12 06:26:37.948789 00000065 UTL default      idxDebugFlag             131
+09/12 06:26:37.948790 00000065 UTL default      tdbDebugFlag             131
+09/12 06:26:37.948791 00000065 UTL default      metaDebugFlag            131
+09/12 06:26:37.948792 00000065 UTL default      timezone                 Etc/UTC (UTC, +0000)
+09/12 06:26:37.948793 00000065 UTL default      locale                   C
+09/12 06:26:37.948794 00000065 UTL default      charset                  UTF-8
+09/12 06:26:37.948795 00000065 UTL default      assert                   1
+09/12 06:26:37.948796 00000065 UTL default      enableCoreFile           1
+09/12 06:26:37.948797 00000065 UTL default      numOfCores               4.00
+09/12 06:26:37.948798 00000065 UTL default      SSE42                    0
+09/12 06:26:37.948799 00000065 UTL default      AVX                      0
+09/12 06:26:37.948800 00000065 UTL default      AVX2                     0
+09/12 06:26:37.948801 00000065 UTL default      FMA                      0
+09/12 06:26:37.948802 00000065 UTL default      SIMD-builtins            0
+09/12 06:26:37.948803 00000065 UTL default      tagFilterCache           0
+09/12 06:26:37.948804 00000065 UTL default      openMax                  1048576
+09/12 06:26:37.948805 00000065 UTL default      streamMax                16
+09/12 06:26:37.948806 00000065 UTL default      pageSizeKB               4
+09/12 06:26:37.948808 00000065 UTL default      totalMemoryKB            8141148
+09/12 06:26:37.948809 00000065 UTL default      os sysname               Linux
+09/12 06:26:37.948810 00000065 UTL default      os nodename              00e810e44cc2
+09/12 06:26:37.948811 00000065 UTL default      os release               5.15.49-linuxkit-pr
+09/12 06:26:37.948812 00000065 UTL default      os version               #1 SMP PREEMPT Thu May 25 07:27:39 UTC 2023
+09/12 06:26:37.948813 00000065 UTL default      os machine               aarch64
+09/12 06:26:37.948814 00000065 UTL default      version                  3.1.1.0
+09/12 06:26:37.948815 00000065 UTL default      compatible_version       3.0.0.0
+09/12 06:26:37.948815 00000065 UTL default      gitinfo                  1bce2b7d0e2d6b82658c8d237473e52a763593fc
+09/12 06:26:37.948816 00000065 UTL default      buildinfo                Built at 2023-09-01 17:47
+09/12 06:26:37.948817 00000065 UTL =================================================================
+09/12 06:26:37.951705 00000065 UDF udfd create udf source directory /var/lib/taos//.udf. result: success
+09/12 06:26:37.951774 00000065 UDF get dnodeId:0 from env, pipe path:/var/lib/taos//.udfd.sock.0
+09/12 06:26:37.953615 00000065 UDF bind to pipe /var/lib/taos//.udfd.sock.0
+09/12 06:26:37.958030 00000065 UDF start udfd event loop

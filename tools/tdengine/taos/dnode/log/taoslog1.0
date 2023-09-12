@@ -1,0 +1,102 @@
+==================================================
+                new log file                      
+==================================================
+09/12 06:34:00.850464 00000201 UTL apoll url not load
+09/12 06:34:00.850500 00000201 UTL load from cfg file /etc/taos//taos.cfg success
+09/12 06:34:00.850506 00000201 UTL env file:.env not load
+09/12 06:34:00.850508 00000201 UTL load from env variables cfg success
+09/12 06:34:00.850640 00000201 UTL                      global config
+09/12 06:34:00.850642 00000201 UTL =================================================================
+09/12 06:34:00.850644 00000201 UTL default      firstEp                  00e810e44cc2:6030
+09/12 06:34:00.850645 00000201 UTL default      secondEp                 00e810e44cc2:6030
+09/12 06:34:00.850646 00000201 UTL default      tempDir                  /tmp/
+09/12 06:34:00.850647 00000201 UTL default      minimalTmpDirGB          1.00
+09/12 06:34:00.850656 00000201 UTL default      shellActivityTimer       3
+09/12 06:34:00.850657 00000201 UTL default      compressMsgSize          -1
+09/12 06:34:00.850658 00000201 UTL default      compressColData          -1
+09/12 06:34:00.850659 00000201 UTL default      queryPolicy              1
+09/12 06:34:00.850660 00000201 UTL default      enableQueryHb            1
+09/12 06:34:00.850660 00000201 UTL default      enableScience            0
+09/12 06:34:00.850661 00000201 UTL default      querySmaOptimize         0
+09/12 06:34:00.850662 00000201 UTL default      queryPlannerTrace        0
+09/12 06:34:00.850663 00000201 UTL default      queryNodeChunkSize       32768
+09/12 06:34:00.850664 00000201 UTL default      queryUseNodeAllocator    1
+09/12 06:34:00.850664 00000201 UTL default      keepColumnName           0
+09/12 06:34:00.850665 00000201 UTL default      smlChildTableName        
+09/12 06:34:00.850666 00000201 UTL default      smlTagName               _tag_null
+09/12 06:34:00.850667 00000201 UTL default      smlTsDefaultName         _ts
+09/12 06:34:00.850668 00000201 UTL default      smlDot2Underline         1
+09/12 06:34:00.850668 00000201 UTL default      maxInsertBatchRows       1000000
+09/12 06:34:00.850669 00000201 UTL default      maxRetryWaitTime         10000
+09/12 06:34:00.850670 00000201 UTL default      useAdapter               0
+09/12 06:34:00.850671 00000201 UTL default      queryMaxConcurrentTable  200
+09/12 06:34:00.850672 00000201 UTL default      metaCacheMaxSize         -1
+09/12 06:34:00.850672 00000201 UTL default      slowLogThreshold         3
+09/12 06:34:00.850673 00000201 UTL default      slowLogScope             
+09/12 06:34:00.850674 00000201 UTL default      numOfRpcThreads          2
+09/12 06:34:00.850675 00000201 UTL default      numOfRpcSessions         30000
+09/12 06:34:00.850675 00000201 UTL default      timeToGetAvailableConn   500000
+09/12 06:34:00.850676 00000201 UTL default      keepAliveIdle            60
+09/12 06:34:00.850677 00000201 UTL default      numOfTaskQueueThreads    4
+09/12 06:34:00.850678 00000201 UTL default      configDir                /etc/taos/
+09/12 06:34:00.850678 00000201 UTL default      scriptDir                /etc/taos/
+09/12 06:34:00.850679 00000201 UTL default      logDir                   /var/log/taos/
+09/12 06:34:00.850680 00000201 UTL default      minimalLogDirGB          1.00
+09/12 06:34:00.850681 00000201 UTL default      numOfLogLines            10000000
+09/12 06:34:00.850682 00000201 UTL default      asyncLog                 1
+09/12 06:34:00.850683 00000201 UTL default      logKeepDays              0
+09/12 06:34:00.850683 00000201 UTL default      debugFlag                0
+09/12 06:34:00.850684 00000201 UTL default      simDebugFlag             143
+09/12 06:34:00.850685 00000201 UTL default      tmrDebugFlag             131
+09/12 06:34:00.850686 00000201 UTL default      uDebugFlag               131
+09/12 06:34:00.850686 00000201 UTL default      rpcDebugFlag             131
+09/12 06:34:00.850687 00000201 UTL default      jniDebugFlag             131
+09/12 06:34:00.850688 00000201 UTL default      qDebugFlag               131
+09/12 06:34:00.850689 00000201 UTL default      cDebugFlag               131
+09/12 06:34:00.850689 00000201 UTL default      timezone                 Etc/UTC (UTC, +0000)
+09/12 06:34:00.850692 00000201 UTL default      locale                   en_US.UTF-8
+09/12 06:34:00.850693 00000201 UTL default      charset                  UTF-8
+09/12 06:34:00.850694 00000201 UTL default      assert                   1
+09/12 06:34:00.850695 00000201 UTL default      enableCoreFile           1
+09/12 06:34:00.850695 00000201 UTL default      numOfCores               4.00
+09/12 06:34:00.850696 00000201 UTL default      SSE42                    0
+09/12 06:34:00.850697 00000201 UTL default      AVX                      0
+09/12 06:34:00.850698 00000201 UTL default      AVX2                     0
+09/12 06:34:00.850698 00000201 UTL default      FMA                      0
+09/12 06:34:00.850699 00000201 UTL default      SIMD-builtins            0
+09/12 06:34:00.850700 00000201 UTL default      tagFilterCache           0
+09/12 06:34:00.850701 00000201 UTL default      openMax                  1048576
+09/12 06:34:00.850701 00000201 UTL default      streamMax                16
+09/12 06:34:00.850702 00000201 UTL default      pageSizeKB               4
+09/12 06:34:00.850703 00000201 UTL default      totalMemoryKB            8141148
+09/12 06:34:00.850704 00000201 UTL default      os sysname               Linux
+09/12 06:34:00.850705 00000201 UTL default      os nodename              00e810e44cc2
+09/12 06:34:00.850705 00000201 UTL default      os release               5.15.49-linuxkit-pr
+09/12 06:34:00.850706 00000201 UTL default      os version               #1 SMP PREEMPT Thu May 25 07:27:39 UTC 2023
+09/12 06:34:00.850707 00000201 UTL default      os machine               aarch64
+09/12 06:34:00.850708 00000201 UTL default      version                  3.1.1.0
+09/12 06:34:00.850708 00000201 UTL default      compatible_version       3.0.0.0
+09/12 06:34:00.850709 00000201 UTL default      gitinfo                  1bce2b7d0e2d6b82658c8d237473e52a763593fc
+09/12 06:34:00.850710 00000201 UTL default      buildinfo                Built at 2023-09-01 17:47
+09/12 06:34:00.850711 00000201 UTL =================================================================
+09/12 06:34:00.852997 00000205 QRY catalog update thread started
+09/12 06:34:00.853033 00000201 QRY scheduler 0x6362646430613062 initialized, maxJob:1000
+09/12 06:34:00.853560 00000201 TSC connecting to server, numOfEps:2 inUse:0 user:root db:(null) key:root:dcc5bed04851fec854c035b2e40263b6:(null):0
+09/12 06:34:00.853563 00000201 TSC ep:0, 00e810e44cc2:6030
+09/12 06:34:00.853564 00000201 TSC ep:1, 00e810e44cc2:6030
+09/12 06:34:37.816595 00000216 TSC ERROR 0x5 error happens, code:-2147473898 - Database not specified, reqId:0x9a40c9195b77001c
+09/12 06:34:45.394736 00000206 QRY ERROR error rsp for use db, error:Database not exist, dbFName:1.test
+09/12 06:34:45.394753 00000206 QRY ERROR error rsp for use db, error:Database not exist, dbFName:1.test
+09/12 06:34:45.394755 00000206 QRY ERROR QID:9a40c91979110022 CTG:0xffff9000f9d0 Get table 1.test.sensor_data meta failed with error Database not exist
+09/12 06:34:45.394756 00000206 QRY ERROR error rsp for use db, error:Database not exist, dbFName:1.test
+09/12 06:34:45.394860 00000206 QRY ERROR PARSER: 0x9a40c91979110022 catalogGetTableMeta error, code:Database not exist, dbName:test, tbName:sensor_data
+09/12 06:34:45.394869 00000206 TSC ERROR 0x6 error occurs, code:Fail to get table info, return to user app, reqId:0x9a40c91979110022
+09/12 06:35:10.960536 00000206 QRY ERROR QID:0x9a40c919dce90038,TID:0x5,EID:0 task failed and no more retry, code:Table already exists
+09/12 06:35:33.405811 00000205 QRY CTG:0xffff9000f9d0 start to remove db from cache, dbFName:1.test, dbId:0x23a4edbc36bff3d3
+09/12 06:35:33.405843 00000205 QRY CTG:0xffff9000f9d0 db removed from cache, dbFName:1.test, dbId:0x23a4edbc36bff3d3
+09/12 06:35:33.881549 00000205 QRY CTG:0xffff9000f9d0 start to remove db from cache, dbFName:1.test, dbId:0x22d126267bbff32b
+09/12 06:35:33.881567 00000205 QRY CTG:0xffff9000f9d0 db removed from cache, dbFName:1.test, dbId:0x22d126267bbff32b
+09/12 06:39:17.892398 00000205 QRY CTG:0xffff9000f9d0 start to remove db from cache, dbFName:1.test, dbId:0x23a4edbc36bff3d3
+09/12 06:39:17.892482 00000205 QRY CTG:0xffff9000f9d0 db removed from cache, dbFName:1.test, dbId:0x23a4edbc36bff3d3
+09/12 06:39:18.997573 00000205 QRY CTG:0xffff9000f9d0 start to remove db from cache, dbFName:1.test, dbId:0x22d126267bbff32b
+09/12 06:39:18.997589 00000205 QRY CTG:0xffff9000f9d0 db removed from cache, dbFName:1.test, dbId:0x22d126267bbff32b
