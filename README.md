@@ -6,17 +6,16 @@ docker-compose up -d
 ```
 ## Configuration
 ### 1. Create TDengine Database and Table
-Open Docker Terminal
-
-In this step we create the appropriate database and table schema in TDengine for receiving MQTT data. Open TDengine CLI and execute SQL bellow:
+In this step we create the appropriate database and table schema in TDengine for receiving MQTT data. 
+First open Docker Terminal
 ![TDengine terminal](docs/images/TDengine_terminal.png "TDengine terminal")
-Then create database from terminal:
+Then create database by TDengine terminal:
 
 ```shell
 # taos
 taos>
 ```
-Copy and paste below database script to taos
+Copy and paste below SQL script to taos
 ```SQL
 CREATE DATABASE test;
 USE test;
@@ -92,7 +91,16 @@ client mock_client_9 connected
 ```
 then check EMQX broker rule dashboard and TDengine database, to check if dataflow work successfully.
 
-## if develop in mainland China, need add use domestic mirror:
+### 4. Grafana Dashboard
+In this step we should a demo dashboard to show the data from TDengine  
+First open http://localhost:3000 grafana dashboard, default username: admin, password: admin  
+Then import dashboard script:
+![grafana_dashboard_import](docs/images/grafana-dashboard-import.png "Import grafana dashboard")
+choose script/dashboard_test.json file to import:
+![grafana_dashboard_test](docs/images/grafana-dashboard-test.png "grafana dashboard")
+also can set to dynamic refresh for demo purpose:
+![grafana_dynamic](docs/images/grafana-dynamic.png "grafana dynamic")
+## If develop in mainland China, need add use domestic mirror:
 ```shell
 $ go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
 $ go env | grep GOPROXY
