@@ -92,9 +92,31 @@ client mock_client_9 connected
 then check EMQX broker rule dashboard and TDengine database, to check if dataflow work successfully.
 
 ### 4. Grafana Dashboard
-In this step we should a demo dashboard to show the data from TDengine  
-First open http://localhost:3000 grafana dashboard, default username: admin, password: admin  
-Then import dashboard script:
+In this step we are going to create a demo dashboard to show the data from TDengine  
+#### 4.1 Setup Graphana
+Install Graphana on your local system. To sign in to Graphana for the first time:
+1. Go to http://localhost:3000/ (Change the actual port number base on the docker configuration)
+2. On the sign in page enter the following  
+*Username: admin*    
+*Password: admin*  
+If successful, you can see a prompt and change your password on that prompt.
+#### 4.2 Integrate Graphana with TDengine
+Install TDengine plugin using either **GUI** in the Graphana plugin catalog or using **script**.
+* First Option - execute the following script: 
+```
+bash -c "$(curl -fsSL \
+  https://raw.githubusercontent.com/taosdata/grafanaplugin/master/install.sh)" -- \
+  -a http://localhost:6041 \
+  -u root \
+  -p taosdata
+```
+* Second Option - use GUI to install the TDengine plugin:  
+![grafana_tdengine_plugin](docs/images/grafana_tdengine_plugin.png "Install TDengine plugin")
+After installing the plugin, add a new datasource of TDengine inside the `connections` pannel. Configure the Host, User, and password accordingly to make it work. (see example below)
+![grafana_create_new_data_source](docs/images/grafana_create_datasource.png "Create new TDengine datasource")
+#### 4.3 Create Dashboard
+Now you are able to create dashboards using the TDengine datasource.   
+For example, import dashboard script as shown in the figure:
 ![grafana_dashboard_import](docs/images/grafana-dashboard-import.png "Import grafana dashboard")
 choose script/dashboard_test.json file to import:
 ![grafana_dashboard_test](docs/images/grafana-dashboard-test.png "grafana dashboard")
@@ -106,22 +128,4 @@ $ go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
 $ go env | grep GOPROXY
 ```
 
-## Setup Graphana
-Install Graphana on your local system. To sign in to Graphana for the first time:
-1. Go to http://localhost:3000/ (Change the actual port number base on the docker configuration)
-2. On the sign in page enter the following  
-*Username: admin*    
-*Password: admin*  
-If successful, you can see a prompt and change your password on that prompt.
-## Integrate Graphana with TDengine
-Install TDengine plugin using either **GUI** in the Graphana plugin catalog or using **script**:
-```
-bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/taosdata/grafanaplugin/master/install.sh)" -- \
-  -a http://localhost:6041 \
-  -u root \
-  -p taosdata
-```
-If you are using GUI, after install the TDengine plugin:  
-Add a new datasource of TDengine inside the `connections` pannel. Configure the Host, User, and password accordingly to make it work.
 

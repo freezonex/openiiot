@@ -2021,3 +2021,207 @@
 09/12 07:42:06.657222 00000078 MND trans:21, execute finished, code:0x0, failedTimes:0 createTime:1694504526637
 09/12 07:42:06.657227 00000078 MND trans:21, send rsp, stage:finished failedTimes:0 code:0x0
 09/12 07:42:06.657230 00000078 MND trans:21, perform delete action, row:0xffff642898cc stage:finished callfunc:1, stopFunc:0
+09/12 07:47:08.276652 00000078 MND update cluster uptime to 4800
+09/12 07:47:08.277602 00000078 MND trans:22, prepare transaction
+09/12 07:47:08.277634 00000078 MND trans:22, sync to other mnodes, stage:prepare createTime:1694504828277
+09/12 07:47:08.277637 00000078 MND trans:22, will be proposed
+09/12 07:47:08.277664 00000078 MND trans:22, is proposing and wait sem, seq:43
+09/12 07:47:08.291810 00000079 MND trans:22, is proposed, saved:22 code:0x0, apply index:43 term:1 config:-1 role:leader raw:0xffff64289c9f sec:1694504828 seq:43
+09/12 07:47:08.292024 00000079 MND trans:22, perform insert action, row:0xffff64289ffc stage:prepare, callfunc:1, startFunc:0
+09/12 07:47:08.292034 00000079 MND trans:22, stage from prepare to redoAction
+09/12 07:47:08.292073 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 07:47:08.292116 00000078 MND trans:22, sync finished, createTime:1694504828277
+09/12 07:47:08.292127 00000078 MND trans:22, prepare finished
+09/12 07:47:08.292131 00000078 MND trans:22, continue to execute, stage:redoAction createTime:1694504828277 topHalf:1
+09/12 07:47:08.292133 00000078 MND trans:22, stage from redoAction to commit
+09/12 07:47:08.292135 00000078 MND trans:22, continue to execute, stage:commit createTime:1694504828277 topHalf:1
+09/12 07:47:08.292136 00000078 MND trans:22, commit transaction
+09/12 07:47:08.292140 00000078 MND trans:22, sync to other mnodes, stage:commit createTime:1694504828277
+09/12 07:47:08.292151 00000078 MND trans:22, will be proposed
+09/12 07:47:08.292163 00000078 MND trans:22, is proposing and wait sem, seq:44
+09/12 07:47:08.295998 00000079 MND trans:22, is proposed, saved:22 code:0x0, apply index:44 term:1 config:-1 role:leader raw:0xffff6428a5df sec:1694504828 seq:44
+09/12 07:47:08.296214 00000079 MND trans:22, perform update action, old row:0xffff64289ffc stage:commit create:1694504828277, new row:0xffff6428f1fc stage:commit create:1694504828277
+09/12 07:47:08.296235 00000079 MND trans:22, perform delete action, row:0xffff6428f1fc stage:commit callfunc:0, stopFunc:0
+09/12 07:47:08.296259 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 07:47:08.296320 00000078 MND trans:22, sync finished, createTime:1694504828277
+09/12 07:47:08.296337 00000078 MND trans:22, commit finished
+09/12 07:47:08.296339 00000078 MND trans:22, stage from commit to commitAction
+09/12 07:47:08.296340 00000078 MND trans:22, continue to execute, stage:commitAction createTime:1694504828277 topHalf:1
+09/12 07:47:08.296353 00000078 MND trans:22, commitAction:0 write to sdb, type:cluster status:ready
+09/12 07:47:08.296355 00000078 MND trans:22, all 1 actions execute successfully
+09/12 07:47:08.296356 00000078 MND trans:22, stage from commitAction to finished
+09/12 07:47:08.296358 00000078 MND trans:22, continue to execute, stage:finished createTime:1694504828277 topHalf:1
+09/12 07:47:08.296414 00000078 MND trans:22, perform delete action, row:0xfffeec02134c stage:finished callfunc:0, stopFunc:0
+09/12 07:47:08.296427 00000078 MND trans:22, execute finished, code:0x0, failedTimes:0 createTime:1694504828277
+09/12 07:47:08.296431 00000078 MND trans:22, send rsp, stage:finished failedTimes:0 code:0x0
+09/12 07:47:08.296433 00000078 MND trans:22, perform delete action, row:0xffff64289ffc stage:finished callfunc:1, stopFunc:0
+09/12 07:52:09.931009 00000078 MND update cluster uptime to 5100
+09/12 07:52:09.931453 00000078 MND trans:23, prepare transaction
+09/12 07:52:09.931474 00000078 MND trans:23, sync to other mnodes, stage:prepare createTime:1694505129931
+09/12 07:52:09.931477 00000078 MND trans:23, will be proposed
+09/12 07:52:09.931495 00000078 MND trans:23, is proposing and wait sem, seq:45
+09/12 07:52:09.939640 00000079 MND trans:23, is proposed, saved:23 code:0x0, apply index:45 term:1 config:-1 role:leader raw:0xffff6428a3cf sec:1694505129 seq:45
+09/12 07:52:09.939881 00000079 MND trans:23, perform insert action, row:0xffff6428a72c stage:prepare, callfunc:1, startFunc:0
+09/12 07:52:09.939889 00000079 MND trans:23, stage from prepare to redoAction
+09/12 07:52:09.939895 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 07:52:09.939903 00000078 MND trans:23, sync finished, createTime:1694505129931
+09/12 07:52:09.939905 00000078 MND trans:23, prepare finished
+09/12 07:52:09.939907 00000078 MND trans:23, continue to execute, stage:redoAction createTime:1694505129931 topHalf:1
+09/12 07:52:09.939910 00000078 MND trans:23, stage from redoAction to commit
+09/12 07:52:09.939912 00000078 MND trans:23, continue to execute, stage:commit createTime:1694505129931 topHalf:1
+09/12 07:52:09.939913 00000078 MND trans:23, commit transaction
+09/12 07:52:09.939916 00000078 MND trans:23, sync to other mnodes, stage:commit createTime:1694505129931
+09/12 07:52:09.939917 00000078 MND trans:23, will be proposed
+09/12 07:52:09.939959 00000078 MND trans:23, is proposing and wait sem, seq:46
+09/12 07:52:09.943980 00000079 MND trans:23, is proposed, saved:23 code:0x0, apply index:46 term:1 config:-1 role:leader raw:0xffff6428f23f sec:1694505129 seq:46
+09/12 07:52:09.944014 00000079 MND trans:23, perform update action, old row:0xffff6428a72c stage:commit create:1694505129931, new row:0xffff6428f59c stage:commit create:1694505129931
+09/12 07:52:09.944019 00000079 MND trans:23, perform delete action, row:0xffff6428f59c stage:commit callfunc:0, stopFunc:0
+09/12 07:52:09.944024 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 07:52:09.944030 00000078 MND trans:23, sync finished, createTime:1694505129931
+09/12 07:52:09.944032 00000078 MND trans:23, commit finished
+09/12 07:52:09.944034 00000078 MND trans:23, stage from commit to commitAction
+09/12 07:52:09.944035 00000078 MND trans:23, continue to execute, stage:commitAction createTime:1694505129931 topHalf:1
+09/12 07:52:09.944046 00000078 MND trans:23, commitAction:0 write to sdb, type:cluster status:ready
+09/12 07:52:09.944059 00000078 MND trans:23, all 1 actions execute successfully
+09/12 07:52:09.944060 00000078 MND trans:23, stage from commitAction to finished
+09/12 07:52:09.944062 00000078 MND trans:23, continue to execute, stage:finished createTime:1694505129931 topHalf:1
+09/12 07:52:09.944099 00000078 MND trans:23, perform delete action, row:0xfffeec02134c stage:finished callfunc:0, stopFunc:0
+09/12 07:52:09.944113 00000078 MND trans:23, execute finished, code:0x0, failedTimes:0 createTime:1694505129931
+09/12 07:52:09.944115 00000078 MND trans:23, send rsp, stage:finished failedTimes:0 code:0x0
+09/12 07:52:09.944117 00000078 MND trans:23, perform delete action, row:0xffff6428a72c stage:finished callfunc:1, stopFunc:0
+09/12 07:57:11.569789 00000078 MND update cluster uptime to 5400
+09/12 07:57:11.570375 00000078 MND trans:24, prepare transaction
+09/12 07:57:11.570453 00000078 MND trans:24, sync to other mnodes, stage:prepare createTime:1694505431570
+09/12 07:57:11.570459 00000078 MND trans:24, will be proposed
+09/12 07:57:11.570474 00000078 MND trans:24, is proposing and wait sem, seq:47
+09/12 07:57:11.576238 00000079 MND trans:24, is proposed, saved:24 code:0x0, apply index:47 term:1 config:-1 role:leader raw:0xffff6428c57f sec:1694505431 seq:47
+09/12 07:57:11.576282 00000079 MND trans:24, perform insert action, row:0xffff6428c8dc stage:prepare, callfunc:1, startFunc:0
+09/12 07:57:11.576285 00000079 MND trans:24, stage from prepare to redoAction
+09/12 07:57:11.576290 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 07:57:11.576294 00000078 MND trans:24, sync finished, createTime:1694505431570
+09/12 07:57:11.576300 00000078 MND trans:24, prepare finished
+09/12 07:57:11.576302 00000078 MND trans:24, continue to execute, stage:redoAction createTime:1694505431570 topHalf:1
+09/12 07:57:11.576304 00000078 MND trans:24, stage from redoAction to commit
+09/12 07:57:11.576306 00000078 MND trans:24, continue to execute, stage:commit createTime:1694505431570 topHalf:1
+09/12 07:57:11.576307 00000078 MND trans:24, commit transaction
+09/12 07:57:11.576310 00000078 MND trans:24, sync to other mnodes, stage:commit createTime:1694505431570
+09/12 07:57:11.576311 00000078 MND trans:24, will be proposed
+09/12 07:57:11.576329 00000078 MND trans:24, is proposing and wait sem, seq:48
+09/12 07:57:11.579212 00000079 MND trans:24, is proposed, saved:24 code:0x0, apply index:48 term:1 config:-1 role:leader raw:0xffff6428fb7f sec:1694505431 seq:48
+09/12 07:57:11.579306 00000079 MND trans:24, perform update action, old row:0xffff6428c8dc stage:commit create:1694505431570, new row:0xffff6428fedc stage:commit create:1694505431570
+09/12 07:57:11.579328 00000079 MND trans:24, perform delete action, row:0xffff6428fedc stage:commit callfunc:0, stopFunc:0
+09/12 07:57:11.579334 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 07:57:11.579366 00000078 MND trans:24, sync finished, createTime:1694505431570
+09/12 07:57:11.579371 00000078 MND trans:24, commit finished
+09/12 07:57:11.579373 00000078 MND trans:24, stage from commit to commitAction
+09/12 07:57:11.579374 00000078 MND trans:24, continue to execute, stage:commitAction createTime:1694505431570 topHalf:1
+09/12 07:57:11.579388 00000078 MND trans:24, commitAction:0 write to sdb, type:cluster status:ready
+09/12 07:57:11.579390 00000078 MND trans:24, all 1 actions execute successfully
+09/12 07:57:11.579391 00000078 MND trans:24, stage from commitAction to finished
+09/12 07:57:11.579392 00000078 MND trans:24, continue to execute, stage:finished createTime:1694505431570 topHalf:1
+09/12 07:57:11.579418 00000078 MND trans:24, perform delete action, row:0xfffeec02134c stage:finished callfunc:0, stopFunc:0
+09/12 07:57:11.579492 00000078 MND trans:24, execute finished, code:0x0, failedTimes:0 createTime:1694505431570
+09/12 07:57:11.579507 00000078 MND trans:24, send rsp, stage:finished failedTimes:0 code:0x0
+09/12 07:57:11.579516 00000078 MND trans:24, perform delete action, row:0xffff6428c8dc stage:finished callfunc:1, stopFunc:0
+09/12 08:02:13.243606 00000078 MND update cluster uptime to 5700
+09/12 08:02:13.243798 00000078 MND trans:25, prepare transaction
+09/12 08:02:13.243863 00000078 MND trans:25, sync to other mnodes, stage:prepare createTime:1694505733243
+09/12 08:02:13.243867 00000078 MND trans:25, will be proposed
+09/12 08:02:13.243894 00000078 MND trans:25, is proposing and wait sem, seq:49
+09/12 08:02:13.250180 00000079 MND trans:25, is proposed, saved:25 code:0x0, apply index:49 term:1 config:-1 role:leader raw:0xffff6428ccaf sec:1694505733 seq:49
+09/12 08:02:13.250294 00000079 MND trans:25, perform insert action, row:0xffff6428d00c stage:prepare, callfunc:1, startFunc:0
+09/12 08:02:13.250357 00000079 MND trans:25, stage from prepare to redoAction
+09/12 08:02:13.250379 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 08:02:13.250397 00000078 MND trans:25, sync finished, createTime:1694505733243
+09/12 08:02:13.250403 00000078 MND trans:25, prepare finished
+09/12 08:02:13.250406 00000078 MND trans:25, continue to execute, stage:redoAction createTime:1694505733243 topHalf:1
+09/12 08:02:13.250409 00000078 MND trans:25, stage from redoAction to commit
+09/12 08:02:13.250411 00000078 MND trans:25, continue to execute, stage:commit createTime:1694505733243 topHalf:1
+09/12 08:02:13.250412 00000078 MND trans:25, commit transaction
+09/12 08:02:13.250415 00000078 MND trans:25, sync to other mnodes, stage:commit createTime:1694505733243
+09/12 08:02:13.250557 00000078 MND trans:25, will be proposed
+09/12 08:02:13.250581 00000078 MND trans:25, is proposing and wait sem, seq:50
+09/12 08:02:13.253607 00000079 MND trans:25, is proposed, saved:25 code:0x0, apply index:50 term:1 config:-1 role:leader raw:0xffff642902af sec:1694505733 seq:50
+09/12 08:02:13.253662 00000079 MND trans:25, perform update action, old row:0xffff6428d00c stage:commit create:1694505733243, new row:0xffff6429060c stage:commit create:1694505733243
+09/12 08:02:13.253682 00000079 MND trans:25, perform delete action, row:0xffff6429060c stage:commit callfunc:0, stopFunc:0
+09/12 08:02:13.253696 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 08:02:13.253778 00000078 MND trans:25, sync finished, createTime:1694505733243
+09/12 08:02:13.253783 00000078 MND trans:25, commit finished
+09/12 08:02:13.253784 00000078 MND trans:25, stage from commit to commitAction
+09/12 08:02:13.253786 00000078 MND trans:25, continue to execute, stage:commitAction createTime:1694505733243 topHalf:1
+09/12 08:02:13.253800 00000078 MND trans:25, commitAction:0 write to sdb, type:cluster status:ready
+09/12 08:02:13.253801 00000078 MND trans:25, all 1 actions execute successfully
+09/12 08:02:13.253803 00000078 MND trans:25, stage from commitAction to finished
+09/12 08:02:13.253880 00000078 MND trans:25, continue to execute, stage:finished createTime:1694505733243 topHalf:1
+09/12 08:02:13.253913 00000078 MND trans:25, perform delete action, row:0xfffeec02134c stage:finished callfunc:0, stopFunc:0
+09/12 08:02:13.253917 00000078 MND trans:25, execute finished, code:0x0, failedTimes:0 createTime:1694505733243
+09/12 08:02:13.253919 00000078 MND trans:25, send rsp, stage:finished failedTimes:0 code:0x0
+09/12 08:02:13.253920 00000078 MND trans:25, perform delete action, row:0xffff6428d00c stage:finished callfunc:1, stopFunc:0
+09/12 08:07:14.981825 00000078 MND update cluster uptime to 6000
+09/12 08:07:14.982343 00000078 MND trans:26, prepare transaction
+09/12 08:07:14.982375 00000078 MND trans:26, sync to other mnodes, stage:prepare createTime:1694506034982
+09/12 08:07:14.982399 00000078 MND trans:26, will be proposed
+09/12 08:07:14.982440 00000078 MND trans:26, is proposing and wait sem, seq:51
+09/12 08:07:14.992662 00000079 MND trans:26, is proposed, saved:26 code:0x0, apply index:51 term:1 config:-1 role:leader raw:0xffff6428d3df sec:1694506034 seq:51
+09/12 08:07:14.992806 00000079 MND trans:26, perform insert action, row:0xffff6428d73c stage:prepare, callfunc:1, startFunc:0
+09/12 08:07:14.992816 00000079 MND trans:26, stage from prepare to redoAction
+09/12 08:07:14.992827 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 08:07:14.992840 00000078 MND trans:26, sync finished, createTime:1694506034982
+09/12 08:07:14.992843 00000078 MND trans:26, prepare finished
+09/12 08:07:14.992846 00000078 MND trans:26, continue to execute, stage:redoAction createTime:1694506034982 topHalf:1
+09/12 08:07:14.992849 00000078 MND trans:26, stage from redoAction to commit
+09/12 08:07:14.992851 00000078 MND trans:26, continue to execute, stage:commit createTime:1694506034982 topHalf:1
+09/12 08:07:14.992853 00000078 MND trans:26, commit transaction
+09/12 08:07:14.992858 00000078 MND trans:26, sync to other mnodes, stage:commit createTime:1694506034982
+09/12 08:07:14.992861 00000078 MND trans:26, will be proposed
+09/12 08:07:14.992899 00000078 MND trans:26, is proposing and wait sem, seq:52
+09/12 08:07:15.000103 00000079 MND trans:26, is proposed, saved:26 code:0x0, apply index:52 term:1 config:-1 role:leader raw:0xffff642909df sec:1694506034 seq:52
+09/12 08:07:15.000243 00000079 MND trans:26, perform update action, old row:0xffff6428d73c stage:commit create:1694506034982, new row:0xffff64290d3c stage:commit create:1694506034982
+09/12 08:07:15.000251 00000079 MND trans:26, perform delete action, row:0xffff64290d3c stage:commit callfunc:0, stopFunc:0
+09/12 08:07:15.000272 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 08:07:15.000502 00000078 MND trans:26, sync finished, createTime:1694506034982
+09/12 08:07:15.000515 00000078 MND trans:26, commit finished
+09/12 08:07:15.000517 00000078 MND trans:26, stage from commit to commitAction
+09/12 08:07:15.000519 00000078 MND trans:26, continue to execute, stage:commitAction createTime:1694506034982 topHalf:1
+09/12 08:07:15.000549 00000078 MND trans:26, commitAction:0 write to sdb, type:cluster status:ready
+09/12 08:07:15.000552 00000078 MND trans:26, all 1 actions execute successfully
+09/12 08:07:15.000554 00000078 MND trans:26, stage from commitAction to finished
+09/12 08:07:15.000556 00000078 MND trans:26, continue to execute, stage:finished createTime:1694506034982 topHalf:1
+09/12 08:07:15.000679 00000078 MND trans:26, perform delete action, row:0xfffeec02134c stage:finished callfunc:0, stopFunc:0
+09/12 08:07:15.000687 00000078 MND trans:26, execute finished, code:0x0, failedTimes:0 createTime:1694506034982
+09/12 08:07:15.000690 00000078 MND trans:26, send rsp, stage:finished failedTimes:0 code:0x0
+09/12 08:07:15.000692 00000078 MND trans:26, perform delete action, row:0xffff6428d73c stage:finished callfunc:1, stopFunc:0
+09/12 08:12:16.729730 00000078 MND update cluster uptime to 6300
+09/12 08:12:16.729900 00000078 MND trans:27, prepare transaction
+09/12 08:12:16.729919 00000078 MND trans:27, sync to other mnodes, stage:prepare createTime:1694506336729
+09/12 08:12:16.729926 00000078 MND trans:27, will be proposed
+09/12 08:12:16.729940 00000078 MND trans:27, is proposing and wait sem, seq:53
+09/12 08:12:16.737613 00000079 MND trans:27, is proposed, saved:27 code:0x0, apply index:53 term:1 config:-1 role:leader raw:0xffff6428db0f sec:1694506336 seq:53
+09/12 08:12:16.737673 00000079 MND trans:27, perform insert action, row:0xffff6428de6c stage:prepare, callfunc:1, startFunc:0
+09/12 08:12:16.737677 00000079 MND trans:27, stage from prepare to redoAction
+09/12 08:12:16.737692 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 08:12:16.737827 00000078 MND trans:27, sync finished, createTime:1694506336729
+09/12 08:12:16.737883 00000078 MND trans:27, prepare finished
+09/12 08:12:16.737892 00000078 MND trans:27, continue to execute, stage:redoAction createTime:1694506336729 topHalf:1
+09/12 08:12:16.737895 00000078 MND trans:27, stage from redoAction to commit
+09/12 08:12:16.737896 00000078 MND trans:27, continue to execute, stage:commit createTime:1694506336729 topHalf:1
+09/12 08:12:16.737898 00000078 MND trans:27, commit transaction
+09/12 08:12:16.737902 00000078 MND trans:27, sync to other mnodes, stage:commit createTime:1694506336729
+09/12 08:12:16.737919 00000078 MND trans:27, will be proposed
+09/12 08:12:16.737946 00000078 MND trans:27, is proposing and wait sem, seq:54
+09/12 08:12:16.745559 00000079 MND trans:27, is proposed, saved:27 code:0x0, apply index:54 term:1 config:-1 role:leader raw:0xffff6429110f sec:1694506336 seq:54
+09/12 08:12:16.745654 00000079 MND trans:27, perform update action, old row:0xffff6428de6c stage:commit create:1694506336729, new row:0xffff6429146c stage:commit create:1694506336729
+09/12 08:12:16.745660 00000079 MND trans:27, perform delete action, row:0xffff6429146c stage:commit callfunc:0, stopFunc:0
+09/12 08:12:16.745671 00000079 MND trans:0, is proposed and post sem, seq:0
+09/12 08:12:16.745713 00000078 MND trans:27, sync finished, createTime:1694506336729
+09/12 08:12:16.745719 00000078 MND trans:27, commit finished
+09/12 08:12:16.745720 00000078 MND trans:27, stage from commit to commitAction
+09/12 08:12:16.745748 00000078 MND trans:27, continue to execute, stage:commitAction createTime:1694506336729 topHalf:1
+09/12 08:12:16.745767 00000078 MND trans:27, commitAction:0 write to sdb, type:cluster status:ready
+09/12 08:12:16.745770 00000078 MND trans:27, all 1 actions execute successfully
+09/12 08:12:16.745771 00000078 MND trans:27, stage from commitAction to finished
+09/12 08:12:16.745772 00000078 MND trans:27, continue to execute, stage:finished createTime:1694506336729 topHalf:1
+09/12 08:12:16.745801 00000078 MND trans:27, perform delete action, row:0xfffeec02134c stage:finished callfunc:0, stopFunc:0
+09/12 08:12:16.745806 00000078 MND trans:27, execute finished, code:0x0, failedTimes:0 createTime:1694506336729
+09/12 08:12:16.745808 00000078 MND trans:27, send rsp, stage:finished failedTimes:0 code:0x0
+09/12 08:12:16.745822 00000078 MND trans:27, perform delete action, row:0xffff6428de6c stage:finished callfunc:1, stopFunc:0
