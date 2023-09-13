@@ -1,9 +1,8 @@
 ## Quick Start
-To use this repository, you need to install docker beforehand. if you get the message 'WSL kernel version too low' after installing docker desktop on Windows, run 
+To use this repository, you need to install docker beforehand. if you get the message 'WSL kernel version too low' after installing docker desktop on Windows, run on the command line to upgrade it.
 ```shell
 wsl --update
 ```
-on the command line to upgrade it.
 bring up a local TDengine DB, build and start the service
 ```shell
 cd tools
