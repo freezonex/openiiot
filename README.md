@@ -1,4 +1,8 @@
 ## Quick Start
+To use this repository, you need to install docker beforehand. if you get the message 'WSL kernel version too low' after installing docker desktop on Windows, run on the command line to upgrade it.
+```shell
+wsl --update
+```
 bring up a local TDengine DB, build and start the service
 ```shell
 cd tools
@@ -23,7 +27,9 @@ CREATE TABLE sensor_data (ts TIMESTAMP, temperature FLOAT, humidity FLOAT, volum
 ```
 ### 2. Create EMQX Integration to TDengine Rule
 #### 2.1 Login EMQX Dashboard
-Use your browser to open the URL http://192.168.31.98:18083 (remember to change your IP here, and cannot use localhost or 127.0.0.1) and log in to EMQX Dashboard. Initial installation username: admin, password: public
+Use your browser to open the URL http://IP:18083 (remember to change your IP here, and cannot use localhost or 127.0.0.1) and log in to EMQX Dashboard. Initial installation 
+username: admin
+password: public
 ![EMQX Login](docs/images/EMQX_login.png "EMQX Login")
 #### 2.2 Create Data Bridges
 Choose "Data Bridges" -> Click "Create" -> Choose "HTTP Servers" -> Configuration:
@@ -32,7 +38,7 @@ in next page, enter below information:
 ```http request
 Name: Your name of the bridge, for example, "toTDengine"  
 Method: POST  
-URL: http://192.168.31.98:9041//rest/sql, remember to change your IP here
+URL: http://IP:6041/rest/sql, remember to change your IP here
 Key: Authorization          Value: Basic cm9vdDp0YW9zZGF0YQ==
 Query Mode: Async
 ```
