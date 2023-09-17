@@ -128,10 +128,34 @@ choose script/dashboard_test.json file to import:
 ![grafana_dashboard_test](docs/images/grafana-dashboard-test.png "grafana dashboard")
 also can set to dynamic refresh for demo purpose:
 ![grafana_dynamic](docs/images/grafana-dynamic.png "grafana dynamic")
-## If develop in mainland China, need add use domestic mirror:
+
+
+## Development
+### If develop in mainland China, need add use domestic mirror:
 ```shell
 $ go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
 $ go env | grep GOPROXY
 ```
 
+### IDL
+IDL repo: https://github.com/freezonex/pb_idl.git
 
+Path: freezonex/openiiot_api/openiiot_api_service.proto
+
+run below commands to pull the IDL repo automatically to the openiiot_api repo root folder.
+```shell
+git submodule init
+git submodule update
+```
+
+### hertztool
+we use hertz framework as the http service and it can generate the codes.
+all the api service are defined in the IDL, it will generate the codes under biz/model.
+when we update the IDL, we should raise MR to main branch in freezonex/pb_idl repo. and then it will trigger a background job to generate the code.
+and push to openiiot main branch. what we need is to rebase from main branch.
+
+refer here for detail.
+
+if we want to test the IDL locally before merge to master branch, we can run below commands.
+```shell 
+hertztool model --idl pb_idl/freezonex/openiiot_api/openiiot_api_service.proto --unset_omitempty -I pb_idl
