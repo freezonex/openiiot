@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Terminal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.11.0/dist/xterm.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xterm@4.11.0/dist/xterm.js"></script>
+</head>
+<body>
+<div id="terminal-container"></div>
+
+<script>
+    const container = document.getElementById('terminal-container');
+    const term = new Terminal();
+    term.open(container);
+
+    // Create a web socket connection to a backend terminal server.
+    // You would need to implement the server-side logic for command execution.
+    const socket = new WebSocket('ws://localhost:3000');
+
+    socket.addEventListener('open', () => {
+        term.write('Connected to the terminal server.\n');
+    });
+
+    socket.addEventListener('message', (event) => {
+        term.write(event.data);
+    });
+
+    term.onData((data) => {
+        socket.send(data);
+    });
+</script>
+</body>
+</html>

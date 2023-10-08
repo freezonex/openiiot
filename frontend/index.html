@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .image-container {
+            position: relative;
+            /*width: 2946px;
+            height: 1082px;*/
+            width: 1350px;
+            height: 496px;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+        }
+        .highlight-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border: 4px solid silver;
+            box-sizing: border-box;
+            pointer-events: none; /* Allows clicks to go through this div to the underlying image */
+        }
+        h1 {
+            color: Green;
+        }
+        body {
+            background: white;
+            margin-top: 4%;
+            margin-left: 10%;
+        }
+    </style>
+</head>
+<body>
+<h1>OpenIIoT</h1>
+<h2>A streamlined, open, and cost-effective solution</h2>
+<div class="image-container">
+    <img src="images/openiiot_white.png" alt="Image" id="image" usemap="#gfg_map" />
+    <div class="highlight-border"></div>
+</div>
+<map name="gfg_map" class="map">
+    <!-- node-red -->
+    <area shape="rect"
+          coords="250,70, 500,500"
+          alt="GFG1"
+          href="http://office.unibutton.com:1880"
+          target="_blank"
+          onmouseover="highlightArea(230,70, 390,420)"
+          onmouseout="resetAreaColor()" />
+    <!-- EMQX -->
+    <area shape="rect"
+          coords="470,190, 630,310"
+          alt="GFG2"
+          href="http://office.unibutton.com:18083"
+          target="_blank"
+          onmouseover="highlightArea(470,190, 630,310)"
+          onmouseout="resetAreaColor()" />
+    <!-- TDEngine -->
+    <area shape="rect"
+          coords="780,190, 940,310"
+          alt="GFG3"
+          href="http://office.unibutton.com:6041"
+          target="_blank"
+          onmouseover="highlightArea(780,190, 940,310)"
+          onmouseout="resetAreaColor()" />
+    <!-- grafana -->
+    <area shape="rect"
+          coords="1030,110, 1190,230"
+          alt="GFG4"
+          href="http://office.unibutton.com:3001"
+          target="_blank"
+          onmouseover="highlightArea(1030,110, 1190,230)"
+          onmouseout="resetAreaColor()" />
+</map>
+<script>
+    const highlight = document.querySelector('.highlight-border');
+
+    function highlightArea(left, top, right, bottom) {
+        highlight.style.left = left + 'px';
+        highlight.style.top = top + 'px';
+        highlight.style.width = (right - left) + 'px';
+        highlight.style.height = (bottom - top) + 'px';
+    }
+
+    function resetAreaColor() {
+        highlight.style.width = '0';
+        highlight.style.height = '0';
+    }
+</script>
+</body>
+</html>
