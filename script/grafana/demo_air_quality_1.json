@@ -1,0 +1,513 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {},
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "tdengine-datasource",
+            "uid": "e5d530aa-067a-4c3a-b8bf-1c441077cea2"
+          },
+          "formatType": "Time series",
+          "queryType": "SQL",
+          "refId": "A",
+          "sql": "select * from demo.air_quality_1;"
+        }
+      ],
+      "title": "Trend chart",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "tdengine-datasource",
+        "uid": "ba33e5ae-d61e-4ae8-9546-97f4b332f748"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 7
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "tdengine-datasource",
+            "uid": "e5d530aa-067a-4c3a-b8bf-1c441077cea2"
+          },
+          "formatType": "Time series",
+          "queryType": "SQL",
+          "refId": "A",
+          "sql": "select last_row(ts, status) from demo.air_quality_1;"
+        }
+      ],
+      "title": "Current status",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "tdengine-datasource",
+        "uid": "ba33e5ae-d61e-4ae8-9546-97f4b332f748"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [
+            {
+              "options": {
+                "maintenance": {
+                  "color": "#ffa6b0",
+                  "index": 8
+                },
+                "momentary stop": {
+                  "color": "#1f60c4",
+                  "index": 7
+                },
+                "not available": {
+                  "color": "#f2495c",
+                  "index": 6
+                },
+                "other technical malfunction": {
+                  "color": "#6a6009",
+                  "index": 4
+                },
+                "pause": {
+                  "color": "yellow",
+                  "index": 2
+                },
+                "post-processing": {
+                  "color": "#8f3bb7",
+                  "index": 5
+                },
+                "preparation": {
+                  "color": "#c1d7fe",
+                  "index": 3
+                },
+                "running": {
+                  "color": "green",
+                  "index": 0
+                },
+                "unknown stop": {
+                  "color": "orange",
+                  "index": 1
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 18,
+        "x": 6,
+        "y": 7
+      },
+      "id": 4,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "colorByField": "status",
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xField": "status",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "10.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "tdengine-datasource",
+            "uid": "e5d530aa-067a-4c3a-b8bf-1c441077cea2"
+          },
+          "formatType": "Time series",
+          "queryType": "SQL",
+          "refId": "A",
+          "sql": "select status, sum(time_duration) /1000 as runtime from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status <> \"running\" group by status;"
+        }
+      ],
+      "title": "Total running time ",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "tdengine-datasource",
+        "uid": "ba33e5ae-d61e-4ae8-9546-97f4b332f748"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "maintenance": {
+                  "color": "super-light-red",
+                  "index": 8
+                },
+                "momentary stop": {
+                  "color": "dark-blue",
+                  "index": 4
+                },
+                "not available": {
+                  "color": "red",
+                  "index": 1
+                },
+                "other technical malfunction": {
+                  "color": "#696009",
+                  "index": 5
+                },
+                "pause": {
+                  "color": "dark-yellow",
+                  "index": 3
+                },
+                "post-processing": {
+                  "color": "dark-purple",
+                  "index": 6
+                },
+                "preparation": {
+                  "color": "super-light-blue",
+                  "index": 7
+                },
+                "running": {
+                  "color": "green",
+                  "index": 0
+                },
+                "unknown stop": {
+                  "color": "dark-orange",
+                  "index": 2
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 1,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "width": 1
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "tdengine-datasource",
+            "uid": "e5d530aa-067a-4c3a-b8bf-1c441077cea2"
+          },
+          "formatType": "Time series",
+          "queryType": "SQL",
+          "refId": "A",
+          "sql": "select ts, status from demo.air_quality_1;"
+        }
+      ],
+      "title": "Machine Status",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": {
+        "type": "tdengine-datasource",
+        "uid": "ba33e5ae-d61e-4ae8-9546-97f4b332f748"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 8,
+        "x": 0,
+        "y": 22
+      },
+      "id": 2,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "10.1.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "tdengine-datasource",
+            "uid": "e5d530aa-067a-4c3a-b8bf-1c441077cea2"
+          },
+          "formatType": "Time series",
+          "queryType": "SQL",
+          "refId": "A",
+          "sql": "select ts, status from demo.air_quality_1 limit 10;"
+        }
+      ],
+      "title": "Status list",
+      "type": "table"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "2023-09-18T23:48:32.769Z",
+    "to": "2023-09-19T06:26:46.957Z"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "demo_air_quality_1",
+  "uid": "c5313fc3-3a1b-4de2-b9e6-699b9ffd35ce",
+  "version": 7,
+  "weekStart": ""
+}

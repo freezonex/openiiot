@@ -1,0 +1,1194 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Restful",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "1bba982de9314fae",
+        "type": "tab",
+        "label": "Modbus",
+        "disabled": false,
+        "info": "Not configured yet",
+        "env": []
+    },
+    {
+        "id": "e3619b80f928e9d4",
+        "type": "tab",
+        "label": "流程 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "93f8e9fa7b981965",
+        "type": "tab",
+        "label": "Example",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "453c9039e501888d",
+        "type": "mqtt-broker",
+        "name": "EMQX-docker",
+        "broker": "192.168.31.121",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b19e4b974689687d",
+        "type": "modbus-client",
+        "name": "mbserver",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.31.118",
+        "tcpPort": "1502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "1",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "cb216faf.d9136",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "iot.eclipse.org",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "3cc11d24.ff01a2",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "01335fe33d47ea7f",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://192.168.31.121:5055/api/demo/water-meter/get?node_num=20",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 360,
+        "y": 300,
+        "wires": [
+            [
+                "a0211995212bf18b"
+            ]
+        ]
+    },
+    {
+        "id": "0d684f1870a6010f",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "d": true,
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "1b505ad265b236ec",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 400,
+        "wires": [
+            [
+                "01335fe33d47ea7f",
+                "869b2299c540f9ff"
+            ]
+        ]
+    },
+    {
+        "id": "1b464b1436c598e0",
+        "type": "json",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 550,
+        "y": 400,
+        "wires": [
+            [
+                "2ac66f6f5640fb0c"
+            ]
+        ]
+    },
+    {
+        "id": "2ac66f6f5640fb0c",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "function 2",
+        "func": "var data = msg.payload.data;\nvar count = data.length;\nvar output = [];\nvar tableName = {\n    \"node1\": \"air_quality_1\",\n    \"node2\": \"air_quality_2\",\n    \"node3\": \"air_quality_3\",\n    \"node4\": \"air_quality_4\",\n    \"node5\": \" air_quality_5\",\n    \"node6\": \"air_quality_6\",\n    \"node7\": \"air_quality_7\",\n    \"node8\": \"air_quality_8\",\n    \"node9\": \"air_quality_9\",\n    \"node10\": \" air_quality_10\",\n};\nfor (let i = 0; i < count; i ++) {\n    let msgTopic = \"openiiot/air_quality/DDATA/\" + data[i].area + \"/\" + data[i].nodeId + \"/restful\";\n    data[i][\"tableName\"] = tableName[data[i].nodeId];\n    output.push({topic: msgTopic, payload: data[i]});\n}\nreturn [output];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 400,
+        "wires": [
+            [
+                "0d684f1870a6010f",
+                "c981d9fefda29120",
+                "5f288cb344186ad2"
+            ]
+        ]
+    },
+    {
+        "id": "5f288cb344186ad2",
+        "type": "mqtt out",
+        "z": "f6f2187d.f17ca8",
+        "name": "mqtt",
+        "topic": "",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "453c9039e501888d",
+        "x": 950,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "c981d9fefda29120",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "d": true,
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "topic",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "869b2299c540f9ff",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://192.168.31.121:5055/api/demo/air-quality/get?node_num=20",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 340,
+        "y": 460,
+        "wires": [
+            [
+                "1b464b1436c598e0"
+            ]
+        ]
+    },
+    {
+        "id": "0405dc549c34778a",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "d": true,
+        "name": "debug 11",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "80324db86327bbec",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "openiiot/air_quality/DDATA/Riyadh/node7/restful",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "453c9039e501888d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 520,
+        "y": 680,
+        "wires": [
+            [
+                "0405dc549c34778a"
+            ]
+        ]
+    },
+    {
+        "id": "a0211995212bf18b",
+        "type": "json",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 550,
+        "y": 300,
+        "wires": [
+            [
+                "b4dad091796c71a9"
+            ]
+        ]
+    },
+    {
+        "id": "b4dad091796c71a9",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "function 3",
+        "func": "var data = msg.payload.data;\nvar count = data.length;\nvar output = [];\nvar tableName = {\n    \"node1\": \"water_meter_1\",\n    \"node2\": \"water_meter_2\",\n    \"node3\": \"water_meter_3\",\n    \"node4\": \"water_meter_4\",\n    \"node5\": \"water_meter_5\",\n    \"node6\": \"water_meter_6\",\n    \"node7\": \"water_meter_7\",\n    \"node8\": \"water_meter_8\",\n    \"node9\": \"water_meter_9\",\n    \"node10\": \"water_meter_10\",\n};\nfor (let i = 0; i < count; i++) {\n    let msgTopic = \"openiiot/water_meter/DDATA/\" + data[i].area + \"/\" + data[i].nodeId + \"/restful\";\n    data[i][\"tableName\"] = tableName[data[i].nodeId];\n    output.push({ topic: msgTopic, payload: data[i] });\n}\nreturn [output];",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 280,
+        "wires": [
+            [
+                "42cd90538338a9c4",
+                "5f288cb344186ad2"
+            ]
+        ]
+    },
+    {
+        "id": "42cd90538338a9c4",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "d": true,
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "4e4e7acc442070ce",
+        "type": "debug",
+        "z": "1bba982de9314fae",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "14268666a196a4a7",
+        "type": "mqtt out",
+        "z": "1bba982de9314fae",
+        "name": "mqtt",
+        "topic": "openiiot/group1/DDATA/Riyadh/node1/modbus",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "453c9039e501888d",
+        "x": 790,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "ab0be729a979115d",
+        "type": "mqtt in",
+        "z": "1bba982de9314fae",
+        "name": "",
+        "topic": "openiiot/group1/DDATA/Riyadh/node1/modbus",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "453c9039e501888d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 340,
+        "y": 600,
+        "wires": [
+            [
+                "9f6599756e4e8b40"
+            ]
+        ]
+    },
+    {
+        "id": "9f6599756e4e8b40",
+        "type": "debug",
+        "z": "1bba982de9314fae",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "58813514276b5cd2",
+        "type": "function",
+        "z": "1bba982de9314fae",
+        "name": "function 1",
+        "func": "var content = msg.payload\nmsg.payload = {\n    \"waterUsage\": content[0], \n    \"VibrationData\": content[1],\n    \"area\": \"Riyadh\",\n    \"nodeId\": \"node1\",\n    \"status\": \"running\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 280,
+        "wires": [
+            [
+                "4e4e7acc442070ce",
+                "14268666a196a4a7"
+            ]
+        ]
+    },
+    {
+        "id": "0b5ae9a326319a7f",
+        "type": "modbus-read",
+        "z": "1bba982de9314fae",
+        "d": true,
+        "name": "",
+        "topic": "openiiot/group1/DDATA/Riyadh/node1/modbus",
+        "showStatusActivities": true,
+        "logIOActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "unitid": "1",
+        "dataType": "HoldingRegister",
+        "adr": "0",
+        "quantity": "2",
+        "rate": "5",
+        "rateUnit": "s",
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "server": "b19e4b974689687d",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "x": 230,
+        "y": 280,
+        "wires": [
+            [
+                "58813514276b5cd2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f25dec165fd61d53",
+        "type": "create dataset",
+        "z": "e3619b80f928e9d4",
+        "name": "",
+        "path": "test/iris.data",
+        "saveFolder": "test/datasets",
+        "saveName": "iris",
+        "input": "0,1,2,3",
+        "output": "4",
+        "trainingPartition": "",
+        "shuffle": true,
+        "seed": "",
+        "x": 380,
+        "y": 1040,
+        "wires": [
+            [
+                "899b16c1360d4573"
+            ]
+        ]
+    },
+    {
+        "id": "d191a455cba8c82d",
+        "type": "load dataset",
+        "z": "e3619b80f928e9d4",
+        "name": "",
+        "datasetFolder": "test/datasets",
+        "datasetName": "iris",
+        "partition": "train.csv",
+        "input": true,
+        "output": true,
+        "x": 330,
+        "y": 1160,
+        "wires": [
+            [
+                "5404702cf7f4cd4a"
+            ],
+            [
+                "2bca751ddd15f8e5"
+            ]
+        ]
+    },
+    {
+        "id": "dce2ef6d5b69f1dd",
+        "type": "inject",
+        "z": "e3619b80f928e9d4",
+        "name": "start",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 1040,
+        "wires": [
+            [
+                "f25dec165fd61d53"
+            ]
+        ]
+    },
+    {
+        "id": "9a0d5c9f5a93a4ec",
+        "type": "inject",
+        "z": "e3619b80f928e9d4",
+        "name": "start",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 1160,
+        "wires": [
+            [
+                "d191a455cba8c82d"
+            ]
+        ]
+    },
+    {
+        "id": "72f4a890854b1d31",
+        "type": "inject",
+        "z": "e3619b80f928e9d4",
+        "name": "start",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 1400,
+        "wires": [
+            [
+                "4857111f86160b8c",
+                "a087b330e9cc2a73"
+            ]
+        ]
+    },
+    {
+        "id": "899b16c1360d4573",
+        "type": "debug",
+        "z": "e3619b80f928e9d4",
+        "name": "print",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 610,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "2bca751ddd15f8e5",
+        "type": "debug",
+        "z": "e3619b80f928e9d4",
+        "name": "error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 810,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "6112c3ee9651a3a0",
+        "type": "debug",
+        "z": "e3619b80f928e9d4",
+        "name": "print",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 790,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "8239174276881e61",
+        "type": "predictor",
+        "z": "e3619b80f928e9d4",
+        "name": "decision tree classifier predictor",
+        "modelPath": "test/models",
+        "modelName": "dtc.b",
+        "x": 590,
+        "y": 1380,
+        "wires": [
+            [
+                "2cd14e5f5eb61e2d"
+            ],
+            [
+                "e8b8c8479289dc0e"
+            ]
+        ]
+    },
+    {
+        "id": "5404702cf7f4cd4a",
+        "type": "decision tree classifier",
+        "z": "e3619b80f928e9d4",
+        "name": "decision tree classifier trainer",
+        "savePath": "test/models",
+        "saveName": "dtc.b",
+        "maxDepth": "",
+        "criterion": "gini",
+        "splitter": "best",
+        "x": 580,
+        "y": 1160,
+        "wires": [
+            [
+                "6112c3ee9651a3a0"
+            ],
+            [
+                "2bca751ddd15f8e5"
+            ]
+        ]
+    },
+    {
+        "id": "2cd14e5f5eb61e2d",
+        "type": "assessment",
+        "z": "e3619b80f928e9d4",
+        "name": "",
+        "score": "accuracy_score",
+        "x": 630,
+        "y": 1280,
+        "wires": [
+            [
+                "b6bfbdfa8dde84f8"
+            ],
+            [
+                "e8b8c8479289dc0e"
+            ]
+        ]
+    },
+    {
+        "id": "4857111f86160b8c",
+        "type": "load dataset",
+        "z": "e3619b80f928e9d4",
+        "name": "",
+        "datasetFolder": "test/datasets",
+        "datasetName": "iris",
+        "partition": "test.csv",
+        "input": false,
+        "output": true,
+        "x": 330,
+        "y": 1320,
+        "wires": [
+            [
+                "2cd14e5f5eb61e2d"
+            ],
+            [
+                "e8b8c8479289dc0e"
+            ]
+        ]
+    },
+    {
+        "id": "a087b330e9cc2a73",
+        "type": "load dataset",
+        "z": "e3619b80f928e9d4",
+        "name": "",
+        "datasetFolder": "test/datasets",
+        "datasetName": "iris",
+        "partition": "test.csv",
+        "input": true,
+        "output": false,
+        "x": 330,
+        "y": 1440,
+        "wires": [
+            [
+                "8239174276881e61"
+            ],
+            [
+                "e8b8c8479289dc0e"
+            ]
+        ]
+    },
+    {
+        "id": "e8b8c8479289dc0e",
+        "type": "debug",
+        "z": "e3619b80f928e9d4",
+        "name": "error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 830,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "b6bfbdfa8dde84f8",
+        "type": "debug",
+        "z": "e3619b80f928e9d4",
+        "name": "print",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 830,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "0a175bb245f90316",
+        "type": "predictor",
+        "z": "e3619b80f928e9d4",
+        "name": "decision tree classifier predictor",
+        "modelPath": "test/models",
+        "modelName": "dtc.b",
+        "x": 490,
+        "y": 1540,
+        "wires": [
+            [
+                "ddb3b20589848382"
+            ],
+            [
+                "92bed760ec58b683"
+            ]
+        ]
+    },
+    {
+        "id": "ddb3b20589848382",
+        "type": "mqtt out",
+        "z": "e3619b80f928e9d4",
+        "name": "",
+        "topic": "predictions",
+        "qos": "",
+        "retain": "",
+        "broker": "cb216faf.d9136",
+        "x": 770,
+        "y": 1500,
+        "wires": []
+    },
+    {
+        "id": "92bed760ec58b683",
+        "type": "debug",
+        "z": "e3619b80f928e9d4",
+        "name": "error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 750,
+        "y": 1580,
+        "wires": []
+    },
+    {
+        "id": "6cf790eb39581dc6",
+        "type": "mqtt in",
+        "z": "e3619b80f928e9d4",
+        "name": "",
+        "topic": "classification",
+        "qos": "2",
+        "broker": "cb216faf.d9136",
+        "inputs": 0,
+        "x": 180,
+        "y": 1540,
+        "wires": [
+            [
+                "0a175bb245f90316"
+            ]
+        ]
+    },
+    {
+        "id": "c9c2d44b4942ccf3",
+        "type": "inject",
+        "z": "93f8e9fa7b981965",
+        "name": "Startup",
+        "props": [
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "date"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0",
+        "topic": "",
+        "x": 120,
+        "y": 180,
+        "wires": [
+            [
+                "e1d69b6ab8bb3dbc"
+            ]
+        ]
+    },
+    {
+        "id": "3d64403dbef62755",
+        "type": "automl-trainer",
+        "z": "93f8e9fa7b981965",
+        "name": "Blank automl trainer, inititiated by income msg with config override",
+        "savePath": ".",
+        "saveName": "1",
+        "task_name": "reg",
+        "task_metric": "mse",
+        "orient": "split",
+        "roles": "",
+        "x": 800,
+        "y": 180,
+        "wires": [
+            [
+                "900d87ab6c41ab10"
+            ],
+            [
+                "810b6bac3f6609f0"
+            ]
+        ]
+    },
+    {
+        "id": "900d87ab6c41ab10",
+        "type": "switch",
+        "z": "93f8e9fa7b981965",
+        "name": "Check result",
+        "property": "payload.state",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "cont",
+                "v": "training complete",
+                "vt": "str"
+            },
+            {
+                "t": "cont",
+                "v": "parameters applied",
+                "vt": "str"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 1170,
+        "y": 180,
+        "wires": [
+            [
+                "ba0eb2757966aa57"
+            ],
+            [
+                "e70e95f3bf05810a"
+            ]
+        ]
+    },
+    {
+        "id": "ba0eb2757966aa57",
+        "type": "debug",
+        "z": "93f8e9fa7b981965",
+        "name": "Good, training complete",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1410,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "e70e95f3bf05810a",
+        "type": "debug",
+        "z": "93f8e9fa7b981965",
+        "name": "Parameter override complete",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1420,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "810b6bac3f6609f0",
+        "type": "debug",
+        "z": "93f8e9fa7b981965",
+        "name": "Something goes wrong",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "74c77439e67a576f",
+        "type": "automl-predictor",
+        "z": "93f8e9fa7b981965",
+        "name": "",
+        "modelPath": ".",
+        "modelName": "example_model.pb",
+        "orient": "split",
+        "x": 720,
+        "y": 520,
+        "wires": [
+            [
+                "2075f007f0ccdc25"
+            ],
+            [
+                "452afc07ae46a9fe"
+            ]
+        ]
+    },
+    {
+        "id": "40b307080ba54353",
+        "type": "change",
+        "z": "93f8e9fa7b981965",
+        "name": "Set train data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"columns\":[\"X1\",\"X2\",\"Y\"],\"data\":[[1,2,3],[2,3,4],[3,4,5],[4,5,6],[7,8,9],[8,9,10],[9,10,11]]}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 320,
+        "wires": [
+            [
+                "3d64403dbef62755"
+            ]
+        ]
+    },
+    {
+        "id": "e81a3288569c71d5",
+        "type": "change",
+        "z": "93f8e9fa7b981965",
+        "name": "Set evaluate data",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"columns\":[\"X1\",\"X2\",\"Y\"],\"data\":[[1,3,3],[1.5,6,4],[2,4,5],[7,5,6],[2,8,9],[4,9,10],[1,10,11]]}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 390,
+        "y": 520,
+        "wires": [
+            [
+                "74c77439e67a576f"
+            ]
+        ]
+    },
+    {
+        "id": "2075f007f0ccdc25",
+        "type": "debug",
+        "z": "93f8e9fa7b981965",
+        "name": "Prediction result",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.predict",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "452afc07ae46a9fe",
+        "type": "debug",
+        "z": "93f8e9fa7b981965",
+        "name": "Something goes wrong",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1020,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "5855044829e55473",
+        "type": "inject",
+        "z": "93f8e9fa7b981965",
+        "name": "Inject to start",
+        "props": [
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "date"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "x": 150,
+        "y": 520,
+        "wires": [
+            [
+                "e81a3288569c71d5"
+            ]
+        ]
+    },
+    {
+        "id": "e1d69b6ab8bb3dbc",
+        "type": "change",
+        "z": "93f8e9fa7b981965",
+        "name": "Set automl trainer params override",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"orient\":\"split\",\"savePath\":\".\",\"saveName\":\"example_model.pb\",\"roles\":\"{\\\"target\\\":\\\"Y\\\",\\\"drop\\\":[\\\"X1\\\"]}\",\"task_name\":\"reg\",\"metric\":\"mse\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "3d64403dbef62755"
+            ]
+        ]
+    },
+    {
+        "id": "c7dbe2abda3a25f8",
+        "type": "comment",
+        "z": "93f8e9fa7b981965",
+        "name": "Dynamic config must contain \"orient\" parameter",
+        "info": "",
+        "x": 260,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "cd6faf49fcf5830e",
+        "type": "comment",
+        "z": "93f8e9fa7b981965",
+        "name": "Click to train model",
+        "info": "",
+        "x": 150,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "c9abcc8a3b09d38e",
+        "type": "comment",
+        "z": "93f8e9fa7b981965",
+        "name": "Load model and evaluate",
+        "info": "",
+        "x": 730,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "8c58368a92b4a68f",
+        "type": "inject",
+        "z": "93f8e9fa7b981965",
+        "name": "Inject to start",
+        "props": [
+            {
+                "p": "topic",
+                "v": "",
+                "vt": "date"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "40b307080ba54353"
+            ]
+        ]
+    },
+    {
+        "id": "977b6889d96be6d4",
+        "type": "comment",
+        "z": "93f8e9fa7b981965",
+        "name": "Click to evaluate saved model",
+        "info": "",
+        "x": 180,
+        "y": 480,
+        "wires": []
+    }
+]

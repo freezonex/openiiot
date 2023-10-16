@@ -42,34 +42,34 @@
 </div>
 <map name="gfg_map" class="map">
     <!-- node-red -->
-    <area id="node-red" 
-          shape="rect"
+    <area shape="rect"
           coords="250,70, 500,500"
           alt="GFG1"
+          href="http://localhost:1880"
           target="_blank"
           onmouseover="highlightArea(230,70, 390,420)"
           onmouseout="resetAreaColor()" />
     <!-- EMQX -->
-    <area id="emqx"
-          shape="rect"
+    <area shape="rect"
           coords="470,190, 630,310"
           alt="GFG2"
+          href="http://localhost:18083"
           target="_blank"
           onmouseover="highlightArea(470,190, 630,310)"
           onmouseout="resetAreaColor()" />
     <!-- TDEngine -->
-    <area id="tdengine"
-          shape="rect"
+    <area shape="rect"
           coords="780,190, 940,310"
           alt="GFG3"
+          href="http://localhost:6041"
           target="_blank"
           onmouseover="highlightArea(780,190, 940,310)"
           onmouseout="resetAreaColor()" />
     <!-- grafana -->
-    <area id="grafana"
-          shape="rect"
+    <area shape="rect"
           coords="1030,110, 1190,230"
           alt="GFG4"
+          href="http://localhost:3000"
           target="_blank"
           onmouseover="highlightArea(1030,110, 1190,230)"
           onmouseout="resetAreaColor()" />
@@ -88,19 +88,6 @@
         highlight.style.width = '0';
         highlight.style.height = '0';
     }
-
-    // Your JavaScript logic to determine the URLs
-    var server = "http://localhost"
-    var nodeRedUrl = server + ":1880";
-    var emqxUrl = server + ":18083";
-    var tdEngineUrl = server + ":6041";
-    var grafanaUrl = server + ":3000";
-    
-    // Set the href attributes based on the variables
-    document.getElementById("node-red").href = nodeRedUrl;
-    document.getElementById("emqx").href = emqxUrl;
-    document.getElementById("tdengine").href = tdEngineUrl;
-    document.getElementById("grafana").href = grafanaUrl;
 </script>
 </body>
 </html>
