@@ -1,0 +1,92 @@
+version: '3'
+services:
+  node-red:
+    #image: nodered/node-red
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "1880:1880"
+    volumes:
+      - nodered:/data
+    environment:
+      - TZ=UTC
+    restart: always
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana:/var/lib/grafana
+    restart: always
+  tdengine:
+    image: tdengine/tdengine
+    container_name: tdengine
+    volumes:
+      - tdengine_data:/var/lib/taos
+      - tdengine_log:/var/log/taos
+    ports:
+      - "6030:6030"
+      - "6041:6041"
+      - "6043-6049:6043-6049"
+      - "6043-6049:6043-6049/udp"
+    restart: always
+  emqx1:
+    image: emqx:5.1.3
+    container_name: emqx1
+    environment:
+      - "EMQX_NODE_NAME=emqx@node1.emqx.io"
+      - "EMQX_CLUSTER__DISCOVERY_STRATEGY=static"
+      - "EMQX_CLUSTER__STATIC__SEEDS=[emqx@node1.emqx.io,emqx@node2.emqx.io]"
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8084:8084
+      - 8883:8883
+      - 18083:18083
+    volumes:
+     - emqx1_data:/opt/emqx/data
+  db_mysql:
+    image: mysql:8.0.30
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: hongzhi
+      MYSQL_USER: hongzhi
+      MYSQL_PASSWORD: root1234
+    ports:
+      - "6033:3306"
+    volumes:
+      - mysql:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - db_mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8080:80
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html
+      - ./images:/usr/share/nginx/html/images
+volumes:
+  nodered:
+  grafana:
+  tdengine_data:
+  tdengine_log:
+  emqx1_data:
+  mysql:

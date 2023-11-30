@@ -1,0 +1,24 @@
+apiVersion: v3alpha3
+requirements:
+  volumes:
+    - name: nodered_data
+      resourceType: pvc
+      size: 500Mi
+    - name: grafana_data
+      resourceType: pvc
+      size: 500Mi
+    - name: tdengine_data
+      resourceType: pvc
+      size: 500Mi
+    - name: tdengine_log
+      resourceType: pvc
+      size: 500Mi
+    - name: emqx_data
+      resourceType: pvc
+      size: 500Mi
+    - name: tdengine_data
+      resourceType: pvc
+      size: 500Mi
+    - name: mysql_data
+      resourceType: pvc
+      size: 500Mi

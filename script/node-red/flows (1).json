@@ -1,0 +1,2514 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "b29f49fc630e741c",
+        "type": "tab",
+        "label": "CAN BUS",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "4024900d334e5de4",
+        "type": "tab",
+        "label": "流程 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1890881e.83819",
+        "type": "ui_group",
+        "name": "Col1",
+        "tab": "c3173234.2636e",
+        "order": 1,
+        "disp": false,
+        "width": 5,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9a96a8b1.92db78",
+        "type": "ui_group",
+        "name": "Col2",
+        "tab": "c3173234.2636e",
+        "order": 2,
+        "disp": false,
+        "width": 5,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "72fc319.cc425d",
+        "type": "ui_group",
+        "name": "Col3",
+        "tab": "c3173234.2636e",
+        "order": 3,
+        "disp": false,
+        "width": 5,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "90894f1efa9c8005",
+        "type": "ui_group",
+        "name": "Col4",
+        "tab": "c3173234.2636e",
+        "order": 5,
+        "disp": false,
+        "width": 5,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c3173234.2636e",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "414d257a44d9af17",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-custom",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Seeed Theme",
+                "default": "#4B7930",
+                "baseColor": "#f0f0f0",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "reset": false
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#4B7930",
+                    "value": "#f0f0f0",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#f0f0f0",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#f0f0f0",
+                    "edited": true
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#262626",
+                    "edited": true
+                },
+                "group-borderColor": {
+                    "value": "#f0f0f0",
+                    "edited": true
+                },
+                "group-backgroundColor": {
+                    "value": "#f0f0f0",
+                    "edited": true
+                },
+                "widget-textColor": {
+                    "value": "#262626",
+                    "edited": true
+                },
+                "widget-backgroundColor": {
+                    "value": "#f0f0f0",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": true
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "true",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 0,
+                "cy": 0,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "4623ebacae9359c3",
+        "type": "socketcan-config",
+        "interface": "vcan0"
+    },
+    {
+        "id": "adfba775f28b362e",
+        "type": "socketcan-config",
+        "interface": "vcan0"
+    },
+    {
+        "id": "1f26bbd77af2cf3d",
+        "type": "canconfig",
+        "channel": "vcan0",
+        "bitrate": "100000"
+    },
+    {
+        "id": "e34ce9cff2013174",
+        "type": "socketcan-config",
+        "interface": "can0"
+    },
+    {
+        "id": "51f50da43629a898",
+        "type": "socketcan-config",
+        "interface": "can0"
+    },
+    {
+        "id": "d24976f9a7167da1",
+        "type": "serial-port",
+        "serialport": "/dev/ttyS0",
+        "serialbaud": "115200",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "777b4e4840adc7e4",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ae6927223f6678b0",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "47.245.114.166",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "3cc11d24.ff01a2",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "7a71f403519da114",
+        "type": "udp out",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "addr": "192.168.31.85",
+        "iface": "",
+        "port": "43893",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": false,
+        "multicast": "false",
+        "x": 750,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "8ee93c6772fc5de3",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "stand/pa",
+        "func": "msg.payload = Buffer.alloc(12);  // Each uint32_t is 4 bytes.\nmsg.payload.writeUInt32LE(0x21010202, 0); // Command code for \"Stand up/down\"\nmsg.payload.writeUInt32LE(0, 4);          // No command value specified.\nmsg.payload.writeUInt32LE(0, 8);          // Command type is 0.\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 260,
+        "wires": [
+            [
+                "7a71f403519da114",
+                "056c4cda4c3c6bb4"
+            ]
+        ]
+    },
+    {
+        "id": "339e704009cde126",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "jump",
+        "func": "msg.payload = Buffer.alloc(12);  // Each uint32_t is 4 bytes.\nmsg.payload.writeUInt32LE(0x2101050C, 0); // Command code for \"Stand up/down\"\nmsg.payload.writeUInt32LE(0, 4);          // No command value specified.\nmsg.payload.writeUInt32LE(0, 8);          // Command type is 0.\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 360,
+        "wires": [
+            [
+                "7a71f403519da114"
+            ]
+        ]
+    },
+    {
+        "id": "868d275053e26e87",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "jump high",
+        "func": "msg.payload = Buffer.alloc(12);  // Each uint32_t is 4 bytes.\nmsg.payload.writeUInt32LE(0x21010504, 0); // Command code for \"Stand up/down\"\nmsg.payload.writeUInt32LE(0, 4);          // No command value specified.\nmsg.payload.writeUInt32LE(0, 8);          // Command type is 0.\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 440,
+        "wires": [
+            [
+                "7a71f403519da114"
+            ]
+        ]
+    },
+    {
+        "id": "cfde365f39029251",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "tai kong bu",
+        "func": "msg.payload = Buffer.alloc(12);  // Each uint32_t is 4 bytes.\nmsg.payload.writeUInt32LE(0x2101030C, 0); // Command code for \"Stand up/down\"\nmsg.payload.writeUInt32LE(0, 4);          // No command value specified.\nmsg.payload.writeUInt32LE(0, 8);          // Command type is 0.\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 520,
+        "wires": [
+            [
+                "7a71f403519da114"
+            ]
+        ]
+    },
+    {
+        "id": "056c4cda4c3c6bb4",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "034551596598136d",
+        "type": "http in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "url": "/standpa",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 260,
+        "wires": [
+            [
+                "8ee93c6772fc5de3"
+            ]
+        ]
+    },
+    {
+        "id": "95452889e19152a0",
+        "type": "http in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "url": "/jump",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 260,
+        "y": 360,
+        "wires": [
+            [
+                "339e704009cde126"
+            ]
+        ]
+    },
+    {
+        "id": "ba210f2223fb0861",
+        "type": "http in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "url": "/jumphigh",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 260,
+        "y": 440,
+        "wires": [
+            [
+                "868d275053e26e87"
+            ]
+        ]
+    },
+    {
+        "id": "9891d507d6a42758",
+        "type": "http in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "url": "/taikongbu",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 260,
+        "y": 520,
+        "wires": [
+            [
+                "cfde365f39029251"
+            ]
+        ]
+    },
+    {
+        "id": "445f2f7b661e48dc",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "Position mode initialisation",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1200007f#0570000001000000",
+        "payloadType": "str",
+        "x": 310,
+        "y": 200,
+        "wires": [
+            [
+                "4084535c93accaaf"
+            ]
+        ]
+    },
+    {
+        "id": "0bea0ac64734eb9a",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "Send position 2",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1200007f#1670000000000000",
+        "payloadType": "str",
+        "x": 300,
+        "y": 380,
+        "wires": [
+            [
+                "4084535c93accaaf"
+            ]
+        ]
+    },
+    {
+        "id": "c5da0519c80415d4",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "Position mode start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0x300007f#",
+        "payloadType": "str",
+        "x": 310,
+        "y": 260,
+        "wires": [
+            [
+                "4084535c93accaaf"
+            ]
+        ]
+    },
+    {
+        "id": "75df1e7c3c2c5480",
+        "type": "comment",
+        "z": "b29f49fc630e741c",
+        "name": "Send CAN frames in using different payloads on CAN0",
+        "info": "",
+        "x": 320,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "f51221828c4e7961",
+        "type": "comment",
+        "z": "b29f49fc630e741c",
+        "name": "Receiove CAN data from interface CAN0",
+        "info": "",
+        "x": 360,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "d775a68e4ab39ae8",
+        "type": "socketcan-out",
+        "z": "b29f49fc630e741c",
+        "name": "socketcan-out",
+        "config": "e34ce9cff2013174",
+        "x": 250,
+        "y": 780,
+        "wires": [
+            [
+                "4f13fa2ddb02f91c",
+                "98f1025acb809a45"
+            ]
+        ]
+    },
+    {
+        "id": "4084535c93accaaf",
+        "type": "socketcan-in",
+        "z": "b29f49fc630e741c",
+        "name": "socketcan-in",
+        "config": "e34ce9cff2013174",
+        "x": 490,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "23233e9ab169403c",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "stop",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "400007f#00000000000000",
+        "payloadType": "str",
+        "x": 270,
+        "y": 440,
+        "wires": [
+            [
+                "4084535c93accaaf"
+            ]
+        ]
+    },
+    {
+        "id": "bd519d309811ad4e",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "Send position",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1200007f#16700000C3F54840",
+        "payloadType": "str",
+        "x": 290,
+        "y": 320,
+        "wires": [
+            [
+                "4084535c93accaaf"
+            ]
+        ]
+    },
+    {
+        "id": "fdb2a301789d7059",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "Speed mode initialisation",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1200007f#0570000002000000",
+        "payloadType": "str",
+        "x": 730,
+        "y": 200,
+        "wires": [
+            [
+                "ffcfca7b99570c5b"
+            ]
+        ]
+    },
+    {
+        "id": "ffcfca7b99570c5b",
+        "type": "socketcan-in",
+        "z": "b29f49fc630e741c",
+        "name": "socketcan-in",
+        "config": "e34ce9cff2013174",
+        "x": 900,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "5cc644b64f0a4334",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "Speed mode start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0x300007f#",
+        "payloadType": "str",
+        "x": 710,
+        "y": 260,
+        "wires": [
+            [
+                "ffcfca7b99570c5b"
+            ]
+        ]
+    },
+    {
+        "id": "c03905aebac6d9c7",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "5RAD",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1200007f#0A7000000000A040",
+        "payloadType": "str",
+        "x": 670,
+        "y": 320,
+        "wires": [
+            [
+                "ffcfca7b99570c5b"
+            ]
+        ]
+    },
+    {
+        "id": "29eda40f81c8be24",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "25rad",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1200007f#0A7000000000C841",
+        "payloadType": "str",
+        "x": 670,
+        "y": 380,
+        "wires": [
+            [
+                "ffcfca7b99570c5b"
+            ]
+        ]
+    },
+    {
+        "id": "89389dab31e9e485",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "stop",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "400007f#00000000000000",
+        "payloadType": "str",
+        "x": 670,
+        "y": 440,
+        "wires": [
+            [
+                "ffcfca7b99570c5b"
+            ]
+        ]
+    },
+    {
+        "id": "aec3f2b49c69ed8e",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "speed test",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1100007f#0A7000000000",
+        "payloadType": "str",
+        "x": 280,
+        "y": 520,
+        "wires": [
+            [
+                "b0e3e09e91c65d8f"
+            ]
+        ]
+    },
+    {
+        "id": "b0e3e09e91c65d8f",
+        "type": "socketcan-in",
+        "z": "b29f49fc630e741c",
+        "name": "socketcan-in",
+        "config": "e34ce9cff2013174",
+        "x": 450,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "4f13fa2ddb02f91c",
+        "type": "function",
+        "z": "b29f49fc630e741c",
+        "name": "function 1",
+        "func": "var data = msg.payload.data;  // Assuming your CAN node outputs data in msg.payload.data\n\n// Check if the data[0] is 10\nif (data.length === 8 && data[0] === 10) {\n   \n\n    var hexSpeedValue = (data[7] << 8) | data[6];\n\n    // Assuming we've previously calculated m (and possibly c if required)\n    var m = (20.0) / (0x41C8 - 0x40A0);\n\n    var speed = m * hexSpeedValue - m * 0x40A0 + 5.0;\n\n    msg.decodedSpeed = speed;\n\n    // Construct the output message\n    msg.payload = \"Received message with ID 0x\" + (msg.payload.canid || \"UNKNOWN\").toString(16) + \"\\n\";\n    msg.payload += \"speed:\" + speed + \" rad/s.\";\n}\n\nreturn msg;  // Return the modified msg object",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 680,
+        "wires": [
+            [
+                "e1867263313aa968"
+            ]
+        ]
+    },
+    {
+        "id": "e1867263313aa968",
+        "type": "debug",
+        "z": "b29f49fc630e741c",
+        "name": "speed test",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 630,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "98f1025acb809a45",
+        "type": "debug",
+        "z": "b29f49fc630e741c",
+        "name": "can input",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "576366b1f4f562e7",
+        "type": "exec",
+        "z": "b29f49fc630e741c",
+        "command": "cat",
+        "addpay": "",
+        "append": "  /dev/hidraw2",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 1070,
+        "y": 680,
+        "wires": [
+            [
+                "b77b7693b5835533"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "2aa890a621bb9e11",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 930,
+        "y": 680,
+        "wires": [
+            [
+                "576366b1f4f562e7"
+            ]
+        ]
+    },
+    {
+        "id": "7dd49e552aaa3647",
+        "type": "debug",
+        "z": "b29f49fc630e741c",
+        "name": "Scanner Input",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1360,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "696291f8eb0c483f",
+        "type": "exec",
+        "z": "b29f49fc630e741c",
+        "command": "cat",
+        "addpay": "",
+        "append": "  /dev/hidraw0",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 1070,
+        "y": 780,
+        "wires": [
+            [
+                "c1fac5104c6c0dfb"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "7b855f1555d662ee",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 930,
+        "y": 780,
+        "wires": [
+            [
+                "696291f8eb0c483f"
+            ]
+        ]
+    },
+    {
+        "id": "fd3681bd8a33ebbb",
+        "type": "debug",
+        "z": "b29f49fc630e741c",
+        "name": "RFID input",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "d9d9968dda54cbb7",
+        "type": "comment",
+        "z": "b29f49fc630e741c",
+        "name": "Scanner Input",
+        "info": "",
+        "x": 950,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "8dcdf0eafb6ae6da",
+        "type": "comment",
+        "z": "b29f49fc630e741c",
+        "name": "RFID Input",
+        "info": "",
+        "x": 940,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "c1fac5104c6c0dfb",
+        "type": "function",
+        "z": "b29f49fc630e741c",
+        "name": "function 8",
+        "func": "const N = 22;  // replace with the actual number\n\n// Retrieve the data arrays from the context or initialize if not present\nlet dataArray = context.get('dataArray') || [];\nlet count = context.get('count') || 0;\n\n// Add the array to the dataArray\ndataArray.push(msg.payload);\ncount++;\n\n// If count reaches the expected number of arrays, process them\nif (count == N) {\n    let combinedData = [].concat(...dataArray);\n    msg.payload = combinedData;\n\n    // Reset the dataArray and count for the next sequence\n    context.set('dataArray', []);\n    context.set('count', 0);\n    return msg; // Send the consolidated array\n} else {\n    context.set('dataArray', dataArray);\n    context.set('count', count);\n    return null; // Don't send anything until you receive all arrays\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1200,
+        "y": 780,
+        "wires": [
+            [
+                "fd3681bd8a33ebbb"
+            ]
+        ]
+    },
+    {
+        "id": "b77b7693b5835533",
+        "type": "function",
+        "z": "b29f49fc630e741c",
+        "name": "function 9",
+        "func": "const N = 22;  // replace with the actual number\n\n// Retrieve the data arrays from the context or initialize if not present\nlet dataArray = context.get('dataArray') || [];\nlet count = context.get('count') || 0;\n\n// Add the array to the dataArray\ndataArray.push(msg.payload);\ncount++;\n\n// If count reaches the expected number of arrays, process them\nif (count == N) {\n    let combinedData = [].concat(...dataArray);\n    msg.payload = combinedData;\n\n    // Reset the dataArray and count for the next sequence\n    context.set('dataArray', []);\n    context.set('count', 0);\n    return msg; // Send the consolidated array\n} else {\n    context.set('dataArray', dataArray);\n    context.set('count', count);\n    return null; // Don't send anything until you receive all arrays\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1200,
+        "y": 680,
+        "wires": [
+            [
+                "7dd49e552aaa3647"
+            ]
+        ]
+    },
+    {
+        "id": "afe853cc530a2c0b",
+        "type": "i2c in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "busno": "1",
+        "address": "50",
+        "command": "32",
+        "count": "16",
+        "x": 1130,
+        "y": 340,
+        "wires": [
+            [
+                "b17b6bea183633dc",
+                "214ac6b5cb5e971b"
+            ]
+        ]
+    },
+    {
+        "id": "b5d18b8fe932a297",
+        "type": "i2c out",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "busno": "1",
+        "address": "50",
+        "command": "32",
+        "payload": "payload",
+        "payloadType": "msg",
+        "count": "8",
+        "x": 1230,
+        "y": 240,
+        "wires": [
+            [
+                "21459143c38ea8cc"
+            ]
+        ]
+    },
+    {
+        "id": "c49859343aca3ffa",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "camera request",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 1020,
+        "y": 240,
+        "wires": [
+            [
+                "19efec08f7d13b69"
+            ]
+        ]
+    },
+    {
+        "id": "21459143c38ea8cc",
+        "type": "debug",
+        "z": "b29f49fc630e741c",
+        "name": "camera request",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1400,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "b17b6bea183633dc",
+        "type": "debug",
+        "z": "b29f49fc630e741c",
+        "d": true,
+        "name": "debug 23",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1440,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "0a88c8119ceeed3d",
+        "type": "i2c scan",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "busno": "1",
+        "x": 1240,
+        "y": 420,
+        "wires": [
+            [
+                "d7877181f184430b"
+            ],
+            [
+                "d7877181f184430b"
+            ]
+        ]
+    },
+    {
+        "id": "21be18a538ab9cad",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "camera scan",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1090,
+        "y": 420,
+        "wires": [
+            [
+                "0a88c8119ceeed3d"
+            ]
+        ]
+    },
+    {
+        "id": "d7877181f184430b",
+        "type": "debug",
+        "z": "b29f49fc630e741c",
+        "name": "camera scan",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1410,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "fefc492a95140b33",
+        "type": "inject",
+        "z": "b29f49fc630e741c",
+        "name": "camera feedback",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 960,
+        "y": 340,
+        "wires": [
+            [
+                "afe853cc530a2c0b"
+            ]
+        ]
+    },
+    {
+        "id": "19efec08f7d13b69",
+        "type": "function",
+        "z": "b29f49fc630e741c",
+        "name": "function 10",
+        "func": "\nmsg.payload = Buffer.from([85, 170, 17, 0, 32, 48]);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 180,
+        "wires": [
+            [
+                "b5d18b8fe932a297"
+            ]
+        ]
+    },
+    {
+        "id": "214ac6b5cb5e971b",
+        "type": "function",
+        "z": "b29f49fc630e741c",
+        "name": "function 11",
+        "func": "let arr = msg.payload;\nlet len = arr[3];\nlet info = {};\nvar data = arr.slice(5, 5 + len + 1);\ninfo['x'] = data[0];\ninfo['y'] = data[2];\ninfo['width'] = data[4];\ninfo['height'] = data[6];\ninfo['id'] = data[8];\nmsg.payload = info;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1290,
+        "y": 340,
+        "wires": [
+            [
+                "93c049e65a9d2d40"
+            ]
+        ]
+    },
+    {
+        "id": "93c049e65a9d2d40",
+        "type": "debug",
+        "z": "b29f49fc630e741c",
+        "name": "camera feedback",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1470,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "3f3029c25c6618f3",
+        "type": "comment",
+        "z": "b29f49fc630e741c",
+        "name": "Camera Face Recognition",
+        "info": "",
+        "x": 930,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "529722cd0bc52d87",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/pmi",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "564bfc9a9d45b38c",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/pms",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "97ba877eb9f72d38",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/sp1",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "717752c7dd76d65a",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/sp2",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dfd824da8810bbb5",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/stop",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3b29298aafb2659c",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/smi",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 520,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2738b13433372075",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/sms",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 520,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "95ece1d8a96d3fc6",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/ss1",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 520,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "472de46ded3f9f1e",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/ss2",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 520,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d07cae5157510c58",
+        "type": "http in",
+        "z": "b29f49fc630e741c",
+        "name": "",
+        "url": "/stop",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 520,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7ed2e61ca0232509",
+        "type": "function",
+        "z": "b29f49fc630e741c",
+        "name": "function 13",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "761c45a17ca7a0e6",
+        "type": "comment",
+        "z": "4024900d334e5de4",
+        "name": "Receiove CAN data from interface CAN0",
+        "info": "",
+        "x": 240,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "62c3bb78f9c6a09e",
+        "type": "socketcan-out",
+        "z": "4024900d334e5de4",
+        "name": "socketcan-out",
+        "config": "e34ce9cff2013174",
+        "x": 130,
+        "y": 740,
+        "wires": [
+            [
+                "869c17e0ce1b621c",
+                "b74a14edcb9ee581"
+            ]
+        ]
+    },
+    {
+        "id": "2a722581531d456c",
+        "type": "socketcan-in",
+        "z": "4024900d334e5de4",
+        "name": "socketcan-in",
+        "config": "e34ce9cff2013174",
+        "x": 480,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "684a1c998b641a05",
+        "type": "socketcan-in",
+        "z": "4024900d334e5de4",
+        "name": "socketcan-in",
+        "config": "e34ce9cff2013174",
+        "x": 980,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "4f3dcf1bb9d56b31",
+        "type": "socketcan-in",
+        "z": "4024900d334e5de4",
+        "name": "socketcan-in",
+        "config": "e34ce9cff2013174",
+        "x": 480,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "869c17e0ce1b621c",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "function 14",
+        "func": "var data = msg.payload.data;  // Assuming your CAN node outputs data in msg.payload.data\n\n// Check if the data[0] is 10\nif (data.length === 8 && data[0] === 10) {\n   \n\n    var hexSpeedValue = (data[7] << 8) | data[6];\n\n    // Assuming we've previously calculated m (and possibly c if required)\n    var m = (20.0) / (0x41C8 - 0x40A0);\n\n    var speed = m * hexSpeedValue - m * 0x40A0 + 5.0;\n\n    msg.decodedSpeed = speed;\n\n    // Construct the output message\n    msg.payload = \"Received message with ID 0x\" + (msg.payload.canid || \"UNKNOWN\").toString(16) + \"\\n\";\n    msg.payload += \"speed:\" + speed + \" rad/s.\";\n}\n\nreturn msg;  // Return the modified msg object",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 700,
+        "wires": [
+            [
+                "0a8ab0a0be7d4d64",
+                "f2e506f7f8493769"
+            ]
+        ]
+    },
+    {
+        "id": "0a8ab0a0be7d4d64",
+        "type": "debug",
+        "z": "4024900d334e5de4",
+        "name": "speed test",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "b74a14edcb9ee581",
+        "type": "debug",
+        "z": "4024900d334e5de4",
+        "name": "can input",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 360,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "7f6c5bd969b95419",
+        "type": "exec",
+        "z": "4024900d334e5de4",
+        "command": "cat",
+        "addpay": "",
+        "append": "  /dev/hidraw2",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 1010,
+        "y": 640,
+        "wires": [
+            [
+                "f3a660e3ba3ea093"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "2e1df48951e762d8",
+        "type": "debug",
+        "z": "4024900d334e5de4",
+        "name": "Scanner Input",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1360,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "25fdc8a3f678199d",
+        "type": "exec",
+        "z": "4024900d334e5de4",
+        "command": "cat",
+        "addpay": "",
+        "append": "  /dev/hidraw0",
+        "useSpawn": "true",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 1010,
+        "y": 740,
+        "wires": [
+            [
+                "8d41491109501665"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "ba762df89161956b",
+        "type": "debug",
+        "z": "4024900d334e5de4",
+        "name": "RFID input",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "3427fdf7e2d55df7",
+        "type": "comment",
+        "z": "4024900d334e5de4",
+        "name": "Scanner Input",
+        "info": "",
+        "x": 890,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "f48d12b8c31005ee",
+        "type": "comment",
+        "z": "4024900d334e5de4",
+        "name": "RFID Input",
+        "info": "",
+        "x": 880,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "8d41491109501665",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "function 15",
+        "func": "const N = 22;  // replace with the actual number\n\n// Retrieve the data arrays from the context or initialize if not present\nlet dataArray = context.get('dataArray') || [];\nlet count = context.get('count') || 0;\n\n// Add the array to the dataArray\ndataArray.push(msg.payload);\ncount++;\n\n// If count reaches the expected number of arrays, process them\nif (count == N) {\n    let combinedData = [].concat(...dataArray);\n    msg.payload = combinedData;\n\n    // Reset the dataArray and count for the next sequence\n    context.set('dataArray', []);\n    context.set('count', 0);\n    return msg; // Send the consolidated array\n} else {\n    context.set('dataArray', dataArray);\n    context.set('count', count);\n    return null; // Don't send anything until you receive all arrays\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1170,
+        "y": 740,
+        "wires": [
+            [
+                "ba762df89161956b",
+                "1431d96ad6034328"
+            ]
+        ]
+    },
+    {
+        "id": "f3a660e3ba3ea093",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "function 16",
+        "func": "const N = 22;  // replace with the actual number\n\n// Retrieve the data arrays from the context or initialize if not present\nlet dataArray = context.get('dataArray') || [];\nlet count = context.get('count') || 0;\n\n// Add the array to the dataArray\ndataArray.push(msg.payload);\ncount++;\n\n// If count reaches the expected number of arrays, process them\nif (count == N) {\n    let combinedData = [].concat(...dataArray);\n    msg.payload = combinedData;\n\n    // Reset the dataArray and count for the next sequence\n    context.set('dataArray', []);\n    context.set('count', 0);\n    return msg; // Send the consolidated array\n} else {\n    context.set('dataArray', dataArray);\n    context.set('count', count);\n    return null; // Don't send anything until you receive all arrays\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1170,
+        "y": 640,
+        "wires": [
+            [
+                "2e1df48951e762d8",
+                "61abeb0fac389710"
+            ]
+        ]
+    },
+    {
+        "id": "60a3e0dedfac386c",
+        "type": "i2c in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "busno": "1",
+        "address": "50",
+        "command": "32",
+        "count": "16",
+        "x": 1270,
+        "y": 320,
+        "wires": [
+            [
+                "6947c724bc9ff29a",
+                "2e2b3e1fb4758133"
+            ]
+        ]
+    },
+    {
+        "id": "c84822046af4459f",
+        "type": "i2c out",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "busno": "1",
+        "address": "50",
+        "command": "32",
+        "payload": "payload",
+        "payloadType": "msg",
+        "count": "8",
+        "x": 1440,
+        "y": 220,
+        "wires": [
+            [
+                "ba115b786b4f6353"
+            ]
+        ]
+    },
+    {
+        "id": "ba115b786b4f6353",
+        "type": "debug",
+        "z": "4024900d334e5de4",
+        "name": "camera request",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1620,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "6947c724bc9ff29a",
+        "type": "debug",
+        "z": "4024900d334e5de4",
+        "d": true,
+        "name": "debug 25",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1600,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "766aeb3138b0f9af",
+        "type": "i2c scan",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "busno": "1",
+        "x": 1290,
+        "y": 400,
+        "wires": [
+            [
+                "ab40f77e5e6b097a"
+            ],
+            [
+                "ab40f77e5e6b097a"
+            ]
+        ]
+    },
+    {
+        "id": "71e85b8d2230cc72",
+        "type": "inject",
+        "z": "4024900d334e5de4",
+        "name": "camera scan",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 1110,
+        "y": 400,
+        "wires": [
+            [
+                "766aeb3138b0f9af"
+            ]
+        ]
+    },
+    {
+        "id": "ab40f77e5e6b097a",
+        "type": "debug",
+        "z": "4024900d334e5de4",
+        "name": "camera scan",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1510,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "d1895c8711b71d7a",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "camera request",
+        "func": "\nmsg.payload = Buffer.from([85, 170, 17, 0, 32, 48]);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 220,
+        "wires": [
+            [
+                "c84822046af4459f"
+            ]
+        ]
+    },
+    {
+        "id": "2e2b3e1fb4758133",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "camera feedback",
+        "func": "let arr = msg.payload;\nlet len = arr[3];\nlet info = {};\nvar data = arr.slice(5, 5 + len + 1);\ninfo['x'] = data[0];\ninfo['y'] = data[2];\ninfo['width'] = data[4];\ninfo['height'] = data[6];\ninfo['id'] = data[8];\nmsg.payload = info;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1490,
+        "y": 320,
+        "wires": [
+            [
+                "95281341ab40d68f",
+                "c3b8426cd216f593"
+            ]
+        ]
+    },
+    {
+        "id": "95281341ab40d68f",
+        "type": "debug",
+        "z": "4024900d334e5de4",
+        "name": "camera feedback",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1690,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "56c94147aaf9b187",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/pmi",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 160,
+        "wires": [
+            [
+                "2716ce7564503111"
+            ]
+        ]
+    },
+    {
+        "id": "92af40b6a40ff22e",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/pms",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 240,
+        "wires": [
+            [
+                "8dd33276fce5e9c4"
+            ]
+        ]
+    },
+    {
+        "id": "2e292a6d3313a2d8",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/sp1",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 300,
+        "wires": [
+            [
+                "bd455abd4e6ce22b"
+            ]
+        ]
+    },
+    {
+        "id": "2ccda193d1ce93e5",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/sp2",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 360,
+        "wires": [
+            [
+                "5e68d21c8162f25e"
+            ]
+        ]
+    },
+    {
+        "id": "3b1f39a907c7cd72",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/stop",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 420,
+        "wires": [
+            [
+                "aca76b5d523870c3"
+            ]
+        ]
+    },
+    {
+        "id": "344530df7919d0fa",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/smi",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 640,
+        "y": 160,
+        "wires": [
+            [
+                "4bbe35b95f40bde3"
+            ]
+        ]
+    },
+    {
+        "id": "06b75fc9323cb91b",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/sms",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 640,
+        "y": 220,
+        "wires": [
+            [
+                "684eb3a443c7f8dc"
+            ]
+        ]
+    },
+    {
+        "id": "9e9a66f29010aabc",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/ss1",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 640,
+        "y": 280,
+        "wires": [
+            [
+                "54113414af11cbef"
+            ]
+        ]
+    },
+    {
+        "id": "be61630e0a206835",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/ss2",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 640,
+        "y": 340,
+        "wires": [
+            [
+                "2070b3c0df1fcf7f"
+            ]
+        ]
+    },
+    {
+        "id": "2716ce7564503111",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "Position mode initialisation",
+        "func": "msg.payload = \"1200007f#0570000001000000\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 160,
+        "wires": [
+            [
+                "2a722581531d456c"
+            ]
+        ]
+    },
+    {
+        "id": "8dd33276fce5e9c4",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "Position mode start",
+        "func": "msg.payload = \"0x300007f#\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 240,
+        "wires": [
+            [
+                "2a722581531d456c"
+            ]
+        ]
+    },
+    {
+        "id": "bd455abd4e6ce22b",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "Send position 1",
+        "func": "msg.payload = \"1200007f#16700000C3F54840\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 300,
+        "wires": [
+            [
+                "2a722581531d456c"
+            ]
+        ]
+    },
+    {
+        "id": "5e68d21c8162f25e",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "Send position 2",
+        "func": "msg.payload = \"1200007f#1670000000000000\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 360,
+        "wires": [
+            [
+                "2a722581531d456c"
+            ]
+        ]
+    },
+    {
+        "id": "aca76b5d523870c3",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "stop",
+        "func": "msg.payload = \"400007f#00000000000000\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 420,
+        "wires": [
+            [
+                "2a722581531d456c"
+            ]
+        ]
+    },
+    {
+        "id": "fbdec48d0eea5b56",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/stop",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 640,
+        "y": 420,
+        "wires": [
+            [
+                "6d859d64ce69f0f9"
+            ]
+        ]
+    },
+    {
+        "id": "6d859d64ce69f0f9",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "stop",
+        "func": "msg.payload = \"400007f#00000000000000\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 420,
+        "wires": [
+            [
+                "684a1c998b641a05"
+            ]
+        ]
+    },
+    {
+        "id": "4bbe35b95f40bde3",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "Speed mode initialisation",
+        "func": "msg.payload = \"1200007f#0570000002000000\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 160,
+        "wires": [
+            [
+                "684a1c998b641a05"
+            ]
+        ]
+    },
+    {
+        "id": "684eb3a443c7f8dc",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "Speed mode start",
+        "func": "msg.payload = \"0x300007f#\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 220,
+        "wires": [
+            [
+                "684a1c998b641a05"
+            ]
+        ]
+    },
+    {
+        "id": "54113414af11cbef",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "5RAD",
+        "func": "msg.payload = \"1200007f#0A7000000000A040\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 280,
+        "wires": [
+            [
+                "684a1c998b641a05"
+            ]
+        ]
+    },
+    {
+        "id": "2070b3c0df1fcf7f",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "25rad",
+        "func": "msg.payload = \"1200007f#0A7000000000C841\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 340,
+        "wires": [
+            [
+                "684a1c998b641a05"
+            ]
+        ]
+    },
+    {
+        "id": "9cd825848242d3fc",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/st",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 480,
+        "wires": [
+            [
+                "198ef0f504408768"
+            ]
+        ]
+    },
+    {
+        "id": "198ef0f504408768",
+        "type": "function",
+        "z": "4024900d334e5de4",
+        "name": "speed test",
+        "func": "msg.payload = \"1100007f#0A7000000000\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 480,
+        "wires": [
+            [
+                "4f3dcf1bb9d56b31"
+            ]
+        ]
+    },
+    {
+        "id": "f2e506f7f8493769",
+        "type": "mqtt out",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "topic": "",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ae6927223f6678b0",
+        "x": 570,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "61abeb0fac389710",
+        "type": "mqtt out",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "topic": "",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ae6927223f6678b0",
+        "x": 1330,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "1431d96ad6034328",
+        "type": "mqtt out",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "topic": "",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ae6927223f6678b0",
+        "x": 1350,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "c3b8426cd216f593",
+        "type": "mqtt out",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "topic": "",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ae6927223f6678b0",
+        "x": 1690,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "4310ac0215cbd427",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/cr",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1090,
+        "y": 220,
+        "wires": [
+            [
+                "d1895c8711b71d7a"
+            ]
+        ]
+    },
+    {
+        "id": "496380dae248f36f",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/cf",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1110,
+        "y": 320,
+        "wires": [
+            [
+                "60a3e0dedfac386c"
+            ]
+        ]
+    },
+    {
+        "id": "c5295a20129678b7",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/scanner",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 850,
+        "y": 640,
+        "wires": [
+            [
+                "7f6c5bd969b95419"
+            ]
+        ]
+    },
+    {
+        "id": "1878e7ac8ad4c696",
+        "type": "http in",
+        "z": "4024900d334e5de4",
+        "name": "",
+        "url": "/rfid",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 840,
+        "y": 740,
+        "wires": [
+            [
+                "25fdc8a3f678199d"
+            ]
+        ]
+    }
+]

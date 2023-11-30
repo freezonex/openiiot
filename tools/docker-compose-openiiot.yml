@@ -1,0 +1,91 @@
+version: '3'
+services:
+  openiiot-nodered:
+    image: openiiot_nodered:1.0.0
+    container_name: openiiot-nodered
+    ports:
+      - "1880:1880"
+      - "43893:43893/udp"
+    volumes:
+      - nodered_data:/data
+    environment:
+      - TZ=UTC
+    restart: always
+  openiiot-tdengine:
+    image: openiiot_tdengine:1.0.0
+    container_name: openiiot-tdengine
+    volumes:
+      - tdengine_data:/var/lib/taosw
+      - tdengine_log:/var/log/taos
+    ports:
+      - "6030:6030"
+      - "6041:6041"
+      - "6043-6049:6043-6049"
+      - "6043-6049:6043-6049/udp"
+    restart: always
+  openiiot-grafana:
+    image: openiiot_grafana:1.0.0
+    container_name: openiiot-grafana
+    links: 
+      - openiiot-tdengine
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: always
+  openiiot-emqx1:
+    image: openiiot_emqx:1.0.0
+    container_name: openiiot-emqx1
+    environment:
+      - "EMQX_NODE_NAME=emqx@node1.emqx.io"
+      - "EMQX_CLUSTER__DISCOVERY_STRATEGY=static"
+      - "EMQX_CLUSTER__STATIC__SEEDS=[emqx@node1.emqx.io,emqx@node2.emqx.io]"
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8084:8084
+      - 8883:8883
+      - 18083:18083
+    volumes:
+     - emqx1_data:/opt/emqx/data
+  openiiot-mysql:
+    image: openiiot_mysql:1.0.0
+    container_name: openiiot-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: hongzhi
+      MYSQL_USER: hongzhi
+      MYSQL_PASSWORD: root1234
+    ports:
+      - "6033:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - openiiot-mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8080:80
+  openiiot-web:
+    image: openiiot_web:1.0.0
+    container_name: openiiot-web
+    ports:
+      - "80:80"
+volumes:
+  nodered_data:
+  grafana_data:
+  tdengine_data:
+  tdengine_log:
+  emqx1_data:
+  mysql_data:

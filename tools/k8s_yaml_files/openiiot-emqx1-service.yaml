@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-openiiot.yml -o ./k8s_yaml_files
+    kompose.version: 1.31.2 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: openiiot-emqx1
+  name: openiiot-emqx1
+spec:
+  ports:
+    - name: "1883"
+      port: 1883
+      targetPort: 1883
+    - name: "8083"
+      port: 8083
+      targetPort: 8083
+    - name: "8084"
+      port: 8084
+      targetPort: 8084
+    - name: "8883"
+      port: 8883
+      targetPort: 8883
+    - name: "18083"
+      port: 18083
+      targetPort: 18083
+  selector:
+    io.kompose.service: openiiot-emqx1
+status:
+  loadBalancer: {}

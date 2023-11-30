@@ -23,7 +23,7 @@ const apiUtil = require("../util")
 
 var defaultContext = {
     page: {
-        title: "Node-RED",
+        title: "FreeFlow",
         favicon: "favicon.ico",
         tabicon: {
             icon: "red/images/node-red-icon-black.svg",
@@ -31,7 +31,7 @@ var defaultContext = {
         }
     },
     header: {
-        title: "FreezoneX",
+        title: "FreeFlow",
         image: "red/images/node-red.svg"
     },
     asset: {

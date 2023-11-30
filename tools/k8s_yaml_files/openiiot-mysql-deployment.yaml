@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-openiiot.yml -o ./k8s_yaml_files
+    kompose.version: 1.31.2 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: openiiot-mysql
+  name: openiiot-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: openiiot-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-openiiot.yml -o ./k8s_yaml_files
+        kompose.version: 1.31.2 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/tools-default: "true"
+        io.kompose.service: openiiot-mysql
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: hongzhi
+            - name: MYSQL_PASSWORD
+              value: root1234
+            - name: MYSQL_ROOT_PASSWORD
+              value: root1234
+            - name: MYSQL_USER
+              value: hongzhi
+          image: openiiot_mysql:1.0.0
+          name: openiiot-mysql
+          ports:
+            - containerPort: 3306
+              hostPort: 6033
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-data
+      restartPolicy: Always
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-data
+status: {}

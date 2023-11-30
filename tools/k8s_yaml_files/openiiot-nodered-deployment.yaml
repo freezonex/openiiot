@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-openiiot.yml -o ./k8s_yaml_files
+    kompose.version: 1.31.2 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: openiiot-nodered
+  name: openiiot-nodered
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: openiiot-nodered
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-openiiot.yml -o ./k8s_yaml_files
+        kompose.version: 1.31.2 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/tools-default: "true"
+        io.kompose.service: openiiot-nodered
+    spec:
+      containers:
+        - env:
+            - name: TZ
+              value: UTC
+          image: openiiot_nodered:1.0.0
+          name: openiiot-nodered
+          ports:
+            - containerPort: 1880
+              hostPort: 1880
+              protocol: TCP
+            - containerPort: 43893
+              hostPort: 43893
+              protocol: UDP
+          resources: {}
+          volumeMounts:
+            - mountPath: /data
+              name: nodered-data
+      restartPolicy: Always
+      volumes:
+        - name: nodered-data
+          persistentVolumeClaim:
+            claimName: nodered-data
+status: {}

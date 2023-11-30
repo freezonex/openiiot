@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-openiiot.yml -o ./k8s_yaml_files
+    kompose.version: 1.31.2 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: openiiot-tdengine
+  name: openiiot-tdengine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: openiiot-tdengine
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-openiiot.yml -o ./k8s_yaml_files
+        kompose.version: 1.31.2 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/tools-default: "true"
+        io.kompose.service: openiiot-tdengine
+    spec:
+      containers:
+        - image: openiiot_tdengine:1.0.0
+          name: openiiot-tdengine
+          ports:
+            - containerPort: 6030
+              hostPort: 6030
+              protocol: TCP
+            - containerPort: 6041
+              hostPort: 6041
+              protocol: TCP
+            - containerPort: 6043
+              hostPort: 6043
+              protocol: TCP
+            - containerPort: 6044
+              hostPort: 6044
+              protocol: TCP
+            - containerPort: 6045
+              hostPort: 6045
+              protocol: TCP
+            - containerPort: 6046
+              hostPort: 6046
+              protocol: TCP
+            - containerPort: 6047
+              hostPort: 6047
+              protocol: TCP
+            - containerPort: 6048
+              hostPort: 6048
+              protocol: TCP
+            - containerPort: 6049
+              hostPort: 6049
+              protocol: TCP
+            - containerPort: 6043
+              hostPort: 6043
+              protocol: UDP
+            - containerPort: 6044
+              hostPort: 6044
+              protocol: UDP
+            - containerPort: 6045
+              hostPort: 6045
+              protocol: UDP
+            - containerPort: 6046
+              hostPort: 6046
+              protocol: UDP
+            - containerPort: 6047
+              hostPort: 6047
+              protocol: UDP
+            - containerPort: 6048
+              hostPort: 6048
+              protocol: UDP
+            - containerPort: 6049
+              hostPort: 6049
+              protocol: UDP
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/taosw
+              name: tdengine-data
+            - mountPath: /var/log/taos
+              name: tdengine-log
+      restartPolicy: Always
+      volumes:
+        - name: tdengine-data
+          persistentVolumeClaim:
+            claimName: tdengine-data
+        - name: tdengine-log
+          persistentVolumeClaim:
+            claimName: tdengine-log
+status: {}
