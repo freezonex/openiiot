@@ -1,135 +1,3 @@
-## Quick Start
-To use this repository, you need to install docker beforehand. if you get the message 'WSL kernel version too low' after installing docker desktop on Windows, run on the command line to upgrade it.
-```shell
-wsl --update
-```
-bring up a local TDengine DB, build and start the service
-```shell
-cd tools
-docker-compose up -d 
-```
-## Configuration
-### 1. Create TDengine Database and Table
-In this step we create the appropriate database and table schema in TDengine for receiving MQTT data. 
-First open Docker Terminal
-![TDengine terminal](docs/images/TDengine_terminal.png "TDengine terminal")
-Then create database by TDengine terminal:
-
-```shell
-# taos
-taos>
-```
-Copy and paste below SQL script to taos
-```SQL
-CREATE DATABASE test;
-USE test;
-CREATE TABLE sensor_data (ts TIMESTAMP, temperature FLOAT, humidity FLOAT, volume FLOAT, pm10 FLOAT, pm25 FLOAT, so2 FLOAT, no2 FLOAT, co FLOAT, sensor_id NCHAR(255), area TINYINT, coll_time TIMESTAMP);
-```
-### 2. Create EMQX Integration to TDengine Rule
-#### 2.1 Login EMQX Dashboard
-Use your browser to open the URL http://IP:18083 (remember to change your IP here, and cannot use localhost or 127.0.0.1) and log in to EMQX Dashboard. Initial installation 
-username: admin
-password: public
-![EMQX Login](docs/images/EMQX_login.png "EMQX Login")
-#### 2.2 Create Data Bridges
-Choose "Data Bridges" -> Click "Create" -> Choose "HTTP Servers" -> Configuration:
-![EMQX data_bridges](docs/images/EMQX_data_bridges.png "EMQX data bridges")
-in next page, enter below information:  
-```http request
-Name: Your name of the bridge, for example, "toTDengine"  
-Method: POST  
-URL: http://IP:6041/rest/sql, remember to change your IP here
-Key: Authorization          Value: Basic cm9vdDp0YW9zZGF0YQ==
-Query Mode: Async
-```
-Body Enter:
-```SQL
-INSERT INTO test.sensor_data VALUES(
-  now,
-  ${payload.temperature},
-  ${payload.humidity},
-  ${payload.volume},
-  ${payload.PM10},
-  ${payload.pm25},
-  ${payload.SO2},
-  ${payload.NO2},
-  ${payload.CO},
-  '${payload.id}',
-  ${payload.area},
-  ${payload.ts}
-)
-```
-Then click "Test Connectivity" to make sure config is correct and click "Create" button to create the data bridge  
-#### 2.3 Create Rule To Integration to TDengine
-Choose "Rules" -> Click "Create":
-![EMQX create_rule](docs/images/EMQX_create_rule.png "EMQX create rule")
-in next page, enter below SQL:
-```SQL
-SELECT
-  payload
-FROM
-  "sensor/data"
-```
-then click "Add Action" -> choose "Forwarding with Data Bridge" -> choose "webhook", to the data bridge you created in last step
-![EMQX add_action](docs/images/EMQX_add_action.png "EMQX add action")
-
-### 3. use mock simulator to create mock data to EMQX broker
-pull this project to your local:
-```shell
-git clone https://github.com/freezonex/TDengine
-```
-enter mock script folder and run mock.js
-```shell
-cd docs/examples/other
-node mock.js
-hongzhi@hongzhis-MacBook-Air other % node mock.js    
-client mock_client_0 connected
-client mock_client_1 connected
-client mock_client_2 connected
-client mock_client_3 connected
-client mock_client_4 connected
-client mock_client_5 connected
-client mock_client_6 connected
-client mock_client_7 connected
-client mock_client_8 connected
-client mock_client_9 connected
-10:26:33 PM send success.
-```
-then check EMQX broker rule dashboard and TDengine database, to check if dataflow work successfully.
-
-### 4. Grafana Dashboard
-In this step we are going to create a demo dashboard to show the data from TDengine  
-#### 4.1 Setup Graphana
-Install Graphana on your local system. To sign in to Graphana for the first time:
-1. Go to http://localhost:3000/ (Change the actual port number base on the docker configuration)
-2. On the sign in page enter the following  
-*Username: admin*    
-*Password: admin*  
-If successful, you can see a prompt and change your password on that prompt.
-#### 4.2 Integrate Graphana with TDengine
-Install TDengine plugin using either **GUI** in the Graphana plugin catalog or using **script**.
-* First Option - execute the following script: 
-```
-bash -c "$(curl -fsSL \
-  https://raw.githubusercontent.com/taosdata/grafanaplugin/master/install.sh)" -- \
-  -a http://localhost:6041 \
-  -u root \
-  -p taosdata
-```
-* Second Option - use GUI to install the TDengine plugin:  
-![grafana_tdengine_plugin](docs/images/grafana_tdengine_plugin.png "Install TDengine plugin")
-After installing the plugin, add a new datasource of TDengine inside the `connections` pannel. Configure the Host, User, and password accordingly to make it work. (see example below)
-![grafana_create_new_data_source](docs/images/grafana_create_datasource.png "Create new TDengine datasource")
-#### 4.3 Create Dashboard
-Now you are able to create dashboards using the TDengine datasource.   
-For example, import dashboard script as shown in the figure:
-![grafana_dashboard_import](docs/images/grafana-dashboard-import.png "Import grafana dashboard")
-choose script/dashboard_test.json file to import:
-![grafana_dashboard_test](docs/images/grafana-dashboard-test.png "grafana dashboard")
-also can set to dynamic refresh for demo purpose:
-![grafana_dynamic](docs/images/grafana-dynamic.png "grafana dynamic")
-
-
 ## Development
 ### If develop in mainland China, need add use domestic mirror:
 ```shell
@@ -143,6 +11,12 @@ IDL repo: https://github.com/freezonex/pb_idl.git
 Path: freezonex/openiiot_api/openiiot_api_service.proto
 
 run below commands to pull the IDL repo automatically to the openiiot_api repo root folder.
+
+```shell
+git submodule add https://github.com/freezonex/node-red.git node-red
+git submodule add https://github.com/freezonex/grafana.git grafana
+```
+
 ```shell
 git submodule init
 git submodule update
@@ -155,7 +29,99 @@ when we update the IDL, we should raise MR to main branch in freezonex/pb_idl re
 and push to openiiot main branch. what we need is to rebase from main branch.
 
 refer here for detail.
+#### installation of hertztool and protobuf support
+```shell 
+go install github.com/cloudwego/hertz/cmd/hz@latest
+hz --version
+brew install protobuf
+protoc --version
+```
 
 if we want to test the IDL locally before merge to master branch, we can run below commands.
 ```shell 
-hertztool model --idl pb_idl/freezonex/openiiot_api/openiiot_api_service.proto --unset_omitempty -I pb_idl
+hz model --idl pb_idl/freezonex/openiiot_api/openiiot_api_service.proto --unset_omitempty -I pb_idl
+```
+
+### DB
+we are planning to connect to the ugqa_db (nebula DB), during the devleopment we can use docker to bring up local DB for the development and testing.
+
+we use ORM library bytedgen(gorm/GEN), and this library will be able to generate the basic code and function. note that, the configs and scripts are customized to generate the DB model/query. the generated codes are biz/dal/model and biz/data/query.
+
+everytime we run the scripts, it will overwrite the codes. 
+so far, the function JSONContains is a customized function to query a json column which contains a list of the tags.
+```shell
+sh generate.sh openiiot
+```
+
+### Configs
+it use the yaml to do the configurations
+details can be seen here. biz/config/*.yml
+consts are defined under biz/config/consts/
+
+### Build
+build all docker images, default PLATFORM is linux/arm64
+```shell
+make build
+```
+if you want to build for mac:
+```shell
+make build PLATFORM=linux/arm64
+```
+for windows
+```shell
+make build PLATFORM=windows/amd64
+```
+build single image
+```shell
+make nodered
+make grafana
+make tdengine
+make emqx
+make mysql
+make web
+```
+stop and delete all docker containers, images
+```shell
+make clean
+```
+stop and delete single docker containers, images
+```shell
+make clean_nodered
+make clean_grafana
+make clean_tdengine
+make clean_emqx
+make clean_mysql
+make clean_web
+```
+save all images to deployment/binary
+```shell
+make save
+```
+
+### Push And Install
+for Supos private installation, after upload all image to the server, just use script in deployment/install.sh to load, tag and push for all images
+```shell
+$ chmod +x install.sh
+$ ./install.sh 
+Loading image from openiiot_emqx.tar...
+8ce178ff9f34: Loading layer [==================================================>]  84.03MB/84.03MB
+ab3a1c678a1d: Loading layer [==================================================>]  7.988MB/7.988MB
+ac8e1488e0fe: Loading layer [==================================================>]  346.6kB/346.6kB
+88a076ed77e2: Loading layer [==================================================>]  142.1MB/142.1MB
+0bfc0b9e58c7: Loading layer [==================================================>]  4.608kB/4.608kB
+Loaded image: openiiot_emqx:1.0.0
+Tagging image openiiot_emqx:1.0.0 as registry:5000/openiiot_emqx:1.0.0...
+Pushing image registry:5000/openiiot_emqx:1.0.0...
+The push refers to repository [registry:5000/openiiot_emqx]
+0bfc0b9e58c7: Pushed 
+88a076ed77e2: Pushed 
+ac8e1488e0fe: Pushed 
+ab3a1c678a1d: Pushed
+```
+
+### Unstall
+just use script in deployment/uninstall.sh to remove all images
+```shell
+$ chmod +x uninstall.sh
+$ ./uninstall.sh 
+```

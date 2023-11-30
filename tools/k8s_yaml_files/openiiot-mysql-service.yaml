@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-openiiot.yml -o ./k8s_yaml_files
+    kompose.version: 1.31.2 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: openiiot-mysql
+  name: openiiot-mysql
+spec:
+  ports:
+    - name: "6033"
+      port: 6033
+      targetPort: 3306
+  selector:
+    io.kompose.service: openiiot-mysql
+status:
+  loadBalancer: {}

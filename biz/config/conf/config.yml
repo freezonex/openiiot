@@ -1,0 +1,27 @@
+IDC: sg
+
+DBConfig:
+  Openiiot:
+    DSN: "root:root1234@tcp(127.0.0.1:6033)/openiiot?charset=utf8mb4&parseTime=True&loc=Local"
+    DB_DEBUG: true
+    CI: false
+    DBNAME: openiiot
+
+SuposConfig:
+  URL: "https://apaas-r4xv.saas.supos.io/"
+  AK: "c01f69318340143ce7cc9c3870173fa0"
+  SK: "5d6e241c7962badbc630e1aae6d25a28"
+  #LOGOUT: "https://eco-p54s.beta010.devcloud.supos.net/open-api/user/logout/%s"
+  LOGOUT: "http://127.0.0.1:8080/auth/logout/%s"    # cannot use 127.0.0.1 because this url is callback from SupOS server
+
+GrafanaConfig:
+  RedirectUri: "http://localhost:3000/login/generic_oauth"
+
+TDEngineConfig:
+  DSN: "root:taosdata@http(localhost:6041)/"
+
+HertzConfig:
+  MaxRequestBodySize: 50
+
+GeneralConfig:
+  OpeniiotUrl: "http://127.0.0.1"

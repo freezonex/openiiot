@@ -131,4 +131,7 @@ tools/taos-tools
 tools/taosws-rs
 tags
 .clangd
-output/
+output
+output_js
+pb_idl
+deployment/binary
