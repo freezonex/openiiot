@@ -17,13 +17,14 @@ import (
 
 const (
 	userTokenHeader = "userToken" // This is the name of the header where the token is expected to be
-	whiteList       = "/auth/*;/ping;/grafana;/tdengine"
+	whiteList       = "/auth/*;/ping;/grafana;/tdengine;/public"
 )
 
 func AuthMiddleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		// Check if the request path is in the white list
 		// Assume `isWhiteListed` is a function you should implement that checks the white list
+		logs.CtxDebugf(ctx, "request URI: %v", string(c.Request.URI().Path()))
 		if isWhiteListed(string(c.Request.URI().Path())) {
 			c.Next(ctx)
 			return

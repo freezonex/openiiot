@@ -2,9 +2,11 @@ package config
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path"
 	"runtime"
+	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -60,6 +62,15 @@ func Init() (*Config, error) {
 	}
 	var c Config
 	configFile := path.Join(path.Dir(filename), "conf/config.yml")
+
+	args := os.Args
+	fmt.Print(args)
+	for _, v := range args {
+		if strings.HasPrefix(v, "-conf-dir=") {
+			configFile = v[10:]
+		}
+	}
+
 	cf, err := os.ReadFile(configFile)
 	if err != nil {
 		return nil, err

@@ -69,10 +69,12 @@ func (a *SuposService) GetAccessToken(ctx context.Context, req *freezonex_openii
 					return nil, fmt.Errorf("error unmarshaling JSON when get userdetail: %w", err)
 				}
 
-				username1 := user.Username
-				userType := classifyUserRole(user)
+				userid := user.PersonCode
+				username1 := user.PersonCode
+				userRole := classifyUserRole(user)
+				cache.Set("CurrentUserId", userid)
 				cache.Set("CurrentUsername", username1)
-				cache.Set("CurrentUserType", userType)
+				cache.Set("CurrentUserRole", userRole)
 			}
 		}
 	}
@@ -87,9 +89,12 @@ func (a *SuposService) GetAccessToken(ctx context.Context, req *freezonex_openii
 }
 
 func classifyUserRole(user UserDetail) string {
+	if user.AccountType == 1 {
+		return "Admin"
+	}
 	for _, role := range user.UserRoleList {
 		switch role.Name {
-		case "systemRole", "companySystemRole", "developer":
+		case "systemRole", "companySystemRole":
 			return "Admin"
 		}
 	}

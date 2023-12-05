@@ -43,9 +43,9 @@ hz model --idl pb_idl/freezonex/openiiot_api/openiiot_api_service.proto --unset_
 ```
 
 ### DB
-we are planning to connect to the ugqa_db (nebula DB), during the devleopment we can use docker to bring up local DB for the development and testing.
+we are planning to connect to the openiiot_db, during the devleopment we can use docker to bring up local DB for the development and testing.
 
-we use ORM library bytedgen(gorm/GEN), and this library will be able to generate the basic code and function. note that, the configs and scripts are customized to generate the DB model/query. the generated codes are biz/dal/model and biz/data/query.
+we use ORM library (gorm/GEN), and this library will be able to generate the basic code and function. note that, the configs and scripts are customized to generate the DB model/query. the generated codes are biz/dal/model and biz/data/query.
 
 everytime we run the scripts, it will overwrite the codes. 
 so far, the function JSONContains is a customized function to query a json column which contains a list of the tags.

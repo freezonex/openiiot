@@ -40,15 +40,15 @@ func (a *TDEngineService) Query(ctx context.Context, req *freezonex_openiiot_api
 	}
 
 	resp := new(freezonex_openiiot_api.TDEngineQueryResponse)
-	data := make([]*freezonex_openiiot_api.TDEngineRow, 0)
+	/*data := make([]*freezonex_openiiot_api.TDEngineRow, 0)
 	for _, v := range result {
 		data = append(data, &freezonex_openiiot_api.TDEngineRow{
 			Time:  v.Time,
 			Value: v.Value,
 		})
-	}
+	}*/
 
-	resp.Data = data
+	resp.Data = result
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil

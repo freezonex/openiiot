@@ -30,7 +30,7 @@ func (a *GrafanaService) Authorize(ctx context.Context, c *app.RequestContext) {
 }
 
 // Token function requests an access token from the Grafana API.
-func (a *GrafanaService) Token(ctx context.Context, req *freezonex_openiiot_api.GrafanaTokenRequest, c *app.RequestContext) (*freezonex_openiiot_api.GrafanaTokenResponse, error) {
+func (a *GrafanaService) GetAccessToken(ctx context.Context, req *freezonex_openiiot_api.GrafanaAccessTokenRequest, c *app.RequestContext) (*freezonex_openiiot_api.GrafanaAccessTokenResponse, error) {
 	if req.Code == "" {
 		return nil, errors.New("grafana authorization code is empty")
 	}
@@ -43,7 +43,7 @@ func (a *GrafanaService) Token(ctx context.Context, req *freezonex_openiiot_api.
 	accessToken := strings.Replace(uuid.New().String(), "-", "", -1)
 	refreshToken := strings.Replace(uuid.New().String(), "-", "", -1)
 
-	resp := new(freezonex_openiiot_api.GrafanaTokenResponse)
+	resp := new(freezonex_openiiot_api.GrafanaAccessTokenResponse)
 	resp.AccessToken = accessToken
 	resp.TokenType = "Bearer"
 	resp.ExpiresIn = 1800
@@ -55,7 +55,7 @@ func (a *GrafanaService) Token(ctx context.Context, req *freezonex_openiiot_api.
 	return resp, nil
 }
 
-func (a *GrafanaService) UserInfo(ctx context.Context, req *freezonex_openiiot_api.GrafanaUserInfoRequest, c *app.RequestContext) (*freezonex_openiiot_api.GrafanaUserInfoResponse, error) {
+func (a *GrafanaService) GetUser(ctx context.Context, req *freezonex_openiiot_api.GrafanaUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.GrafanaUserResponse, error) {
 	headerAuth := req.Authorization
 	if !strings.HasPrefix(headerAuth, "Bearer") {
 		return nil, errors.New("grafana authorization header not valid, must start with Bearer")
@@ -66,12 +66,15 @@ func (a *GrafanaService) UserInfo(ctx context.Context, req *freezonex_openiiot_a
 		return nil, fmt.Errorf("grafana access token: %v, not match with %v", token, grafana_accessToken)
 	}
 
-	loginUsername, _ := cache.Get("CurrentUsername")
-	role, _ := cache.Get("CurrentUserType")
-	resp := new(freezonex_openiiot_api.GrafanaUserInfoResponse)
-	resp.Email = loginUsername + "@test.com"
-	resp.Name = loginUsername
-	resp.Role = []string{role}
+	currentUserId, _ := cache.Get("CurrentUserId")
+	currentUserName, _ := cache.Get("CurrentUserName")
+	currentUserRole, _ := cache.Get("CurrentUserRole")
+	resp := new(freezonex_openiiot_api.GrafanaUserResponse)
+	resp.Sub = currentUserId
+	resp.Name = currentUserName
+	resp.Email = currentUserName + "@localhost"
+	resp.Role = []string{currentUserRole}
+	//resp.Role = []string{"Editor"}
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil

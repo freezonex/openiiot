@@ -1,32 +1,19 @@
-# Start from the official Golang image to build your application
-FROM golang:latest as builder
+# Build stage
+FROM golang:alpine AS builder
+WORKDIR /openiiot
+COPY biz biz
+COPY *.go .
+COPY go.mod go.mod
+COPY go.sum go.sum
+RUN go build -o server .
 
-# Set the Current Working Directory inside the container
-WORKDIR /app
+# Final stage
+FROM alpine
+WORKDIR /openiiot
+COPY --from=builder /openiiot/server .
+COPY biz/config/conf/*.yml /openiiot/conf/
+COPY public/* /openiiot/public/
 
-# Copy the source from the current directory to the Working Directory inside the container
-COPY . .
+EXPOSE 8085 
 
-# Build the Go app
-RUN go build -o ${RUN_NAME} .
-
-# Start a new stage from scratch for a smaller final image
-FROM alpine:latest
-
-# Add bash to the image for your scripts
-RUN apk add --no-cache bash
-
-# Copy the Pre-built binary file from the previous stage
-COPY --from=builder /app/${RUN_NAME} /app/
-
-# Copy necessary files and directories
-COPY biz/config/conf/*.yml /app/output/conf/
-
-# Copy additional configuration files
-COPY conf/ /app/output/conf/
-
-# Set the Current Working Directory inside the container
-WORKDIR /app/output
-
-# Command to run the executable
-CMD ["./${RUN_NAME}"]
+CMD ["./server", "-conf-dir=conf/config.yml"]
