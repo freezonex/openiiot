@@ -64,7 +64,7 @@ func initLogger() {
 	}
 
 	logger.SetOutput(mw)
-	logger.SetLevel(hlog.LevelDebug)
+	logger.SetLevel(hlog.LevelTrace)
 	hlog.SetLogger(logger)
 }
 
@@ -79,12 +79,13 @@ func main() {
 	opt := hertzConfig.Option{F: func(o *hertzConfig.Options) {
 		o.MaxRequestBodySize = c.HertzConfig.MaxRequestBodySize * 1024 * 1024
 	}}
-	r := server.Default(opt, server.WithHostPorts(":8080"))
+	r := server.Default(opt, server.WithHostPorts(":8085"))
 	r.Use(middleware.AuthMiddleware())
 	r.Use(middleware.CorsMiddleware())
 
 	//r := server.Default()
 
 	register(r, c)
+
 	r.Spin()
 }

@@ -67,19 +67,19 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 		{
 			grafanaAuthGroup.GET("/authorize", grafanaHandler.Authorize)
 			grafanaAuthGroup.POST(
-				"/token",
+				"/accesstoken",
 				middleware.Response(
-					"/grafana/auth/token",
-					grafanaHandler.Token,
-					&iiotpb.GrafanaTokenRequest{}))
+					"/grafana/auth/accesstoken",
+					grafanaHandler.GetAccessToken,
+					&iiotpb.GrafanaAccessTokenRequest{}))
 		}
 
 		grafanaGroup.GET(
-			"/userinfo",
+			"/user",
 			middleware.Response(
-				"/grafana/userinfo",
-				grafanaHandler.UserInfo,
-				&iiotpb.GrafanaUserInfoRequest{}))
+				"/grafana/user",
+				grafanaHandler.GetUser,
+				&iiotpb.GrafanaUserRequest{}))
 	}
 
 	tdengineGroup := r.Group("/tdengine", middleware.Access())
@@ -103,5 +103,19 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/tdengine/query",
 				tdengineHandler.Query,
 				&iiotpb.TDEngineQueryRequest{}))
+	}
+
+	{ // frontend, for debug purpose only
+		//r.Static("/web", "deployment/web/html/")
+
+		/*r.StaticFile("/public/web", "public/index.html")
+		r.StaticFile("/public/openiiot_white.png", "public/openiiot_white.png")
+		r.StaticFile("/public/http.js", "public/http.js")
+		r.StaticFile("/public/axios.min.js", "public/axios.min.js")
+		r.StaticFile("/public/axios.min.map", "public/axios.min.map")
+		r.StaticFile("/public/script.js", "public/script.js")*/
+
+		//fs := &app.FS{Root: "deployment/web/html"}
+		//r.StaticFS("/html", fs)
 	}
 }

@@ -69,10 +69,10 @@ func (a *SuposService) GetCurrentUser(ctx context.Context, req *freezonex_openii
 
 	resp := new(freezonex_openiiot_api.GetCurrentUserResponse)
 	if loginUsername != "" {
-		loginUserRoleList, _ := cache.Get("CurrentUserType")
+		loginUserRoleList, _ := cache.Get("CurrentUserRole")
 		resp.Code = 0
 		resp.Message = "Success"
-		resp.Data = loginUserRoleList
+		resp.Data = loginUsername + " - " + loginUserRoleList
 	} else {
 		resp.Code = 0
 		resp.Message = "No login user information"
