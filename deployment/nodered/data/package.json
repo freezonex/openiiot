@@ -1,0 +1,24 @@
+{
+    "name": "node-red-project",
+    "description": "A Node-RED Project",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "@flowforge/node-red-function-gpt": "latest",
+        "dashboard-evi": "latest",
+        "node-red-contrib-automl": "latest",
+        "node-red-contrib-i2c": "latest",
+        "node-red-contrib-loop": "latest",
+        "node-red-contrib-machine-learning": "latest",
+        "node-red-contrib-machine-learning-v2": "latest",
+        "node-red-contrib-modbus": "latest",
+        "node-red-contrib-mqtt-sparkplug-plus": "latest",
+        "node-red-contrib-opc-da": "latest",
+        "node-red-contrib-opcua": "latest",
+        "node-red-contrib-protobuf": "latest",
+        "node-red-contrib-socketcan": "latest",
+        "node-red-node-email": "latest",
+        "node-red-node-serialport": "latest",
+        "red-contrib-socketcan": "latest"
+    }
+}

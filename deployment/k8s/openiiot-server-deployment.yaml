@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openiiot-server
+  namespace: openiiot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openiiot-server
+  template:
+    metadata:
+      labels:
+        app: openiiot-server
+    spec:
+      containers:
+        - name: openiiot-server
+          image: openiiot_server:1.0.0
+          env:
+            - name: SUPOS_CURRENT_USERNAME
+              value: "hongzhi"
+            - name: SUPOS_CURRENT_ROLENAME
+              value: "GrafanaAdmin"
+          ports:
+            - containerPort: 8085
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+

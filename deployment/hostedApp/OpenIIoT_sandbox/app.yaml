@@ -1,0 +1,7 @@
+apiVersion: v3alpha1
+name: openiiot
+showName: Open IIoT
+vendorName: freezonex
+appVersion: 1.0.1
+description: flow-based, low-code
+type: normal

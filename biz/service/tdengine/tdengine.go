@@ -32,6 +32,19 @@ func (a *TDEngineService) Exec(ctx context.Context, req *freezonex_openiiot_api.
 	return resp, nil
 }
 
+func (a *TDEngineService) BatchExec(ctx context.Context, req *freezonex_openiiot_api.TDEngineBatchExecRequest, c *app.RequestContext) (*freezonex_openiiot_api.TDEngineBatchExecResponse, error) {
+	dsn := ConstructDSNString(req.Dsn.Username, req.Dsn.Password, req.Dsn.Host)
+	rowsAffected, err := a.t.BatchExec(dsn, req.Sql)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := new(freezonex_openiiot_api.TDEngineBatchExecResponse)
+	resp.RowsAffected = rowsAffected
+	resp.BaseResp = middleware.SuccessResponseOK
+	return resp, nil
+}
+
 func (a *TDEngineService) Query(ctx context.Context, req *freezonex_openiiot_api.TDEngineQueryRequest, c *app.RequestContext) (*freezonex_openiiot_api.TDEngineQueryResponse, error) {
 	dsn := ConstructDSNString(req.Dsn.Username, req.Dsn.Password, req.Dsn.Host)
 	result, err := a.t.Query(dsn, req.Sql)

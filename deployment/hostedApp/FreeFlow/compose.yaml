@@ -1,0 +1,24 @@
+apiVersion: v3alpha1
+service: 
+  replicas: 1
+  proxy: 
+    paths: 
+    - path: nodered
+      servicePort: 1880
+  ports: 
+  - port: 1880
+    targetPort: 1880
+    protocol: TCP
+    name: http
+  containers: 
+  - name: nodered
+    image: registry:5000/openiiot_nodered:1.0.0
+    ports: 
+    - containerPort: 1880
+    resources: 
+      requests: 
+        cpu: 10m
+        memory: 128Mi
+      limits: 
+        cpu: 1000m
+        memory: 2Gi

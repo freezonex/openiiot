@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: openiiot-tdengine-service
+  namespace: openiiot
+spec:
+  type: NodePort
+  ports:
+    - name: tdengine6030
+      port: 6030
+      targetPort: 6030
+      nodePort: 32030
+    - name: tdengine6041
+      port: 6041
+      targetPort: 6041
+      nodePort: 32041
+  selector:
+    app: openiiot-tdengine
+

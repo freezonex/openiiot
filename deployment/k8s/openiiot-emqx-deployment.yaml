@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openiiot-emqx
+  namespace: openiiot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openiiot-emqx
+  template:
+    metadata:
+      labels:
+        app: openiiot-emqx
+    spec:
+      containers:
+        - name: openiiot-emqx
+          image: openiiot_emqx:1.0.0
+          env:
+            - name: EMQX_NODE_NAME
+              value: "emqx@node1.emqx.io"
+            - name: EMQX_CLUSTER__DISCOVERY_STRATEGY
+              value: "static"
+            - name: EMQX_CLUSTER__STATIC__SEEDS
+              value: "[emqx@node1.emqx.io,emqx@node2.emqx.io]"
+          ports:
+            - containerPort: 1883
+            - containerPort: 8083
+            - containerPort: 8084
+            - containerPort: 8883
+            - containerPort: 18083
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #     - /opt/emqx/bin/emqx
+          #     - ctl
+          #     - status
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 5
+          #   timeoutSeconds: 25
+          #   failureThreshold: 5
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+

@@ -1,5 +1,11 @@
 FROM nodered/node-red
 
+# Copy custom Node-RED nodes package.json
+COPY deployment/nodered/data/package.json /data/
+
+# Install custom Node-RED nodes
+RUN cd /data && npm install
+
 # Define arguments with default values for source and target directories
 #ARG SRC_DIR=node-red/packages/node_modules/@node-red/editor-client/src/images
 ARG SRC_DIR=deployment/nodered/images
