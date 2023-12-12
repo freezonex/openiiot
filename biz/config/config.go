@@ -8,6 +8,8 @@ import (
 	"runtime"
 	"strings"
 
+	"freezonex/openiiot/biz/service/utils/cache"
+
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -99,6 +101,14 @@ func Init() (*Config, error) {
 	if sk != "" {
 		c.SuposConfig.SK = sk
 	}
+
+	//only for debug purpose, will be override when connected SupOS
+	currentUsername := os.Getenv("SUPOS_CURRENT_USERNAME")
+	currentRoleName := os.Getenv("SUPOS_CURRENT_ROLENAME")
+
+	cache.Set("CurrentUserId", currentUsername)
+	cache.Set("CurrentUsername", currentUsername)
+	cache.Set("CurrentUserRole", currentRoleName)
 
 	return &c, nil
 }

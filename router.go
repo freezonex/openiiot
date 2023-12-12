@@ -98,6 +98,12 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				tdengineHandler.Exec,
 				&iiotpb.TDEngineExecRequest{}))
 		tdengineGroup.POST(
+			"/batchexec",
+			middleware.Response(
+				"/tdengine/batchexec",
+				tdengineHandler.BatchExec,
+				&iiotpb.TDEngineBatchExecRequest{}))
+		tdengineGroup.POST(
 			"/query",
 			middleware.Response(
 				"/tdengine/query",

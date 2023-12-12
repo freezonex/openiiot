@@ -3,6 +3,7 @@ package tdengine
 import (
 	db "database/sql"
 	"encoding/json"
+	"strings"
 
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	_ "github.com/taosdata/driver-go/v3/taosRestful"
@@ -52,6 +53,52 @@ func (t TDEngineClient) Exec(DSN string, sql string) (int64, error) {
 	}
 	logs.Info("RowsAffected", rowsAffected)
 	return rowsAffected, nil
+}
+
+// use transaction to batch execute sql split by ";"
+func (t TDEngineClient) BatchExec(DSN string, sqlBatch string) (int64, error) {
+	taos, err := db.Open("taosRestful", DSN)
+	if err != nil {
+		logs.Errorf("failed to initialize connection to TDengine, err: %v", err)
+		return 0, err
+	}
+	defer taos.Close()
+
+	tx, err := taos.Begin()
+	if err != nil {
+		logs.Errorf("failed to begin transaction, err: %v", err)
+		return 0, err
+	}
+
+	var totalRowsAffected int64 = 0
+	sqlStatements := strings.Split(sqlBatch, ";")
+	for _, sql := range sqlStatements {
+		sql = strings.TrimSpace(sql)
+		if sql == "" {
+			continue
+		}
+		result, err := tx.Exec(sql)
+		if err != nil {
+			tx.Rollback()
+			logs.Errorf("failed to Exec %v, err: %v", sql, err)
+			return totalRowsAffected, err
+		}
+		rowsAffected, err := result.RowsAffected()
+		if err != nil {
+			tx.Rollback()
+			logs.Errorf("failed to get affected rows for %v, err: %v", sql, err)
+			return totalRowsAffected, err
+		}
+		totalRowsAffected += rowsAffected
+	}
+
+	if err := tx.Commit(); err != nil {
+		tx.Rollback()
+		logs.Errorf("failed to commit transaction, err: %v", err)
+		return totalRowsAffected, err
+	}
+
+	return totalRowsAffected, nil
 }
 
 func (t TDEngineClient) Query(DSN string, sql string) (string, error) {

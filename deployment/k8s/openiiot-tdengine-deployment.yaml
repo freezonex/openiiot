@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openiiot-tdengine
+  namespace: openiiot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openiiot-tdengine
+  template:
+    metadata:
+      labels:
+        app: openiiot-tdengine
+    spec:
+      containers:
+        - name: openiiot-tdengine
+          image: openiiot_tdengine:1.0.0
+          ports:
+            - containerPort: 6030
+            - containerPort: 6041
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+

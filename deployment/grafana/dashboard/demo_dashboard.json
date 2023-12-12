@@ -1,0 +1,1259 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 3,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 90
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 13,
+          "w": 11,
+          "x": 0,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "10.1.5",
+        "targets": [
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "queryType": "SQL",
+            "refId": "A",
+            "sql": "select * from demo.air_quality_1;"
+          }
+        ],
+        "title": "Panel Title",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "continuous-RdYlGr"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 11,
+          "x": 11,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "displayMode": "lcd",
+          "minVizHeight": 10,
+          "minVizWidth": 0,
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showUnfilled": true,
+          "valueMode": "color"
+        },
+        "pluginVersion": "10.1.5",
+        "targets": [
+          {
+            "alias": "",
+            "colNameFormatStr": "",
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "queryType": "SQL",
+            "refId": "Pause",
+            "sql": "select sum(time_duration) as Pause_time from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status = \"pause\" group by status;",
+            "timeShiftPeriod": ""
+          },
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "hide": false,
+            "queryType": "SQL",
+            "refId": "Unknown stop",
+            "sql": "select sum(time_duration) as Unknown_stop_time from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status = \"unknown stop\" group by status;"
+          },
+          {
+            "colNameFormatStr": "",
+            "colNameToGroup": "",
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "hide": false,
+            "queryType": "SQL",
+            "refId": "Momentary stop",
+            "sql": "select sum(time_duration) as Momentary_stop_time from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status = \"momentary stop\" group by status;",
+            "timeShiftUnit": "seconds"
+          },
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "hide": false,
+            "queryType": "SQL",
+            "refId": "Not available",
+            "sql": "select sum(time_duration) as Not_available_time from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status = \"not available\" group by status;"
+          },
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "hide": false,
+            "queryType": "SQL",
+            "refId": "Preperation",
+            "sql": "select sum(time_duration) as Preparation_time from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status = \"preparation\" group by status;"
+          },
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "hide": false,
+            "queryType": "SQL",
+            "refId": "Maintenance",
+            "sql": "select sum(time_duration) as Maintenance_time from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status = \"maintenance\" group by status;"
+          },
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "hide": false,
+            "queryType": "SQL",
+            "refId": "Post_processing",
+            "sql": "select sum(time_duration) as Post_processing_time from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status = \"post-processing\" group by status;"
+          },
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "hide": false,
+            "queryType": "SQL",
+            "refId": "Other technical malfunction",
+            "sql": "select sum(time_duration) as Other_technical_malfunction_time from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status = \"other technical malfunction\" group by status;"
+          },
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "hide": false,
+            "queryType": "SQL",
+            "refId": "Running",
+            "sql": "select sum(time_duration) /1000 as Running_time from (select first(ts) as start_time, spread(ts) as time_duration, status from demo.air_quality_1 state_window(status)) where status = \"running\" group by status;"
+          }
+        ],
+        "title": "Total running time",
+        "type": "bargauge"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 2,
+          "x": 22,
+          "y": 0
+        },
+        "id": 5,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "none",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "/.*/",
+            "values": false
+          },
+          "text": {},
+          "textMode": "value"
+        },
+        "pluginVersion": "10.1.5",
+        "targets": [
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "queryType": "SQL",
+            "refId": "A",
+            "sql": "select last_row(ts, status) from demo.air_quality_1;"
+          }
+        ],
+        "title": "Current status",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "scaleDistribution": {
+                "type": "linear"
+              }
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 13,
+          "x": 11,
+          "y": 7
+        },
+        "id": 12,
+        "options": {
+          "calculate": true,
+          "calculation": {
+            "xBuckets": {
+              "mode": "size"
+            }
+          },
+          "cellGap": 1,
+          "color": {
+            "exponent": 0.5,
+            "fill": "green",
+            "mode": "opacity",
+            "reverse": false,
+            "scale": "exponential",
+            "scheme": "RdYlGn",
+            "steps": 115
+          },
+          "exemplars": {
+            "color": "rgba(255,0,255,0.7)"
+          },
+          "filterValues": {
+            "le": 1e-9
+          },
+          "legend": {
+            "show": true
+          },
+          "rowsFrame": {
+            "layout": "auto"
+          },
+          "tooltip": {
+            "show": true,
+            "yHistogram": false
+          },
+          "yAxis": {
+            "axisPlacement": "left",
+            "reverse": false
+          }
+        },
+        "pluginVersion": "10.1.5",
+        "targets": [
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "grafana"
+            },
+            "queryType": "randomWalk",
+            "refId": "A"
+          },
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "grafana"
+            },
+            "hide": false,
+            "queryType": "randomWalk",
+            "refId": "B"
+          },
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "grafana"
+            },
+            "hide": false,
+            "queryType": "randomWalk",
+            "refId": "C"
+          },
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "grafana"
+            },
+            "hide": false,
+            "queryType": "randomWalk",
+            "refId": "D"
+          }
+        ],
+        "title": "Contribution",
+        "type": "heatmap"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "continuous-RdYlGr"
+            },
+            "custom": {
+              "fillOpacity": 70,
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineWidth": 0,
+              "spanNulls": false
+            },
+            "mappings": [
+              {
+                "options": {
+                  "maintenance": {
+                    "color": "super-light-orange",
+                    "index": 8
+                  },
+                  "momentary stop": {
+                    "color": "orange",
+                    "index": 4
+                  },
+                  "not available": {
+                    "color": "red",
+                    "index": 1
+                  },
+                  "other technical malfunction": {
+                    "color": "purple",
+                    "index": 5
+                  },
+                  "pause": {
+                    "color": "blue",
+                    "index": 3
+                  },
+                  "post-processing": {
+                    "color": "dark-blue",
+                    "index": 6
+                  },
+                  "preparation": {
+                    "color": "yellow",
+                    "index": 7
+                  },
+                  "running": {
+                    "color": "green",
+                    "index": 0
+                  },
+                  "unknown stop": {
+                    "color": "#614327",
+                    "index": 2
+                  }
+                },
+                "type": "value"
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 24,
+          "x": 0,
+          "y": 13
+        },
+        "id": 11,
+        "options": {
+          "alignValue": "left",
+          "legend": {
+            "displayMode": "list",
+            "placement": "right",
+            "showLegend": true
+          },
+          "mergeValues": true,
+          "rowHeight": 0.38,
+          "showValue": "auto",
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "queryType": "SQL",
+            "refId": "A",
+            "sql": "select ts, status from demo.air_quality_1;"
+          }
+        ],
+        "title": "Machine status",
+        "type": "state-timeline"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "continuous-BlPu"
+            },
+            "custom": {
+              "align": "left",
+              "cellOptions": {
+                "type": "color-text"
+              },
+              "filterable": true,
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 13,
+          "w": 7,
+          "x": 0,
+          "y": 17
+        },
+        "id": 7,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "enablePagination": true,
+            "fields": [],
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "10.1.5",
+        "targets": [
+          {
+            "datasource": {
+              "type": "tdengine-datasource",
+              "name": "tdengine-demo"
+            },
+            "formatType": "Time series",
+            "queryType": "SQL",
+            "refId": "A",
+            "sql": "select ts, status from demo.air_quality_1 limit 100;"
+          }
+        ],
+        "title": "Status list",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "grafana-mqtt-datasource",
+          "name": "mqtt-demo"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 4,
+          "x": 7,
+          "y": 17
+        },
+        "id": 14,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "10.1.5",
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-mqtt-datasource",
+              "name": "mqtt-demo"
+            },
+            "refId": "A",
+            "topic": "test/draeger"
+          }
+        ],
+        "title": "Number of devices",
+        "transformations": [],
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "grafana",
+          "uid": "grafana"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "blue",
+              "mode": "fixed"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 6,
+          "w": 4,
+          "x": 11,
+          "y": 17
+        },
+        "id": 15,
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area",
+          "justifyMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "textMode": "auto"
+        },
+        "pluginVersion": "10.1.5",
+        "targets": [
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "grafana"
+            },
+            "queryType": "randomWalk",
+            "refId": "A"
+          }
+        ],
+        "title": "Number of entries",
+        "type": "stat"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "description": "",
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 15,
+          "y": 17
+        },
+        "id": 18,
+        "options": {
+          "backgroundColor": "#a1c2f3",
+          "contentType": "application/json",
+          "foregroundColor": "#000000",
+          "icon": "google",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "left",
+          "text": "button for mechine",
+          "type": "header",
+          "url": "http://api.example.com/",
+          "variant": "custom"
+        },
+        "title": "Dog",
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 18,
+          "y": 17
+        },
+        "id": 20,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "Speed mode initialize",
+          "type": "header",
+          "url": "http://47.245.114.166:18880/smi_remote",
+          "variant": "primary"
+        },
+        "title": "motor",
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 3,
+          "w": 3,
+          "x": 21,
+          "y": 17
+        },
+        "id": 26,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "The default button label",
+          "type": "header",
+          "url": "http://api.example.com/",
+          "variant": "primary"
+        },
+        "title": "Device",
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 3,
+          "x": 15,
+          "y": 20
+        },
+        "id": 19,
+        "options": {
+          "backgroundColor": "#a9cafa",
+          "contentType": "application/json",
+          "foregroundColor": "#000000",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "button label",
+          "type": "header",
+          "url": "http://api.example.com/",
+          "variant": "custom"
+        },
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 3,
+          "x": 18,
+          "y": 20
+        },
+        "id": 23,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "Speed mode start",
+          "type": "header",
+          "url": "http://47.245.114.166:18880/sms_remote",
+          "variant": "primary"
+        },
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 3,
+          "x": 21,
+          "y": 20
+        },
+        "id": 27,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "The default button label",
+          "type": "header",
+          "url": "http://api.example.com/",
+          "variant": "primary"
+        },
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 3,
+          "x": 15,
+          "y": 22
+        },
+        "id": 21,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "button label",
+          "type": "header",
+          "url": "http://api.example.com/",
+          "variant": "primary"
+        },
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 3,
+          "x": 18,
+          "y": 22
+        },
+        "id": 24,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "Speed 1",
+          "type": "header",
+          "url": "http://47.245.114.166:18880/ss1_remote",
+          "variant": "primary"
+        },
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 3,
+          "x": 21,
+          "y": 22
+        },
+        "id": 28,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "The default button label",
+          "type": "header",
+          "url": "http://api.example.com/",
+          "variant": "primary"
+        },
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "grafana-mqtt-datasource",
+          "name": "mqtt-demo"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "super-light-yellow",
+              "mode": "fixed"
+            },
+            "custom": {
+              "align": "left",
+              "cellOptions": {
+                "type": "color-background"
+              },
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 4,
+          "x": 7,
+          "y": 23
+        },
+        "id": 16,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "10.1.5",
+        "targets": [
+          {
+            "datasource": {
+              "type": "grafana-mqtt-datasource",
+              "name": "mqtt-demo"
+            },
+            "refId": "A",
+            "topic": "openiiot/air_quality/DDATA/Riyadh/node7/restful"
+          }
+        ],
+        "title": "Device",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "grafana",
+          "uid": "grafana"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "fixedColor": "light-green",
+              "mode": "fixed"
+            },
+            "custom": {
+              "align": "left",
+              "cellOptions": {
+                "type": "color-background"
+              },
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green"
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 4,
+          "x": 11,
+          "y": 23
+        },
+        "id": 17,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "showHeader": true
+        },
+        "pluginVersion": "10.1.5",
+        "targets": [
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "grafana"
+            },
+            "queryType": "randomWalk",
+            "refId": "A"
+          }
+        ],
+        "title": "NFC",
+        "type": "table"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 3,
+          "x": 15,
+          "y": 24
+        },
+        "id": 22,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "speed 2",
+          "type": "header",
+          "url": "http://47.245.114.166:18880/ss2_remote",
+          "variant": "primary"
+        },
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 3,
+          "x": 18,
+          "y": 24
+        },
+        "id": 25,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "stop",
+          "type": "header",
+          "url": "http://47.245.114.166:18880/stop_remote",
+          "variant": "primary"
+        },
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 2,
+          "w": 3,
+          "x": 21,
+          "y": 24
+        },
+        "id": 29,
+        "options": {
+          "contentType": "application/json",
+          "icon": "cog",
+          "isAuth": false,
+          "method": "GET",
+          "orientation": "center",
+          "text": "The default button label",
+          "type": "header",
+          "url": "http://api.example.com/",
+          "variant": "primary"
+        },
+        "type": "cloudspout-button-panel"
+      },
+      {
+        "datasource": {
+          "type": "tdengine-datasource",
+          "name": "tdengine-demo"
+        },
+        "gridPos": {
+          "h": 4,
+          "w": 9,
+          "x": 15,
+          "y": 26
+        },
+        "id": 13,
+        "options": {
+          "alertInstanceLabelFilter": "",
+          "alertName": "",
+          "dashboardAlerts": false,
+          "groupBy": [],
+          "groupMode": "default",
+          "maxItems": 20,
+          "sortOrder": 4,
+          "stateFilter": {
+            "error": true,
+            "firing": true,
+            "noData": false,
+            "normal": false,
+            "pending": true
+          },
+          "viewMode": "list"
+        },
+        "title": "Alert",
+        "type": "alertlist"
+      }
+    ],
+    "refresh": "",
+    "schemaVersion": 38,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Test dashboard",
+    "uid": "f12cbb44-6acd-4569-97dc-a1171f795105",
+    "version": 75,
+    "weekStart": ""
+  }

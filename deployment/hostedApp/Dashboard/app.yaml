@@ -1,0 +1,7 @@
+apiVersion: v3alpha1
+name: dashboard
+showName: Dashboard
+vendorName: freezonex
+appVersion: 1.0.0
+description: dashboard
+type: normal

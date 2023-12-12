@@ -40,6 +40,16 @@ func (a *TDEngineHandler) Exec(ctx context.Context, c *app.RequestContext) middl
 	return resp
 }
 
+func (a *TDEngineHandler) BatchExec(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.TDEngineBatchExecRequest)
+	resp, err := a.service.BatchExec(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=TDEngine BatchExec error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}
+
 func (a *TDEngineHandler) Query(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
 	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.TDEngineQueryRequest)
 	resp, err := a.service.Query(ctx, req, c)

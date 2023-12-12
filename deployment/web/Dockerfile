@@ -7,6 +7,6 @@ ARG DEST_DIR=/usr/share/nginx/html
 COPY ${SRC_DIR}/ ${DEST_DIR}/
 
 # html image
-ARG SRC_IMAGE=deployment/web/images
+ARG SRC_IMAGE=deployment/web/html/images
 ARG DEST_IMAGE=/usr/share/nginx/html/images
 COPY ${SRC_IMAGE}/ ${DEST_IMAGE}/

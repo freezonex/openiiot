@@ -12,7 +12,7 @@ FROM alpine
 WORKDIR /openiiot
 COPY --from=builder /openiiot/server .
 COPY biz/config/conf/*.yml /openiiot/conf/
-COPY public/* /openiiot/public/
+# COPY public/* /openiiot/public/
 
 EXPOSE 8085 
 

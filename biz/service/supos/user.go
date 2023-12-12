@@ -66,6 +66,7 @@ func (a *SuposService) GetAllUser(ctx context.Context, req *freezonex_openiiot_a
 
 func (a *SuposService) GetCurrentUser(ctx context.Context, req *freezonex_openiiot_api.GetCurrentUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetCurrentUserResponse, error) {
 	loginUsername, _ := cache.Get("CurrentUsername")
+	//loginUsername = "hongzhi"
 
 	resp := new(freezonex_openiiot_api.GetCurrentUserResponse)
 	if loginUsername != "" {

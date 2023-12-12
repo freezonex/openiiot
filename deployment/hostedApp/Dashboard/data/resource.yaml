@@ -1,0 +1,7 @@
+- code: eco_1i1l_101
+  name: Grafana
+  type: 0
+  openType: 0
+  url: apps/freezonex-dashboard/grafana
+  sort: 10002
+  desc: Grafana

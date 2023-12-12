@@ -67,12 +67,12 @@ func (a *GrafanaService) GetUser(ctx context.Context, req *freezonex_openiiot_ap
 	}
 
 	currentUserId, _ := cache.Get("CurrentUserId")
-	currentUserName, _ := cache.Get("CurrentUserName")
+	currentUsername, _ := cache.Get("CurrentUsername")
 	currentUserRole, _ := cache.Get("CurrentUserRole")
 	resp := new(freezonex_openiiot_api.GrafanaUserResponse)
 	resp.Sub = currentUserId
-	resp.Name = currentUserName
-	resp.Email = currentUserName + "@localhost"
+	resp.Name = currentUsername
+	resp.Email = currentUsername + "@localhost"
 	resp.Role = []string{currentUserRole}
 	//resp.Role = []string{"Editor"}
 	resp.BaseResp = middleware.SuccessResponseOK

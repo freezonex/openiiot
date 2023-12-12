@@ -1,0 +1,7 @@
+apiVersion: v3alpha1
+name: freeflow
+showName: FreeFlow
+vendorName: freezonex
+appVersion: 1.0.0
+description: free flow
+type: normal

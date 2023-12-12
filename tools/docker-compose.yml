@@ -3,32 +3,30 @@ services:
   openiiot-server:
     image: openiiot_server:1.0.0
     container_name: openiiot-server
+    environment:
+      - "SUPOS_CURRENT_USERNAME=hongzhi"
+      - "SUPOS_CURRENT_ROLENAME=GrafanaAdmin"
     ports:
       - "8085:8085"
     restart: unless-stopped
+
+  openiiot-web:
+    image: openiiot_web:1.0.0
+    container_name: openiiot-web
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
   openiiot-nodered:
     image: openiiot_nodered:1.0.0
     container_name: openiiot-nodered
     ports:
       - "1880:1880"
       - "43893:43893/udp"
-    volumes:
-      - nodered_data:/data
     environment:
       - TZ=UTC
     restart: unless-stopped
-  openiiot-tdengine:
-    image: openiiot_tdengine:1.0.0
-    container_name: openiiot-tdengine
-    volumes:
-      - tdengine_data:/var/lib/taosw
-      - tdengine_log:/var/log/taos
-    ports:
-      - "6030:6030"
-      - "6041:6041"
-      - "6043-6049:6043-6049"
-      - "6043-6049:6043-6049/udp"
-    restart: unless-stopped
+
   openiiot-grafana:
     image: openiiot_grafana:1.0.0
     container_name: openiiot-grafana
@@ -36,9 +34,8 @@ services:
       - openiiot-tdengine
     ports:
       - "3000:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
     restart: unless-stopped
+
   openiiot-emqx1:
     image: openiiot_emqx:1.0.0
     container_name: openiiot-emqx1
@@ -60,6 +57,20 @@ services:
     volumes:
      - emqx1_data:/opt/emqx/data
     restart: unless-stopped
+
+  openiiot-tdengine:
+    image: openiiot_tdengine:1.0.0
+    container_name: openiiot-tdengine
+    volumes:
+      - tdengine_data:/var/lib/taosw
+      - tdengine_log:/var/log/taos
+    ports:
+      - "6030:6030"
+      - "6041:6041"
+      - "6043-6049:6043-6049"
+      - "6043-6049:6043-6049/udp"
+    restart: unless-stopped
+
   openiiot-mysql:
     image: openiiot_mysql:1.0.0
     container_name: openiiot-mysql
@@ -73,6 +84,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
+    
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: pma
@@ -85,11 +97,6 @@ services:
     restart: unless-stopped
     ports:
       - 8080:80
-  # openiiot-web:
-  #   image: openiiot_web:1.0.0
-  #   container_name: openiiot-web
-  #   ports:
-  #     - "80:80"
 volumes:
   nodered_data:
   grafana_data:

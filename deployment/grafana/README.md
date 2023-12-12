@@ -40,8 +40,8 @@ GF_AUTH_GENERIC_OAUTH_ENABLED=true
 GF_AUTH_GENERIC_OAUTH_AUTO_LOGIN=true
 GF_AUTH_GENERIC_OAUTH_CLIENT_ID=openiiot
 GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=openiiot_secret
-GF_AUTH_GENERIC_OAUTH_AUTH_URL=http://127.0.0.1:8081/login/oauth/authorize
-GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://127.0.0.1:8081/login/oauth/token
-GF_AUTH_GENERIC_OAUTH_API_URL=http://127.0.0.1:8081/userinfo
+GF_AUTH_GENERIC_OAUTH_AUTH_URL=http://127.0.0.1:8085/login/oauth/authorize
+GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://127.0.0.1:8085/login/oauth/accesstoken
+GF_AUTH_GENERIC_OAUTH_API_URL=http://127.0.0.1:8085/user
 GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH = contains(role[*], 'GrafanaAdmin') && 'GrafanaAdmin' || contains(role[*], 'Admin') && 'Admin' || contains(role[*], 'Editor') && 'Editor' || 'Viewer'
 ```

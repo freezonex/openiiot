@@ -1,0 +1,7 @@
+- code: eco_h6ar_101
+  name: Node-RED
+  type: 0
+  openType: 0
+  url: /apps/freezonex-freeflow/nodered/
+  sort: 10002
+  desc: Node-RED
