@@ -64,12 +64,6 @@ func (t TDEngineClient) BatchExec(DSN string, sqlBatch string) (int64, error) {
 	}
 	defer taos.Close()
 
-	tx, err := taos.Begin()
-	if err != nil {
-		logs.Errorf("failed to begin transaction, err: %v", err)
-		return 0, err
-	}
-
 	var totalRowsAffected int64 = 0
 	sqlStatements := strings.Split(sqlBatch, ";")
 	for _, sql := range sqlStatements {
@@ -77,25 +71,17 @@ func (t TDEngineClient) BatchExec(DSN string, sqlBatch string) (int64, error) {
 		if sql == "" {
 			continue
 		}
-		result, err := tx.Exec(sql)
+		result, err := taos.Exec(sql)
 		if err != nil {
-			tx.Rollback()
 			logs.Errorf("failed to Exec %v, err: %v", sql, err)
 			return totalRowsAffected, err
 		}
 		rowsAffected, err := result.RowsAffected()
 		if err != nil {
-			tx.Rollback()
 			logs.Errorf("failed to get affected rows for %v, err: %v", sql, err)
 			return totalRowsAffected, err
 		}
 		totalRowsAffected += rowsAffected
-	}
-
-	if err := tx.Commit(); err != nil {
-		tx.Rollback()
-		logs.Errorf("failed to commit transaction, err: %v", err)
-		return totalRowsAffected, err
 	}
 
 	return totalRowsAffected, nil
@@ -157,4 +143,51 @@ func (t TDEngineClient) Query(DSN string, sql string) (string, error) {
 
 	jsonStr := string(jsonString)
 	return jsonStr, nil
+}
+
+// use transaction to batch execute sql split by ";", but restful does not support transaction
+// This is a limitation of many RESTful APIs, so can use different driver, for example naive sql connection in 6030 port
+func (t TDEngineClient) BatchExecWithTransaction(DSN string, sqlBatch string) (int64, error) {
+	taos, err := db.Open("taosRestful", DSN)
+	if err != nil {
+		logs.Errorf("failed to initialize connection to TDengine, err: %v", err)
+		return 0, err
+	}
+	defer taos.Close()
+
+	tx, err := taos.Begin()
+	if err != nil {
+		logs.Errorf("failed to begin transaction, err: %v", err)
+		return 0, err
+	}
+
+	var totalRowsAffected int64 = 0
+	sqlStatements := strings.Split(sqlBatch, ";")
+	for _, sql := range sqlStatements {
+		sql = strings.TrimSpace(sql)
+		if sql == "" {
+			continue
+		}
+		result, err := tx.Exec(sql)
+		if err != nil {
+			tx.Rollback()
+			logs.Errorf("failed to Exec %v, err: %v", sql, err)
+			return totalRowsAffected, err
+		}
+		rowsAffected, err := result.RowsAffected()
+		if err != nil {
+			tx.Rollback()
+			logs.Errorf("failed to get affected rows for %v, err: %v", sql, err)
+			return totalRowsAffected, err
+		}
+		totalRowsAffected += rowsAffected
+	}
+
+	if err := tx.Commit(); err != nil {
+		tx.Rollback()
+		logs.Errorf("failed to commit transaction, err: %v", err)
+		return totalRowsAffected, err
+	}
+
+	return totalRowsAffected, nil
 }
