@@ -1,0 +1,31 @@
+{{- range .Values.deploymentNames }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-{{ . }}
+  namespace: openiiot-nodered-cluster
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $.Release.Name }}-{{ . }}
+  template:
+    metadata:
+      labels:
+        app: {{ $.Release.Name }}-{{ . }}
+    spec:
+      containers:
+      - name: nodered
+        image: {{ $.Values.nodered.image }}
+        ports:
+        {{- range $.Values.nodered.ports }}
+          - containerPort: {{ .port }}
+        {{- end }}
+        resources:
+          requests:
+            cpu: {{ $.Values.nodered.resources.requests.cpu }}
+            memory: {{ $.Values.nodered.resources.requests.memory }}
+          limits:
+            cpu: {{ $.Values.nodered.resources.limits.cpu }}
+            memory: {{ $.Values.nodered.resources.limits.memory }}
+{{- end }}

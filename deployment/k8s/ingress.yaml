@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: openiiot-nodered-ingress
+  namespace: openiiot
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /openiiot/nodered
+            pathType: Prefix
+            backend:
+              serviceName: openiiot-nodered-service
+              servicePort: 1880

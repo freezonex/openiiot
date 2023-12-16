@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openiiot-consolemanager
+  namespace: openiiot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openiiot-consolemanager
+  template:
+    metadata:
+      labels:
+        app: openiiot-consolemanager
+    spec:
+      containers:
+        - name: openiiot-consolemanager
+          image: openiiot_consolemanager:1.0.0
+          ports:
+            - containerPort: 81
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+
