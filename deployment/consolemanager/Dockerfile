@@ -36,10 +36,12 @@ RUN npm install --only=production
 # Copy the build artifacts from the builder stage
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/src ./src
-COPY --from=builder /app/.env.local ./.env.local
+COPY --from=builder /app/.env ./.env
+COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/jsconfig.json ./jsconfig.json
 COPY --from=builder /app/next.config.js ./next.config.js
-COPY --from=builder /app/server.js ./server.js
+COPY --from=builder /app/next.config.js ./next.config.js
+COPY --from=builder /app/node_modules ./node_modules
 # COPY --from=builder /app/public ./public
 
 # Your app binds to port 81 so you'll use the EXPOSE instruction to have it mapped by the docker daemon
