@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1  # or v1 depending on your Kubernetes version
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-nodered-ingress
+  namespace: openiiot-nodered-cluster
+spec:
+  rules:
+  - http:
+      paths:
+      {{- range $index, $name := .Values.deploymentNames }}
+      - path: /openiiot/nodered{{ $index }}
+        pathType: Prefix
+        backend:
+          serviceName: {{ $.Release.Name }}-service-{{ $name }}
+          servicePort: 1880  # Assuming 1880 is the port you want to expose
+      {{- end }}

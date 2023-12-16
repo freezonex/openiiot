@@ -13,8 +13,8 @@ Path: freezonex/openiiot_api/openiiot_api_service.proto
 run below commands to pull the IDL repo automatically to the openiiot_api repo root folder.
 
 ```shell
-git submodule add https://github.com/freezonex/node-red.git node-red
-git submodule add https://github.com/freezonex/grafana.git grafana
+git submodule add https://github.com/freezonex/pb_idl.git pb_idl
+git submodule add https://github.com/freezonex/Openiiot-Configuration-Dashboard.git frontend
 ```
 
 ```shell

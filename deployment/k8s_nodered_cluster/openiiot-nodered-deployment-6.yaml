@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openiiot-nodered-6
+  namespace: openiiot-nodered
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openiiot-nodered-6
+  template:
+    metadata:
+      labels:
+        app: openiiot-nodered-6
+    spec:
+      containers:
+        - name: openiiot-nodered-6
+          image: openiiot_nodered:1.0.0
+          ports:
+            - containerPort: 1880
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+

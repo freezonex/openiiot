@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# Array of ports to check
-PORTS=(30085 30080 30081 31880 31893 32000 30883 30083 30084 31883 31083 32030 32041 32306)
+# Define port range
+START_PORT=30050
+END_PORT=30070
 
 check_ports() {
-    for port in "${PORTS[@]}"; do
+    for (( port = START_PORT; port <= END_PORT; port++ )); do
         if lsof -i:"$port" > /dev/null 2>&1; then
             echo "Port $port is occupied. Exiting installation."
             exit 1
@@ -12,12 +13,13 @@ check_ports() {
     done
 }
 
-# Check if any port is occupied
+# Check if any port in the range is occupied
 check_ports
 
+
 # Check if the namespace "openiiot" already exists
-if kubectl get namespace openiiot > /dev/null 2>&1; then
-    echo "Namespace 'openiiot' already exists."
+if kubectl get namespace openiiot-nodered > /dev/null 2>&1; then
+    echo "Namespace 'openiiot-nodered' already exists."
     exit 1
 fi
 

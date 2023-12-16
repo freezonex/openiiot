@@ -16,6 +16,15 @@ spec:
       containers:
         - name: openiiot-grafana
           image: openiiot_grafana:1.0.0
+          env:
+          - name: GF_SECURITY_ALLOW_EMBEDDING
+            value: "true"
+          - name: GF_AUTH_ANONYMOUS_ENABLED
+            value: "true"
+          - name: GF_AUTH_ANONYMOUS_ORG_NAME
+            value: "Main Org."
+          - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+            value: "Admin"
           ports:
             - containerPort: 3000
           resources:

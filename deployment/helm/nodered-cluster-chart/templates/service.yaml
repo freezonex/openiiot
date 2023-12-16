@@ -1,0 +1,17 @@
+{{- range .Values.deploymentNames }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Release.Name }}-service-{{ . }}
+  namespace: openiiot-nodered-cluster
+spec:
+  type: ClusterIP
+  ports:
+  {{- range $index, $_ := $.Values.nodered.ports }}
+  - name: "port-{{ $index }}-{{ . }}"
+    port: {{ .port }}
+    targetPort: {{ .targetPort }}
+  {{- end }}
+  selector:
+    app: {{ $.Release.Name }}-{{ . }}
+{{- end }}

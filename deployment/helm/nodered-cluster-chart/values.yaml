@@ -1,0 +1,28 @@
+replicaCount: 20
+
+nodered:
+  image: openiiot_nodered:1.0.0
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "128Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  ports:
+    - port: 1880
+      targetPort: 1880
+    - port: 43893
+      targetPort: 43893
+
+deploymentNames:
+  - nodered-1
+  - nodered-2
+  - nodered-3
+  - nodered-4
+  - nodered-5
+  - nodered-6
+  - nodered-7
+  - nodered-8
+  - nodered-9
+  - nodered-10
