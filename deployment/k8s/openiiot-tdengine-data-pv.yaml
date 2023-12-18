@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: openiiot-tdengine-data-pv
+  labels:
+    type: openiiot-tdengine-data
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.1.186
+    path: "/volumes/nfs/openiiot/tdengine_data"
+

@@ -26,4 +26,15 @@ spec:
             limits:
               cpu: "1000m"
               memory: "2Gi"
-
+          volumeMounts:
+            - name: tdengine-data
+              mountPath: "/var/lib/taosw"
+            - name: tdengine-log
+              mountPath: "/var/log/taos"
+      volumes:
+        - name: tdengine-data
+          persistentVolumeClaim:
+            claimName: openiiot-tdengine-data-pvc
+        - name: tdengine-log
+          persistentVolumeClaim:
+            claimName: openiiot-tdengine-log-pvc

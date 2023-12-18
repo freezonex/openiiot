@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: openiiot-grafana-pv
+  labels:
+    type: openiiot-grafana
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.1.186
+    path: "/volumes/nfs/openiiot/grafana_data"
+

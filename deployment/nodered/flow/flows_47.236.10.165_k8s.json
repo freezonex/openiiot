@@ -133,7 +133,7 @@
         "id": "777b4e4840adc7e4",
         "type": "mqtt-broker",
         "name": "local mqtt broker",
-        "broker": "10.106.22.46",
+        "broker": "openiiot-emqx-service.openiiot",
         "port": "1883",
         "clientid": "",
         "autoConnect": true,
@@ -590,7 +590,7 @@
         "userProps": "",
         "correl": "",
         "expiry": "",
-        "broker": "4272a6cb0998095f",
+        "broker": "777b4e4840adc7e4",
         "x": 950,
         "y": 480,
         "wires": []

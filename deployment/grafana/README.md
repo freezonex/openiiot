@@ -45,3 +45,14 @@ GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://127.0.0.1:8085/grafana/auth/accesstoken
 GF_AUTH_GENERIC_OAUTH_API_URL=http://127.0.0.1:8085/grafana/user
 GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH = contains(role[*], 'GrafanaAdmin') && 'GrafanaAdmin' || contains(role[*], 'Admin') && 'Admin' || contains(role[*], 'Editor') && 'Editor' || 'Viewer'
 ```
+
+## OEE demo dashobard
+### Add DataSource
+#### tdengine-demo
+http://openiiot-tdengine-service.openiiot:6041
+
+admin, admin
+#### mqtt-demo
+tcp://openiiot-emqx-service.openiiot:1883
+
+admin, public
