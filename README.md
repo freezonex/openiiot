@@ -79,6 +79,8 @@ make tdengine
 make emqx
 make mysql
 make web
+make server
+make consolemanager
 ```
 stop and delete all docker containers, images
 ```shell
@@ -92,10 +94,24 @@ make clean_tdengine
 make clean_emqx
 make clean_mysql
 make clean_web
+make clean_server
+make clean_consolemanager
 ```
 save all images to deployment/binary
 ```shell
 make save
+```
+
+save single image to deployment/binary
+```shell
+make save_nodered
+make save_grafana
+make save_tdengine
+make save_emqx
+make save_mysql
+make save_web
+make save_wever
+make save_consolvemanager
 ```
 
 ### Push And Install

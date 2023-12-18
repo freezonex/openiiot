@@ -52,3 +52,8 @@ help:
 save:
 	@mkdir -p $(SAVE_DIR)
 	$(foreach service,$(SERVICES),docker save -o $(SAVE_DIR)/$(DOCKER_PREFIX)$(service).tar $(DOCKER_PREFIX)$(service):$(TAG);)
+
+$(addprefix save_,$(SERVICES)):
+	@echo "Saving service $(subst save_,,$@)..."
+	@mkdir -p $(SAVE_DIR)
+	docker save -o $(SAVE_DIR)/$(DOCKER_PREFIX)$(subst save_,,$@).tar $(DOCKER_PREFIX)$(subst save_,,$@):$(TAG)

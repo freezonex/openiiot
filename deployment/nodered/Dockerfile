@@ -3,6 +3,15 @@ FROM nodered/node-red
 # Copy custom Node-RED nodes package.json
 COPY deployment/nodered/data/package.json /data/
 
+# Copy package.json and the plugin installation script to /opt/nodered/
+COPY deployment/nodered/data/package.json /opt/nodered/
+COPY deployment/nodered/install-plugins.sh /opt/nodered/
+
+# Change file permissions for the install script
+USER root
+RUN chmod +x /opt/nodered/install-plugins.sh
+USER node-red
+
 # Install custom Node-RED nodes
 RUN cd /data && npm install
 

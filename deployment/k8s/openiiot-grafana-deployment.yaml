@@ -20,7 +20,7 @@ spec:
           - name: GF_SECURITY_ALLOW_EMBEDDING
             value: "true"
           - name: GF_AUTH_ANONYMOUS_ENABLED
-            value: "true"
+            value: "false"
           - name: GF_AUTH_ANONYMOUS_ORG_NAME
             value: "Main Org."
           - name: GF_AUTH_ANONYMOUS_ORG_ROLE
@@ -34,4 +34,10 @@ spec:
             limits:
               cpu: "1000m"
               memory: "2Gi"
-
+          volumeMounts:
+            - name: grafana-data
+              mountPath: "/var/lib/grafana"
+      volumes:
+        - name: grafana-data
+          persistentVolumeClaim:
+            claimName: openiiot-grafana-pvc

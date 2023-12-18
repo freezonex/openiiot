@@ -46,4 +46,10 @@ spec:
             limits:
               cpu: "1000m"
               memory: "2Gi"
-
+          volumeMounts:
+            - name: emqx-data
+              mountPath: "/opt/emqx/data"
+      volumes:
+        - name: emqx-data
+          persistentVolumeClaim:
+            claimName: openiiot-emqx-pvc

@@ -7,6 +7,12 @@ RUN grafana cli plugins install grafana-mqtt-datasource && \
     grafana cli plugins install grafana-iot-twinmaker-app && \
     grafana cli plugins install tdengine-datasource
     
+# Copy the plugin installation script
+COPY deployment/grafana/install-plugins.sh /opt/grafana/install-plugins.sh
+USER root
+RUN chmod +x /opt/grafana/install-plugins.sh
+USER grafana
+
 # Update Logo
 ARG SRC_DIR=deployment/grafana/img
 ARG DEST_DIR=/usr/share/grafana/public/img
@@ -20,3 +26,6 @@ COPY ${SRC_DIR}/grafana_icon.svg ${DEST_DIR}/grafana_icon.svg
 USER root
 RUN find /usr/share/grafana/public/build/ -name "*.js" -exec sed -i 's|AppTitle="Grafana")|AppTitle="FreezoneX")|g' {} \;
 RUN find /usr/share/grafana/public/build/ -name "*.js" -exec sed -i 's|LoginTitle="Welcome to Grafana")|LoginTitle="Welcome to FreezoneX")|g' {} \;
+
+# Revert to the default user
+USER grafana

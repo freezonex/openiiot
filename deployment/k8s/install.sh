@@ -1,32 +1,54 @@
 #!/bin/bash
 
-# Array of ports to check
-PORTS=(30085 30080 30081 31880 31893 32000 30883 30083 30084 31883 31083 32030 32041 32306)
-
-check_ports() {
-    for port in "${PORTS[@]}"; do
-        if lsof -i:"$port" > /dev/null 2>&1; then
-            echo "Port $port is occupied. Exiting installation."
-            exit 1
+# Function to wait for a job to complete
+wait_for_job() {
+    local job_name=$1
+    local namespace=$2
+    echo "Waiting for job $job_name to complete..."
+    while true; do
+        if kubectl get job $job_name -n $namespace | grep -q '1/1'; then
+            echo "Job $job_name completed successfully."
+            break
+        else
+            echo "Waiting for job $job_name to complete..."
+            sleep 10
         fi
     done
 }
 
-# Check if any port is occupied
-check_ports
-
-# Check if the namespace "openiiot" already exists
-if kubectl get namespace openiiot > /dev/null 2>&1; then
-    echo "Namespace 'openiiot' already exists. Exiting installation."
+# Check if the namespace "openiiot" does not exist
+if ! kubectl get namespace openiiot > /dev/null 2>&1; then
+    echo "Namespace 'openiiot' does not exist. Please use "kubectl create namespace openiiot" to create it before running this script."
     exit 1
 fi
 
-# Create the namespace "openiiot"
-kubectl create namespace openiiot
+# Apply pv and pvc YAML files
+kubectl apply -f openiiot-nodered-pv.yaml
+kubectl apply -f openiiot-nodered-pvc.yaml
+kubectl apply -f openiiot-grafana-pv.yaml
+kubectl apply -f openiiot-grafana-pvc.yaml
+kubectl apply -f openiiot-emqx-pv.yaml
+kubectl apply -f openiiot-emqx-pvc.yaml
+kubectl apply -f openiiot-tdengine-data-pv.yaml
+kubectl apply -f openiiot-tdengine-data-pvc.yaml
+kubectl apply -f openiiot-tdengine-log-pv.yaml
+kubectl apply -f openiiot-tdengine-log-pvc.yaml
+kubectl apply -f openiiot-mysql-pv.yaml
+kubectl apply -f openiiot-mysql-pvc.yaml
+
+# Apply the jobs
+kubectl apply -f install-nodered-plugins-job.yaml
+kubectl apply -f install-grafana-plugins-job.yaml
+
+# Wait for both jobs to complete
+wait_for_job "install-nodered-plugins" "openiiot"
+wait_for_job "install-grafana-plugins" "openiiot"
 
 # Apply deployment and service YAML files
 kubectl apply -f openiiot-server-deployment.yaml
 kubectl apply -f openiiot-server-service.yaml
+kubectl apply -f openiiot-consolemanager-deployment.yaml
+kubectl apply -f openiiot-consolemanager-service.yaml
 kubectl apply -f openiiot-web-deployment.yaml
 kubectl apply -f openiiot-web-service.yaml
 kubectl apply -f openiiot-nodered-deployment.yaml

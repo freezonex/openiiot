@@ -26,4 +26,11 @@ spec:
             limits:
               cpu: "1000m"
               memory: "2Gi"
+          volumeMounts:
+            - name: nodered-data
+              mountPath: "/data"
+      volumes:
+        - name: nodered-data
+          persistentVolumeClaim:
+            claimName: openiiot-nodered-pvc
 
