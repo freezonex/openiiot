@@ -112,24 +112,24 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.GrafanaUserRequest{}))
 		grafanaDashboardGroup := grafanaGroup.Group("/dashboard")
 		{
-			grafanaDashboardGroup.POST("/createdb", middleware.Response(
-				"/grafana/dashboard/createdb",
+			grafanaDashboardGroup.POST("/create", middleware.Response(
+				"/grafana/dashboard/create",
 				grafanaHandler.CreateDashBoard,
 				&iiotpb.GrafanaCreateDashboardRequest{}))
-			grafanaDashboardGroup.POST("/savebyuid", middleware.Response(
-				"/grafana/dashboard/savebyuid",
+			grafanaDashboardGroup.POST("/save/uid", middleware.Response(
+				"/grafana/dashboard/save/uid",
 				grafanaHandler.SaveDashboardByUid,
 				&iiotpb.GrafanaSaveDashboardByUidRequest{}))
 		}
 		
 		grafanaDataSourceGroup := grafanaGroup.Group("/datasource")
 		{
-			grafanaDataSourceGroup.GET("/getall", middleware.Response(
-					"/grafana/datasource/getall",
-					grafanaHandler.GetDatasources,
+			grafanaDataSourceGroup.GET("/get", middleware.Response(
+					"/grafana/datasource/get",
+					grafanaHandler.GetDatasource,
 					&iiotpb.GrafanaDataSourcesRequest{}))
-			grafanaDataSourceGroup.POST("/createds", middleware.Response(
-					"/grafana/datasource/createds",
+			grafanaDataSourceGroup.POST("/create", middleware.Response(
+					"/grafana/datasource/create",
 					grafanaHandler.CreateDatasource,
 					&iiotpb.GrafanaCreateDataSourceRequest{}))
 			grafanaDataSourceGroup.POST("/delete", middleware.Response(

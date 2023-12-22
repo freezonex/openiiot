@@ -44,9 +44,9 @@ func (a *GrafanaHandler) GetUser(ctx context.Context, c *app.RequestContext) mid
 	return resp
 }
 
-func (a *GrafanaHandler) GetDatasources(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+func (a *GrafanaHandler) GetDatasource(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
 	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GrafanaDataSourcesRequest)
-	resp, err := a.service.GetDatasources(ctx, req, c)
+	resp, err := a.service.GetDatasource(ctx, req, c)
 	if err != nil {
 		logs.CtxErrorf(ctx, "event=GetDataSources error=%v", err)
 		return middleware.ErrorResp(http.StatusInternalServerError, err)
