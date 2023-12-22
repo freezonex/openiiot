@@ -9,15 +9,16 @@ import (
 
 	//"code.byted.org/gopkg/env"
 	//"github.com/sirupsen/logrus"
-	"gorm.io/driver/mysql"
 	"freezonex/openiiot/biz/config"
+
+	"gorm.io/driver/mysql"
 	//"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/dal/query_openiiot"
 )
 
 var (
-	dbOpeniiot     *gorm.DB
-	dsnOpeniiot		 = "root:root1234@tcp(127.0.0.1:3306)/openiiot?charset=utf8mb4&parseTime=True&loc=Local"
+	dbOpeniiot  *gorm.DB
+	dsnOpeniiot = "root:root1234@tcp(127.0.0.1:3306)/openiiot?charset=utf8mb4&parseTime=True&loc=Local"
 	//dbOpeniiotName = "openiiot_db"
 	//psmOpeniiot    = "freezonex.mysql.openiiot_db"
 )

@@ -12,6 +12,7 @@ import (
 	"freezonex/openiiot/biz/service/grafana"
 	"freezonex/openiiot/biz/service/supos"
 	"freezonex/openiiot/biz/service/tdengine"
+	"freezonex/openiiot/biz/service/tenant"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
@@ -22,7 +23,7 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 	db, err := mysql.Init(&c.DBConfig)
 	if err != nil {
 		logs.Errorf("cannot connect to mysql database, err: %v", err)
-		//panic(err)
+		panic(err)
 	}
 
 	authGroup := r.Group("/auth", middleware.Access())
@@ -43,15 +44,44 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.LogoutRequest{}))
 	}
 
+	tenantGroup := r.Group("/tenant", middleware.Access())
+	{
+		tenantHandler := handler.NewTenantHandler(tenant.NewTenantService(db))
+		tenantGroup.POST(
+			"/add",
+			middleware.Response(
+				"/tenant/add",
+				tenantHandler.AddTenant,
+				&iiotpb.AddTenantRequest{}))
+		tenantGroup.GET(
+			"/get",
+			middleware.Response(
+				"/tenant/get",
+				tenantHandler.GetTenant,
+				&iiotpb.GetTenantRequest{}))
+		tenantGroup.POST(
+			"/update",
+			middleware.Response(
+				"/tenant/update",
+				tenantHandler.UpdateTenant,
+				&iiotpb.UpdateTenantRequest{}))
+		tenantGroup.POST(
+			"/delete",
+			middleware.Response(
+				"/tenant/delete",
+				tenantHandler.DeleteTenant,
+				&iiotpb.DeleteTenantRequest{}))
+	}
+
 	userGroup := r.Group("/user", middleware.Access())
 	{
 		userHandler := handler.NewUserHandler(supos.NewSuposService(db, &c.SuposConfig))
 		userGroup.GET(
-			"/list",
+			"/supos/list",
 			middleware.Response(
-				"/user/list",
-				userHandler.GetAllUser,
-				&iiotpb.GetUserRequest{}))
+				"/user/supos/list",
+				userHandler.GetSuposUser,
+				&iiotpb.GetSuposUserRequest{}))
 		userGroup.GET(
 			"/current",
 			middleware.Response(
@@ -111,17 +141,4 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.TDEngineQueryRequest{}))
 	}
 
-	{ // frontend, for debug purpose only
-		//r.Static("/web", "deployment/web/html/")
-
-		/*r.StaticFile("/public/web", "public/index.html")
-		r.StaticFile("/public/openiiot_white.png", "public/openiiot_white.png")
-		r.StaticFile("/public/http.js", "public/http.js")
-		r.StaticFile("/public/axios.min.js", "public/axios.min.js")
-		r.StaticFile("/public/axios.min.map", "public/axios.min.map")
-		r.StaticFile("/public/script.js", "public/script.js")*/
-
-		//fs := &app.FS{Root: "deployment/web/html"}
-		//r.StaticFS("/html", fs)
-	}
 }

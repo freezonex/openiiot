@@ -7,14 +7,16 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/cloudwego/hertz/pkg/app"
+
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/cache"
 
-	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
-func (a *SuposService) GetAllUser(ctx context.Context, req *freezonex_openiiot_api.GetUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetUserResponse, error) {
+func (a *SuposService) GetSuposUser(ctx context.Context, req *freezonex_openiiot_api.GetSuposUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetSuposUserResponse, error) {
 	param := req.Param
 	if strings.TrimSpace(param.CompanyCode) == "" {
 		param.CompanyCode = "default_org_company"
@@ -40,10 +42,10 @@ func (a *SuposService) GetAllUser(ctx context.Context, req *freezonex_openiiot_a
 		return nil, err
 	}
 
-	resp := new(freezonex_openiiot_api.GetUserResponse)
-	data := make([]*freezonex_openiiot_api.User, 0)
+	resp := new(freezonex_openiiot_api.GetSuposUserResponse)
+	data := make([]*freezonex_openiiot_api.SuposUser, 0)
 	for _, v := range result.List {
-		data = append(data, &freezonex_openiiot_api.User{
+		data = append(data, &freezonex_openiiot_api.SuposUser{
 			Username:    v.Username,
 			UserDesc:    v.UserDesc,
 			AccountType: int32(v.AccountType),
@@ -66,20 +68,20 @@ func (a *SuposService) GetAllUser(ctx context.Context, req *freezonex_openiiot_a
 
 func (a *SuposService) GetCurrentUser(ctx context.Context, req *freezonex_openiiot_api.GetCurrentUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetCurrentUserResponse, error) {
 	loginUsername, _ := cache.Get("CurrentUsername")
+	loginUserRoleList, _ := cache.Get("CurrentUserRole")
 	//loginUsername = "hongzhi"
 
 	resp := new(freezonex_openiiot_api.GetCurrentUserResponse)
-	if loginUsername != "" {
-		loginUserRoleList, _ := cache.Get("CurrentUserRole")
-		resp.Code = 0
-		resp.Message = "Success"
-		resp.Data = loginUsername + " - " + loginUserRoleList
-	} else {
-		resp.Code = 0
-		resp.Message = "No login user information"
+	data := new(freezonex_openiiot_api.User)
+	if loginUsername == "" {
+		logs.Error(ctx, "event=GetTenant, current user is empty")
+		return nil, errors.New("current user is empty")
 	}
 
+	data.Username = loginUsername
+	data.Role = loginUserRoleList
 	resp.BaseResp = middleware.SuccessResponseOK
+	resp.Data = data
 
 	return resp, nil
 }

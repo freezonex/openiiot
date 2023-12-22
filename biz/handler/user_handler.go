@@ -20,9 +20,9 @@ func NewUserHandler(s *supos.SuposService) *UserHandler {
 	return &UserHandler{suposService: s}
 }
 
-func (a *UserHandler) GetAllUser(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
-	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GetUserRequest)
-	resp, err := a.suposService.GetAllUser(ctx, req, c)
+func (a *UserHandler) GetSuposUser(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GetSuposUserRequest)
+	resp, err := a.suposService.GetSuposUser(ctx, req, c)
 	if err != nil {
 		logs.CtxErrorf(ctx, "event=GetAllUser error=%v", err)
 		return middleware.ErrorResp(http.StatusInternalServerError, err)

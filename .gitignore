@@ -40,7 +40,7 @@ taoshebei/
 taosdalipu/
 Target/
 *.failed
-*.sql
+sql
 sim
 sim/
 psim/

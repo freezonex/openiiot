@@ -4,11 +4,8 @@ import "errors"
 
 // general settings
 const (
-	TOKEN_VALIDATED_CACHE         = 1000 //items
-	ACCOUNT_COLLECT_CACHE         = 500  //items
-	ACCOUNT_RETURN_LIMIT          = 1000 //DB rows
-	ACCOUNT_PER_REQUEST_LIMIT     = 5    // maximum number of accounts per request
-	NAMESPACE_RETURN_LIMIT        = 1000 //DB rows
+	TOKEN_VALIDATED_CACHE = 1000 //items
+	TENANT_RETURN_LIMIT   = 1000 //DB rows
 )
 
 // account status
@@ -35,8 +32,8 @@ const (
 
 // openiiot flow status
 const (
-	TESTCASE_DISABLE = "DISABLED"
-	TESTCASE_ENABLE  = "ENABLE"
+	FLOW_DISABLE = "DISABLED"
+	FLOW_ENABLE  = "ENABLE"
 )
 
 var ErrKeyNotFound = errors.New("key not found")
@@ -47,17 +44,3 @@ var ErrBadRequest = errors.New("request body missing required fields")
 var ErrWrongInputFormat = errors.New("wrong input format")
 var ErrIndexFileNotFound = errors.New("index.html file not found in allure html report tar file")
 var ErrTimeout = errors.New("request timed out")
-
-// used by trigger redirect to queue
-const (
-	MsgTagTriggerAPITest = "TRIGGER_API_TEST"
-	MsgTagStopTask       = "STOP_TASK"
-	RemoteJobTimeout     = 30
-)
-
-// meta table values
-const (
-	FailureThresholdKey    = "failure_notify_threshold"
-	FailureThresholdDefVal = 1
-	FailureFromDays        = 1 // check how many days for the failure threshold.
-)

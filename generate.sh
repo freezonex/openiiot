@@ -2,17 +2,25 @@
 
 export RUNTIME_IDC_NAME=local
 
-usage() {
+
+usage()
+{
   echo "usage: sh generate.sh db
-        db: openiiot"
+        db: hongzhi or openiiot"
 }
 
-case "$1" in
-  "openiiot")
-    go run cmd/generate/generate.go openiiot
+case $1 in
+  "hongzhi")
+    go run cmd/generate/generate.go hongzhi
     ;;
+  "openiiot")
+      go run cmd/generate/generate.go openiiot
+      ;;
   *)
     usage
-    exit 1
     ;;
+#go run cmd/generate/generate.go
 esac
+
+
+
