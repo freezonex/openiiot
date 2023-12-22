@@ -79,9 +79,9 @@ services:
     container_name: openiiot-mysql
     environment:
       MYSQL_ROOT_PASSWORD: root1234
-      MYSQL_DATABASE: hongzhi
-      MYSQL_USER: hongzhi
-      MYSQL_PASSWORD: root1234
+      MYSQL_DATABASE: openiiot
+      MYSQL_USER: openiiot
+      MYSQL_PASSWORD: openiiot1234
     ports:
       - "6033:3306"
     volumes:
@@ -91,10 +91,10 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: pma
-    links:
-      - openiiot-mysql
+    # links:
+    #   - openiiot-mysql
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: openiiot-mysql
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
     restart: unless-stopped

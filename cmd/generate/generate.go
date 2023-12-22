@@ -56,14 +56,19 @@ func generateDbOpeniiotModels() {
 		FieldNullable:     true,
 	})
 
-	/*err := Logger{}.Apply(db.Config)
-	if err != nil {
-		panic(fmt.Errorf("UseDB fail: %w", err))
-	}*/
 	g.UseDB(db)
 
 	g.ApplyBasic(
-		g.GenerateModel("openiiot_config"),
+		g.GenerateModel("tenant"),
+		g.GenerateModel("user"),
+		g.GenerateModel("edge"),
+		g.GenerateModel("core"),
+		g.GenerateModel("app"),
+		g.GenerateModel("flow"),
+		g.GenerateModel("flow_edge"),
+		g.GenerateModel("flow_core"),
+		g.GenerateModel("flow_app"),
+		g.GenerateModel("global_config"),
 	)
 	g.Execute()
 }

@@ -2,7 +2,7 @@ IDC: sg
 
 DBConfig:
   Openiiot:
-    DSN: "root:root1234@tcp(127.0.0.1:6033)/openiiot?charset=utf8mb4&parseTime=True&loc=Local"
+    DSN: "openiiot:openiiot1234@tcp(127.0.0.1:6033)/openiiot?charset=utf8mb4&parseTime=True&loc=Local"
     DB_DEBUG: true
     CI: false
     DBNAME: openiiot
