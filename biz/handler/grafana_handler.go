@@ -43,3 +43,53 @@ func (a *GrafanaHandler) GetUser(ctx context.Context, c *app.RequestContext) mid
 	}
 	return resp
 }
+
+func (a *GrafanaHandler) GetDatasources(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GrafanaDataSourcesRequest)
+	resp, err := a.service.GetDatasources(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=GetDataSources error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}
+
+func (a *GrafanaHandler) CreateDatasource(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GrafanaCreateDataSourceRequest)
+	resp, err := a.service.NewDataSource(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=CreateDataSource error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}
+
+func (a *GrafanaHandler) DeleteDatasource(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GrafanaDeleteDataSourceRequest)
+	resp, err := a.service.DeleteDataSource(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=CreateDataSource error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}
+
+func (a *GrafanaHandler) CreateDashBoard(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GrafanaCreateDashboardRequest)
+	resp, err := a.service.CreateDashBoard(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=CreateDashboard error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}
+
+func (a *GrafanaHandler) SaveDashboardByUid(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GrafanaSaveDashboardByUidRequest)
+	resp, err := a.service.SaveDashboardByUID(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=SaveDashboardByUid error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}

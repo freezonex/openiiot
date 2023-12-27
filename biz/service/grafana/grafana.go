@@ -2,8 +2,10 @@ package grafana
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
@@ -78,4 +80,77 @@ func (a *GrafanaService) GetUser(ctx context.Context, req *freezonex_openiiot_ap
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil
+}
+
+func (a *GrafanaService) GetDatasources(ctx context.Context, req *freezonex_openiiot_api.GrafanaDataSourcesRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaDataSourcesResponse, error) {
+	dataSources, err := a.client.DataSources(req.Dsn)
+	if err != nil {
+		return nil, err
+	}
+	
+	resp := new(freezonex_openiiot_api.GrafanaDataSourcesResponse)
+	resp.DataSources = dataSources
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+
+}
+
+func (a *GrafanaService) NewDataSource(ctx context.Context, req *freezonex_openiiot_api.GrafanaCreateDataSourceRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaCreateDataSourceResponse, error) {
+	dataSource, err := a.client.NewDataSource(req.Dsn, req.DataSource)
+	if err != nil {
+		return nil, err
+	}
+	
+	resp := new(freezonex_openiiot_api.GrafanaCreateDataSourceResponse)
+	resp.Message = fmt.Sprintf("New Data Scource %d created ", dataSource)
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+
+}
+func (a *GrafanaService) DeleteDataSource(ctx context.Context, req *freezonex_openiiot_api.GrafanaDeleteDataSourceRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaDeleteDataSourceResponse, error) {
+	err := a.client.DeleteDataSourceByName(req.Dsn, req.Name)
+	if err != nil {
+		return nil, err
+	}
+	
+	resp := new(freezonex_openiiot_api.GrafanaDeleteDataSourceResponse)
+	resp.BaseResp = middleware.SuccessResponseOK
+	resp.Message = fmt.Sprintf("Data Scource %s deleted ", req.Name)
+	return resp, nil
+
+}
+func (a *GrafanaService) CreateDashBoard(ctx context.Context, req *freezonex_openiiot_api.GrafanaCreateDashboardRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaCreateDashboardResponse, error) {
+	saveResponse, err := a.client.CreateDashBoard(req.Dsn, req.Dashboard)
+	if err != nil {
+		return nil, err
+	}
+	resp := new(freezonex_openiiot_api.GrafanaCreateDashboardResponse)
+	resp.SaveResponse = saveResponse
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+
+}
+
+func (a *GrafanaService) SaveDashboardByUID(ctx context.Context, req *freezonex_openiiot_api.GrafanaSaveDashboardByUidRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaSaveDashboardByUidResponse, error) {
+	returnedDashboard, err := a.client.DashboardByUID(req.Dsn, req.Uid, req.SavePath)
+	if err != nil {
+		return nil, err
+	}
+	jsonData, err := json.MarshalIndent(returnedDashboard, "", "    ")
+	if err != nil {
+		logs.Error("error marshalling to JSON: %s", err)
+	}
+	err = os.WriteFile(req.SavePath, jsonData, 0644)
+	if err != nil {
+		logs.Error("error writing JSON to file: %s", err)
+	}
+	resp := new(freezonex_openiiot_api.GrafanaSaveDashboardByUidResponse)
+	resp.Message = fmt.Sprintf("Dashboard JSON file saved in %s", req.SavePath)
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+
 }
