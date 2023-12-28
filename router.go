@@ -9,11 +9,12 @@ import (
 	"freezonex/openiiot/biz/handler"
 	"freezonex/openiiot/biz/middleware"
 	iiotpb "freezonex/openiiot/biz/model/freezonex_openiiot_api"
+	"freezonex/openiiot/biz/service/edge"
 	"freezonex/openiiot/biz/service/grafana"
 	"freezonex/openiiot/biz/service/supos"
 	"freezonex/openiiot/biz/service/tdengine"
 	"freezonex/openiiot/biz/service/tenant"
-
+	"freezonex/openiiot/biz/service/user"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
@@ -75,19 +76,73 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	userGroup := r.Group("/user", middleware.Access())
 	{
-		userHandler := handler.NewUserHandler(supos.NewSuposService(db, &c.SuposConfig))
+		suposuserHandler := handler.NewSuposHandler(supos.NewSuposService(db, &c.SuposConfig))
+		userHandler := handler.NewUserHandler(user.NewUserService(db))
 		userGroup.GET(
 			"/supos/list",
 			middleware.Response(
 				"/user/supos/list",
-				userHandler.GetSuposUser,
+				suposuserHandler.GetSuposUser,
 				&iiotpb.GetSuposUserRequest{}))
 		userGroup.GET(
 			"/current",
 			middleware.Response(
 				"/user/current",
-				userHandler.GetCurrentUser,
+				suposuserHandler.GetCurrentUser,
 				&iiotpb.GetCurrentUserRequest{}))
+		userGroup.POST(
+			"/add",
+			middleware.Response(
+				"/user/add",
+				userHandler.AddUser,
+				&iiotpb.AddUserRequest{}))
+		userGroup.GET(
+			"/get",
+			middleware.Response(
+				"/user/get",
+				userHandler.GetUser,
+				&iiotpb.GetUserRequest{}))
+		userGroup.POST(
+			"/update",
+			middleware.Response(
+				"/user/update",
+				userHandler.UpdateUser,
+				&iiotpb.UpdateUserRequest{}))
+		userGroup.POST(
+			"/delete",
+			middleware.Response(
+				"/user/delete",
+				userHandler.DeleteUser,
+				&iiotpb.DeleteUserRequest{}))
+	}
+
+	edgeGroup := r.Group("/edge", middleware.Access())
+	{
+		edgeHandler := handler.NewEdgeHandler(edge.NewEdgeService(db))
+		edgeGroup.POST(
+			"/add",
+			middleware.Response(
+				"/edge/add",
+				edgeHandler.AddEdge,
+				&iiotpb.AddEdgeRequest{}))
+		edgeGroup.GET(
+			"/get",
+			middleware.Response(
+				"/edge/get",
+				edgeHandler.GetEdge,
+				&iiotpb.GetEdgeRequest{}))
+		edgeGroup.POST(
+			"/update",
+			middleware.Response(
+				"/edge/update",
+				edgeHandler.UpdateEdge,
+				&iiotpb.UpdateEdgeRequest{}))
+		edgeGroup.POST(
+			"/delete",
+			middleware.Response(
+				"/edge/delete",
+				edgeHandler.DeleteEdge,
+				&iiotpb.DeleteEdgeRequest{}))
 	}
 
 	grafanaGroup := r.Group("/grafana", middleware.Access())
@@ -110,34 +165,6 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/grafana/user",
 				grafanaHandler.GetUser,
 				&iiotpb.GrafanaUserRequest{}))
-		grafanaDashboardGroup := grafanaGroup.Group("/dashboard")
-		{
-			grafanaDashboardGroup.POST("/createdb", middleware.Response(
-				"/grafana/dashboard/createdb",
-				grafanaHandler.CreateDashBoard,
-				&iiotpb.GrafanaCreateDashboardRequest{}))
-			grafanaDashboardGroup.POST("/savebyuid", middleware.Response(
-				"/grafana/dashboard/savebyuid",
-				grafanaHandler.SaveDashboardByUid,
-				&iiotpb.GrafanaSaveDashboardByUidRequest{}))
-		}
-		
-		grafanaDataSourceGroup := grafanaGroup.Group("/datasource")
-		{
-			grafanaDataSourceGroup.GET("/getall", middleware.Response(
-					"/grafana/datasource/getall",
-					grafanaHandler.GetDatasources,
-					&iiotpb.GrafanaDataSourcesRequest{}))
-			grafanaDataSourceGroup.POST("/createds", middleware.Response(
-					"/grafana/datasource/createds",
-					grafanaHandler.CreateDatasource,
-					&iiotpb.GrafanaCreateDataSourceRequest{}))
-			grafanaDataSourceGroup.POST("/delete", middleware.Response(
-					"/grafana/datasource/delete",
-					grafanaHandler.DeleteDatasource,
-					&iiotpb.GrafanaDeleteDataSourceRequest{}))
-		}
-		
 	}
 
 	tdengineGroup := r.Group("/tdengine", middleware.Access())

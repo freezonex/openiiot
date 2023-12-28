@@ -56,7 +56,10 @@ func (a *TenantService) GetTenantDB(ctx context.Context, id int64, name string) 
 func (a *TenantService) UpdateTenantDB(ctx context.Context, id int64, name string, description string) error {
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
-
+	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
+	if existRecord == nil {
+		return errors.New("tenant does not exist")
+	}
 	updates := make(map[string]interface{})
 	if name != "" {
 		updates[table.Name.ColumnName().String()] = name
@@ -71,8 +74,15 @@ func (a *TenantService) UpdateTenantDB(ctx context.Context, id int64, name strin
 
 // DeleteTenantDB will delete tenant record from the DB.
 func (a *TenantService) DeleteTenantDB(ctx context.Context, id int64) error {
+
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx)
+
+	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
+	if existRecord == nil {
+		return errors.New("tenant does not exist")
+	}
+
 	_, err := tx.Where(table.ID.Eq(id)).Delete()
 	return err
 }
