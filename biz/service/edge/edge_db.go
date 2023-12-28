@@ -17,7 +17,7 @@ func (a *EdgeService) AddEdgeDB(ctx context.Context, name string, description st
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.Name.Eq(name)).First()
 	if existRecord != nil {
-		return -1, errors.New("username exist")
+		return -1, errors.New("edgename exist")
 	}
 	id := common.GetUUID()
 	newRecord := &model_openiiot.Edge{
