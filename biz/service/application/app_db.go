@@ -1,4 +1,4 @@
-package edge
+package application
 
 import (
 	"context"
@@ -12,19 +12,19 @@ import (
 )
 
 // AddUserDB will add User record to the DB.
-func (a *EdgeService) AddEdgeDB(ctx context.Context, name string, description string, tenant_id int64, url string, username string, password string, type1 string) (int64, error) {
-	table := a.db.DBOpeniiotQuery.Edge
+func (a *AppService) AddAppDB(ctx context.Context, name string, description string, tenantid int64, url string, username string, password string, type1 string) (int64, error) {
+	table := a.db.DBOpeniiotQuery.App
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.Name.Eq(name)).First()
 	if existRecord != nil {
-		return -1, errors.New("edgename exist")
+		return -1, errors.New("app name exist")
 	}
 	id := common.GetUUID()
-	newRecord := &model_openiiot.Edge{
+	newRecord := &model_openiiot.App{
 		ID:          id,
 		Name:        name,
 		Description: &description,
-		TenantID:    tenant_id,
+		TenantID:    tenantid,
 		URL:         url,
 		Username:    &username,
 		Password:    &password,
@@ -38,8 +38,8 @@ func (a *EdgeService) AddEdgeDB(ctx context.Context, name string, description st
 }
 
 // GetUserDB will get user record from the DB in condition
-func (a *EdgeService) GetEdgeDB(ctx context.Context, id int64, name string, tenant_id int64, url string, type1 string) ([]*model_openiiot.Edge, error) {
-	table := a.db.DBOpeniiotQuery.Edge
+func (a *AppService) GetAppDB(ctx context.Context, id int64, name string, tenantid int64, url string, type1 string) ([]*model_openiiot.App, error) {
+	table := a.db.DBOpeniiotQuery.App
 	tx := table.WithContext(ctx).Select(field.ALL)
 	if id != 0 {
 		tx = tx.Where(table.ID.Eq(id))
@@ -47,8 +47,8 @@ func (a *EdgeService) GetEdgeDB(ctx context.Context, id int64, name string, tena
 	if name != "" {
 		tx = tx.Where(table.Name.Eq(name))
 	}
-	if tenant_id != 0 {
-		tx = tx.Where(table.TenantID.Eq(tenant_id))
+	if tenantid != 0 {
+		tx = tx.Where(table.TenantID.Eq(tenantid))
 	}
 	if url != "" {
 		tx = tx.Where(table.URL.Eq(url))
@@ -67,24 +67,25 @@ func (a *EdgeService) GetEdgeDB(ctx context.Context, id int64, name string, tena
 }
 
 // UpdateUserDB will update user record from the DB.
-func (a *EdgeService) UpdateEdgeDB(ctx context.Context, id int64, name string, description string, tenant_id int64, url string, username string, password string, type1 string) error {
-	table := a.db.DBOpeniiotQuery.Edge
+func (a *AppService) UpdateAppDB(ctx context.Context, id int64, name string, description string, tenantid int64, url string, username string, password string, type1 string) error {
+	table := a.db.DBOpeniiotQuery.App
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
 
 	if existRecord == nil {
-		return errors.New("edge does not exist")
+		return errors.New("user does not exist")
 	}
 
 	updates := make(map[string]interface{})
+
 	if name != "" {
 		updates[table.Name.ColumnName().String()] = name
 	}
 	if description != "" {
 		updates[table.Description.ColumnName().String()] = description
 	}
-	if tenant_id != 0 {
-		updates[table.TenantID.ColumnName().String()] = tenant_id
+	if tenantid != 0 {
+		updates[table.TenantID.ColumnName().String()] = tenantid
 	}
 	if url != "" {
 		updates[table.URL.ColumnName().String()] = url
@@ -104,13 +105,13 @@ func (a *EdgeService) UpdateEdgeDB(ctx context.Context, id int64, name string, d
 }
 
 // DeleteUserDB will delete user record from the DB.
-func (a *EdgeService) DeleteEdgeDB(ctx context.Context, id int64) error {
-	table := a.db.DBOpeniiotQuery.Edge
+func (a *AppService) DeleteAppDB(ctx context.Context, id int64) error {
+	table := a.db.DBOpeniiotQuery.App
 	tx := table.WithContext(ctx)
 
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
 	if existRecord == nil {
-		return errors.New("edge does not exist")
+		return errors.New("application does not exist")
 	}
 	_, err := tx.Where(table.ID.Eq(id)).Delete()
 	return err

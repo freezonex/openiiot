@@ -2,6 +2,7 @@ package edge
 
 import (
 	"context"
+	"freezonex/openiiot/biz/service/utils/common"
 
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
@@ -39,11 +40,13 @@ func (a *EdgeService) GetEdge(ctx context.Context, req *freezonex_openiiot_api.G
 	data := make([]*freezonex_openiiot_api.Edge, 0)
 	for _, v := range edges {
 		data = append(data, &freezonex_openiiot_api.Edge{
-			Id:       v.ID,
-			Username: v.Name,
-			TenantId: v.TenantID,
-			Url:      v.URL,
-			Type:     v.Type,
+			Id:         v.ID,
+			Username:   v.Name,
+			TenantId:   v.TenantID,
+			Url:        v.URL,
+			Type:       v.Type,
+			CreateTime: common.GetTimeStringFromTime(&v.CreateTime), // Format time as needed
+			UpdateTime: common.GetTimeStringFromTime(&v.UpdateTime),
 		})
 	}
 	resp.Data = data

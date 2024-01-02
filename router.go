@@ -9,7 +9,10 @@ import (
 	"freezonex/openiiot/biz/handler"
 	"freezonex/openiiot/biz/middleware"
 	iiotpb "freezonex/openiiot/biz/model/freezonex_openiiot_api"
+	"freezonex/openiiot/biz/service/application"
+	"freezonex/openiiot/biz/service/core"
 	"freezonex/openiiot/biz/service/edge"
+	"freezonex/openiiot/biz/service/flow"
 	"freezonex/openiiot/biz/service/grafana"
 	"freezonex/openiiot/biz/service/supos"
 	"freezonex/openiiot/biz/service/tdengine"
@@ -145,6 +148,93 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.DeleteEdgeRequest{}))
 	}
 
+	coreGroup := r.Group("/core", middleware.Access())
+	{
+		coreHandler := handler.NewCoreHandler(core.NewCoreService(db))
+		coreGroup.POST(
+			"/add",
+			middleware.Response(
+				"/core/add",
+				coreHandler.AddCore,
+				&iiotpb.AddCoreRequest{}))
+		coreGroup.GET(
+			"/get",
+			middleware.Response(
+				"/core/get",
+				coreHandler.GetCore,
+				&iiotpb.GetCoreRequest{}))
+		coreGroup.POST(
+			"/update",
+			middleware.Response(
+				"/core/update",
+				coreHandler.UpdateCore,
+				&iiotpb.UpdateCoreRequest{}))
+		coreGroup.POST(
+			"/delete",
+			middleware.Response(
+				"/core/delete",
+				coreHandler.DeleteCore,
+				&iiotpb.DeleteCoreRequest{}))
+	}
+
+	appGroup := r.Group("/app", middleware.Access())
+	{
+		appHandler := handler.NewAppHandler(application.NewAppService(db))
+		appGroup.POST(
+			"/add",
+			middleware.Response(
+				"/app/add",
+				appHandler.AddApp,
+				&iiotpb.AddAppRequest{}))
+		appGroup.GET(
+			"/get",
+			middleware.Response(
+				"/app/get",
+				appHandler.GetApp,
+				&iiotpb.GetAppRequest{}))
+		appGroup.POST(
+			"/update",
+			middleware.Response(
+				"/app/update",
+				appHandler.UpdateApp,
+				&iiotpb.UpdateAppRequest{}))
+		appGroup.POST(
+			"/delete",
+			middleware.Response(
+				"/app/delete",
+				appHandler.DeleteApp,
+				&iiotpb.DeleteAppRequest{}))
+	}
+
+	flowGroup := r.Group("/flow", middleware.Access())
+	{
+		flowHandler := handler.NewFlowHandler(flow.NewFlowService(db))
+		flowGroup.POST(
+			"/add",
+			middleware.Response(
+				"/flow/add",
+				flowHandler.AddFlow,
+				&iiotpb.AddFlowRequest{}))
+		flowGroup.GET(
+			"/get",
+			middleware.Response(
+				"/flow/get",
+				flowHandler.GetFlow,
+				&iiotpb.GetFlowRequest{}))
+		flowGroup.POST(
+			"/update",
+			middleware.Response(
+				"/flow/update",
+				flowHandler.UpdateFlow,
+				&iiotpb.UpdateFlowRequest{}))
+		flowGroup.POST(
+			"/delete",
+			middleware.Response(
+				"/flow/delete",
+				flowHandler.DeleteFlow,
+				&iiotpb.DeleteFlowRequest{}))
+	}
+
 	grafanaGroup := r.Group("/grafana", middleware.Access())
 	{
 		grafanaHandler := handler.NewGrafanaHandler(grafana.NewGrafanaService(db, &c.GrafanaConfig))
@@ -158,7 +248,6 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 					grafanaHandler.GetAccessToken,
 					&iiotpb.GrafanaAccessTokenRequest{}))
 		}
-
 		grafanaGroup.GET(
 			"/user",
 			middleware.Response(

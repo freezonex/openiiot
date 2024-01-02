@@ -21,6 +21,7 @@ func (a *UserService) AddUserDB(ctx context.Context, username string, password s
 	}
 	id := common.GetUUID()
 	newRecord := &model_openiiot.User{
+		ID:          id,
 		Username:    username,
 		Password:    &password,
 		Description: &description,
@@ -37,20 +38,20 @@ func (a *UserService) AddUserDB(ctx context.Context, username string, password s
 }
 
 // GetUserDB will get user record from the DB in condition
-func (a *UserService) GetUserDB(ctx context.Context, username string, tenantid int64, role string, authid string, source string) ([]*model_openiiot.User, error) {
+func (a *UserService) GetUserDB(ctx context.Context, username string, tenant_id int64, role string, auth_id string, source string) ([]*model_openiiot.User, error) {
 	table := a.db.DBOpeniiotQuery.User
 	tx := table.WithContext(ctx).Select(field.ALL)
 	if username != "" {
 		tx = tx.Where(table.Username.Eq(username))
 	}
-	if tenantid != 0 {
-		tx = tx.Where(table.TenantID.Eq(tenantid))
+	if tenant_id != 0 {
+		tx = tx.Where(table.TenantID.Eq(tenant_id))
 	}
 	if role != "" {
 		tx = tx.Where(table.Role.Eq(role))
 	}
-	if authid != "" {
-		tx = tx.Where(table.AuthID.Eq(authid))
+	if auth_id != "" {
+		tx = tx.Where(table.AuthID.Eq(auth_id))
 	}
 	if source != "" {
 		tx = tx.Where(table.Source.Eq(source))
@@ -66,7 +67,7 @@ func (a *UserService) GetUserDB(ctx context.Context, username string, tenantid i
 }
 
 // UpdateUserDB will update user record from the DB.
-func (a *UserService) UpdateUserDB(ctx context.Context, id int64, username string, password string, description string, tenantid int64, role string, authid string, source string) error {
+func (a *UserService) UpdateUserDB(ctx context.Context, id int64, username string, password string, description string, tenant_id int64, role string, auth_id string, source string) error {
 	table := a.db.DBOpeniiotQuery.User
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
@@ -76,9 +77,7 @@ func (a *UserService) UpdateUserDB(ctx context.Context, id int64, username strin
 	}
 
 	updates := make(map[string]interface{})
-	if id != 0 {
-		updates[table.ID.ColumnName().String()] = id
-	}
+
 	if username != "" {
 		updates[table.Username.ColumnName().String()] = username
 	}
@@ -88,14 +87,14 @@ func (a *UserService) UpdateUserDB(ctx context.Context, id int64, username strin
 	if description != "" {
 		updates[table.Description.ColumnName().String()] = description
 	}
-	if tenantid != 0 {
-		updates[table.TenantID.ColumnName().String()] = tenantid
+	if tenant_id != 0 {
+		updates[table.TenantID.ColumnName().String()] = tenant_id
 	}
 	if role != "" {
 		updates[table.Role.ColumnName().String()] = role
 	}
-	if authid != "" {
-		updates[table.AuthID.ColumnName().String()] = authid
+	if auth_id != "" {
+		updates[table.AuthID.ColumnName().String()] = auth_id
 	}
 	if source != "" {
 		updates[table.Source.ColumnName().String()] = source

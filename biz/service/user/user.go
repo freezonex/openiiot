@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"freezonex/openiiot/biz/service/utils/common"
 
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
@@ -39,12 +40,14 @@ func (a *UserService) GetUser(ctx context.Context, req *freezonex_openiiot_api.G
 	data := make([]*freezonex_openiiot_api.User, 0)
 	for _, v := range users {
 		data = append(data, &freezonex_openiiot_api.User{
-			Id:       v.ID,
-			Username: v.Username,
-			TenantId: v.TenantID,
-			Role:     v.Role,
-			AuthId:   *v.AuthID,
-			Source:   *v.Source,
+			Id:         v.ID,
+			Username:   v.Username,
+			TenantId:   v.TenantID,
+			Role:       v.Role,
+			AuthId:     *v.AuthID,
+			Source:     *v.Source,
+			CreateTime: common.GetTimeStringFromTime(&v.CreateTime), // Format time as needed
+			UpdateTime: common.GetTimeStringFromTime(&v.UpdateTime),
 		})
 	}
 	resp.Data = data
@@ -52,54 +55,6 @@ func (a *UserService) GetUser(ctx context.Context, req *freezonex_openiiot_api.G
 
 	return resp, nil
 }
-
-// GetSuposUser will get user record in condition
-//func (a *SuposService) GetSuposUser(ctx context.Context, req *freezonex_openiiot_api.GetSuposUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetSuposUserResponse, error) {
-//	users, err := a.GetSuposUserDB(ctx, req.BaseRequest, req.Param)
-//
-//	if err != nil {
-//		logs.Error(ctx, "event=GetSuposUser error=%v", err.Error())
-//		return nil, err
-//	}
-//
-//	resp := new(freezonex_openiiot_api.GetUserResponse)
-//	data := make([]*freezonex_openiiot_api.User, 0)
-//	for _, v := range users {
-//		data = append(data, &freezonex_openiiot_api.User{
-//			BaseRequest: v.BaseRequest,
-//			Param:       v.Param,
-//		})
-//	}
-//	resp.Data = data
-//	resp.BaseResp = middleware.SuccessResponseOK
-//
-//	return resp, nil
-//}
-//
-//// GetCurrentUser will get user record in condition
-//func (a *SuposService) GetCurrentUser(ctx context.Context, req *freezonex_openiiot_api.GetCurrentUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetCurrentUserResponse, error) {
-//	users, err := a.GetSuposUserDB(ctx, req.Id, req.Name)
-//
-//	if err != nil {
-//		logs.Error(ctx, "event=GetSuposUser error=%v", err.Error())
-//		return nil, err
-//	}
-//
-//	resp := new(freezonex_openiiot_api.GetUserResponse)
-//	data := make([]*freezonex_openiiot_api.User, 0)
-//	for _, v := range users {
-//		data = append(data, &freezonex_openiiot_api.User{
-//			Id:          v.ID,
-//			Name:        v.Name,
-//			Description: *v.Description,
-//			IsDefault:   *v.IsDefault,
-//		})
-//	}
-//	resp.Data = data
-//	resp.BaseResp = middleware.SuccessResponseOK
-//
-//	return resp, nil
-//}
 
 // UpdateUser will update user record
 func (a *UserService) UpdateUser(ctx context.Context, req *freezonex_openiiot_api.UpdateUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateUserResponse, error) {
@@ -117,7 +72,7 @@ func (a *UserService) UpdateUser(ctx context.Context, req *freezonex_openiiot_ap
 
 // DeleteUser will delete user record
 func (a *UserService) DeleteUser(ctx context.Context, req *freezonex_openiiot_api.DeleteUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteUserResponse, error) {
-	//Delete user also should delete user user, edge pool, core pool, app pool, flow
+	//Delete user also should delete user user, edge pool, core pool, application pool, flow
 	/*err := a.DeleteUserUserDB(ctx, req.Id)
 	if err != nil {
 		logs.Error(ctx, "event=DeleteUser user error=%v", err.Error())
