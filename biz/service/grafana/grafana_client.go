@@ -139,9 +139,7 @@ func (c *GrafanaClient) request(method, requestPath string, query url.Values, bo
 	// check status code.
 	switch {
 	case resp.StatusCode == http.StatusNotFound:
-		return ErrNotFound{
-			BodyContents: bodyContents,
-		}
+		return fmt.Errorf("status: %d, body: %v", resp.StatusCode, string(bodyContents))
 	case resp.StatusCode >= 400:
 		return fmt.Errorf("status: %d, body: %v", resp.StatusCode, string(bodyContents))
 	}
@@ -250,7 +248,7 @@ func matchRetryCode(gottenCode int, retryCodes []string) (bool, error) {
 // }
 
 
-func (c *GrafanaClient) DataSources(DSN *freezonex_openiiot_api.GrafanaDSN) ([]*freezonex_openiiot_api.DataSource, error) {
+func (c *GrafanaClient) GetDataSource(DSN *freezonex_openiiot_api.GrafanaDSN) ([]*freezonex_openiiot_api.DataSource, error) {
 	result := make([]*DataSource, 0)
 	config := Config{
 		BasicAuth: url.UserPassword(DSN.Username, DSN.Password),

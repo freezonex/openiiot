@@ -270,13 +270,13 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 		grafanaDataSourceGroup := grafanaGroup.Group("/datasource")
 		{
 			grafanaDataSourceGroup.GET("/get", middleware.Response(
-				"/grafana/datasource/get",
-				grafanaHandler.GetDatasource,
-				&iiotpb.GrafanaDataSourcesRequest{}))
+					"/grafana/datasource/get",
+					grafanaHandler.GetDatasource,
+					&iiotpb.GrafanaDataSourcesRequest{}))
 			grafanaDataSourceGroup.POST("/create", middleware.Response(
-				"/grafana/datasource/create",
-				grafanaHandler.CreateDatasource,
-				&iiotpb.GrafanaCreateDataSourceRequest{}))
+					"/grafana/datasource/create",
+					grafanaHandler.CreateDatasource,
+					&iiotpb.GrafanaCreateDataSourceRequest{}))
 			grafanaDataSourceGroup.POST("/delete", middleware.Response(
 				"/grafana/datasource/delete",
 				grafanaHandler.DeleteDatasource,
