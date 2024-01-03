@@ -248,12 +248,41 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 					grafanaHandler.GetAccessToken,
 					&iiotpb.GrafanaAccessTokenRequest{}))
 		}
+
 		grafanaGroup.GET(
 			"/user",
 			middleware.Response(
 				"/grafana/user",
 				grafanaHandler.GetUser,
 				&iiotpb.GrafanaUserRequest{}))
+		grafanaDashboardGroup := grafanaGroup.Group("/dashboard")
+		{
+			grafanaDashboardGroup.POST("/create", middleware.Response(
+				"/grafana/dashboard/create",
+				grafanaHandler.CreateDashBoard,
+				&iiotpb.GrafanaCreateDashboardRequest{}))
+			grafanaDashboardGroup.POST("/save/uid", middleware.Response(
+				"/grafana/dashboard/save/uid",
+				grafanaHandler.SaveDashboardByUid,
+				&iiotpb.GrafanaSaveDashboardByUidRequest{}))
+		}
+
+		grafanaDataSourceGroup := grafanaGroup.Group("/datasource")
+		{
+			grafanaDataSourceGroup.GET("/get", middleware.Response(
+				"/grafana/datasource/get",
+				grafanaHandler.GetDatasource,
+				&iiotpb.GrafanaDataSourcesRequest{}))
+			grafanaDataSourceGroup.POST("/create", middleware.Response(
+				"/grafana/datasource/create",
+				grafanaHandler.CreateDatasource,
+				&iiotpb.GrafanaCreateDataSourceRequest{}))
+			grafanaDataSourceGroup.POST("/delete", middleware.Response(
+				"/grafana/datasource/delete",
+				grafanaHandler.DeleteDatasource,
+				&iiotpb.GrafanaDeleteDataSourceRequest{}))
+		}
+
 	}
 
 	tdengineGroup := r.Group("/tdengine", middleware.Access())
