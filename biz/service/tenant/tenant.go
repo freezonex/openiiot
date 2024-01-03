@@ -2,6 +2,7 @@ package tenant
 
 import (
 	"context"
+	"freezonex/openiiot/biz/service/utils/common"
 
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
@@ -42,6 +43,8 @@ func (a *TenantService) GetTenant(ctx context.Context, req *freezonex_openiiot_a
 			Name:        v.Name,
 			Description: *v.Description,
 			IsDefault:   *v.IsDefault,
+			CreateTime:  common.GetTimeStringFromTime(&v.CreateTime), // Format time as needed
+			UpdateTime:  common.GetTimeStringFromTime(&v.UpdateTime),
 		})
 	}
 	resp.Data = data
@@ -66,7 +69,7 @@ func (a *TenantService) UpdateTenant(ctx context.Context, req *freezonex_openiio
 
 // DeleteTenant will delete tenant record
 func (a *TenantService) DeleteTenant(ctx context.Context, req *freezonex_openiiot_api.DeleteTenantRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteTenantResponse, error) {
-	//Delete tenant also should delete tenant user, edge pool, core pool, app pool, flow
+	//Delete tenant also should delete tenant user, edge pool, core pool, application pool, flow
 	/*err := a.DeleteTenantUserDB(ctx, req.Id)
 	if err != nil {
 		logs.Error(ctx, "event=DeleteTenant user error=%v", err.Error())

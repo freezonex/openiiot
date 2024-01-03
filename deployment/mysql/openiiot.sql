@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS tenant (
 CREATE TABLE IF NOT EXISTS user (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100),
     description VARCHAR(200),
     tenant_id BIGINT NOT NULL,
     role VARCHAR(50) NOT NULL,     -- Viewer, Editor, Admin, SuperAdmin
@@ -29,6 +30,8 @@ CREATE TABLE IF NOT EXISTS edge (
     description VARCHAR(200),
     tenant_id BIGINT NOT NULL,
     url VARCHAR(300) NOT NULL,    -- http://nodered-url:1883
+    username VARCHAR(100),
+    password VARCHAR(100),
     type VARCHAR(100) NOT NULL,   -- nodered, restful, modbus, opcua, opcda
     source VARCHAR(100),          -- user: self-defined
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -41,18 +44,22 @@ CREATE TABLE IF NOT EXISTS core (
     description VARCHAR(200),
     tenant_id BIGINT NOT NULL,
     url VARCHAR(300) NOT NULL,
+    username VARCHAR(100),
+    password VARCHAR(100),
     type VARCHAR(100) NOT NULL,       -- mqtt | tdengine, 
     source VARCHAR(100),              -- openiiot: created by openiiot, user: self-defined
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS app (
+CREATE TABLE IF NOT EXISTS application (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     description VARCHAR(200),
     tenant_id BIGINT NOT NULL,
     url VARCHAR(300) NOT NULL,
+    username VARCHAR(100),
+    password VARCHAR(100),
     type VARCHAR(100) NOT NULL,       -- grafana | odm | bi, 
     source VARCHAR(100),              -- openiiot: created by openiiot, user: self-defined
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
