@@ -9,6 +9,7 @@ import (
 	"freezonex/openiiot/biz/handler"
 	"freezonex/openiiot/biz/middleware"
 	iiotpb "freezonex/openiiot/biz/model/freezonex_openiiot_api"
+	"freezonex/openiiot/biz/service/emqx"
 	"freezonex/openiiot/biz/service/grafana"
 	"freezonex/openiiot/biz/service/supos"
 	"freezonex/openiiot/biz/service/tdengine"
@@ -90,6 +91,17 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.GetCurrentUserRequest{}))
 	}
 
+	emqxGroup := r.Group("/emqx", middleware.Access())
+	{
+		emqxHandler := handler.NewEmqxHandler(emqx.NewEmqxService(db))
+		emqxGroup.GET(
+			"/status",
+			middleware.Response(
+				"/emqx/status",
+				emqxHandler.GetStatus,
+				&iiotpb.EmqxGetStatusRequest{}))
+	}
+
 	grafanaGroup := r.Group("/grafana", middleware.Access())
 	{
 		grafanaHandler := handler.NewGrafanaHandler(grafana.NewGrafanaService(db, &c.GrafanaConfig))
@@ -127,7 +139,7 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 			grafanaDataSourceGroup.GET("/get", middleware.Response(
 					"/grafana/datasource/get",
 					grafanaHandler.GetDatasource,
-					&iiotpb.GrafanaDataSourcesRequest{}))
+					&iiotpb.GrafanaGetDataSourceRequest{}))
 			grafanaDataSourceGroup.POST("/create", middleware.Response(
 					"/grafana/datasource/create",
 					grafanaHandler.CreateDatasource,
