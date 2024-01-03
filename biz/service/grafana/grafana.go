@@ -82,13 +82,13 @@ func (a *GrafanaService) GetUser(ctx context.Context, req *freezonex_openiiot_ap
 	return resp, nil
 }
 
-func (a *GrafanaService) GetDatasource(ctx context.Context, req *freezonex_openiiot_api.GrafanaDataSourcesRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaDataSourcesResponse, error) {
+func (a *GrafanaService) GetDatasource(ctx context.Context, req *freezonex_openiiot_api.GrafanaGetDataSourceRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaGetDataSourceResponse, error) {
 	dataSources, err := a.client.GetDataSource(req.Dsn)
 	if err != nil {
 		return nil, err
 	}
 	
-	resp := new(freezonex_openiiot_api.GrafanaDataSourcesResponse)
+	resp := new(freezonex_openiiot_api.GrafanaGetDataSourceResponse)
 	resp.DataSources = dataSources
 	resp.BaseResp = middleware.SuccessResponseOK
 
