@@ -286,39 +286,39 @@ func (a *FlowService) UpdateFlowEdgeDB(ctx context.Context, flowid int64, edgeid
 }
 
 func (a *FlowService) UpdateFlowCoreDB(ctx context.Context, flowid int64, coreids []int64) error {
-	table := a.db.DBOpeniiotQuery.FlowEdge
+	table := a.db.DBOpeniiotQuery.FlowCore
 	tx := table.WithContext(ctx).Where(table.FlowID.Eq(flowid))
 
-	for _, edgeID := range coreids {
+	for _, coreID := range coreids {
 
-		exist_edgeid, _ := tx.Where(table.FlowID.Eq(flowid), table.EdgeID.Eq(edgeID)).First()
+		exist_coreid, _ := tx.Where(table.FlowID.Eq(flowid), table.CoreID.Eq(coreID)).First()
 
-		if exist_edgeid == nil {
-			newEdge := model_openiiot.FlowEdge{
+		if exist_coreid == nil {
+			newCore := model_openiiot.FlowCore{
 				FlowID: flowid,
-				EdgeID: edgeID,
+				CoreID: coreID,
 			}
-			err := tx.Create(&newEdge)
+			err := tx.Create(&newCore)
 			if err != nil {
 				return err
 			}
 		}
 	}
 
-	existingEdgeIDs, err := a.GetFlowEdgeIDs(ctx, flowid)
+	existingCoreIDs, err := a.GetFlowCoreIDs(ctx, flowid)
 	if err != nil {
 		return err // Handle error appropriately
 	}
 	// Create a map for quick lookup of incoming edgeids
 
-	inputEdgeMap := make(map[int64]bool)
+	inputCoreMap := make(map[int64]bool)
 	for _, id := range coreids {
-		inputEdgeMap[id] = true
+		inputCoreMap[id] = true
 	}
 
-	for _, existingID := range existingEdgeIDs {
-		if !inputEdgeMap[existingID] {
-			_, err := tx.Where(table.FlowID.Eq(flowid), table.EdgeID.Eq(existingID)).Delete(&model_openiiot.FlowEdge{})
+	for _, existingID := range existingCoreIDs {
+		if !inputCoreMap[existingID] {
+			_, err := tx.Where(table.FlowID.Eq(flowid), table.CoreID.Eq(existingID)).Delete(&model_openiiot.FlowCore{})
 			if err != nil {
 				return err
 			}
@@ -329,39 +329,39 @@ func (a *FlowService) UpdateFlowCoreDB(ctx context.Context, flowid int64, coreid
 }
 
 func (a *FlowService) UpdateFlowAppDB(ctx context.Context, flowid int64, appids []int64) error {
-	table := a.db.DBOpeniiotQuery.FlowEdge
+	table := a.db.DBOpeniiotQuery.FlowApp
 	tx := table.WithContext(ctx).Where(table.FlowID.Eq(flowid))
 
-	for _, edgeID := range appids {
+	for _, appID := range appids {
 
-		exist_edgeid, _ := tx.Where(table.FlowID.Eq(flowid), table.EdgeID.Eq(edgeID)).First()
+		exist_edgeid, _ := tx.Where(table.FlowID.Eq(flowid), table.AppID.Eq(appID)).First()
 
 		if exist_edgeid == nil {
-			newEdge := model_openiiot.FlowEdge{
+			newApp := model_openiiot.FlowApp{
 				FlowID: flowid,
-				EdgeID: edgeID,
+				AppID:  appID,
 			}
-			err := tx.Create(&newEdge)
+			err := tx.Create(&newApp)
 			if err != nil {
 				return err
 			}
 		}
 	}
 
-	existingEdgeIDs, err := a.GetFlowEdgeIDs(ctx, flowid)
+	existingAppIDs, err := a.GetFlowAppIDs(ctx, flowid)
 	if err != nil {
 		return err // Handle error appropriately
 	}
 	// Create a map for quick lookup of incoming edgeids
 
-	inputEdgeMap := make(map[int64]bool)
+	inputAppMap := make(map[int64]bool)
 	for _, id := range appids {
-		inputEdgeMap[id] = true
+		inputAppMap[id] = true
 	}
 
-	for _, existingID := range existingEdgeIDs {
-		if !inputEdgeMap[existingID] {
-			_, err := tx.Where(table.FlowID.Eq(flowid), table.EdgeID.Eq(existingID)).Delete(&model_openiiot.FlowEdge{})
+	for _, existingID := range existingAppIDs {
+		if !inputAppMap[existingID] {
+			_, err := tx.Where(table.FlowID.Eq(flowid), table.AppID.Eq(existingID)).Delete(&model_openiiot.FlowApp{})
 			if err != nil {
 				return err
 			}
