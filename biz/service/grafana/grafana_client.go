@@ -15,7 +15,7 @@ type GrafanaClient struct {
 	dsn freezonex_openiiot_api.GrafanaDSN
 }
 
-func generateBaicAuth(username string, password string) (string, error) {
+func generateBasicAuth(username string, password string) (string, error) {
 	auth := username + ":" + password
 	authBase64 := base64.StdEncoding.EncodeToString([]byte(auth))
 	return "Basic " + authBase64, nil
@@ -23,7 +23,7 @@ func generateBaicAuth(username string, password string) (string, error) {
 
 func (c *GrafanaClient) GetDataSource(ctx context.Context, req *freezonex_openiiot_api.GrafanaGetDataSourceRequest) ([]*freezonex_openiiot_api.DataSource, error) {
 
-	basicAuth, err := generateBaicAuth(req.GetDsn().Username, req.GetDsn().Password)
+	basicAuth, err := generateBasicAuth(req.GetDsn().Username, req.GetDsn().Password)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *GrafanaClient) CreateDashBoard(ctx context.Context, req *freezonex_open
 		logs.Error("Cannot unmarshal model in dashboard", req.Dashboard)
 		return nil, err
 	}
-	basicAuth, err := generateBaicAuth(req.GetDsn().Username, req.GetDsn().Password)
+	basicAuth, err := generateBasicAuth(req.GetDsn().Username, req.GetDsn().Password)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func (c *GrafanaClient) CreateDashBoard(ctx context.Context, req *freezonex_open
 //}
 
 func (c *GrafanaClient) DashboardByUID(ctx context.Context, req *freezonex_openiiot_api.GrafanaSaveDashboardByUidRequest) (*Dashboard, error) {
-	basicAuth, err := generateBaicAuth(req.GetDsn().Username, req.GetDsn().Password)
+	basicAuth, err := generateBasicAuth(req.GetDsn().Username, req.GetDsn().Password)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func (c *GrafanaClient) NewDataSource(ctx context.Context, req *freezonex_openii
 	if err != nil {
 		return 0, err
 	}
-	basicAuth, err := generateBaicAuth(req.GetDsn().Username, req.GetDsn().Password)
+	basicAuth, err := generateBasicAuth(req.GetDsn().Username, req.GetDsn().Password)
 	if err != nil {
 		return 0, err
 	}
@@ -108,7 +108,7 @@ func (c *GrafanaClient) NewDataSource(ctx context.Context, req *freezonex_openii
 
 func (c *GrafanaClient) DeleteDataSourceByName(ctx context.Context, req *freezonex_openiiot_api.GrafanaDeleteDataSourceRequest) error {
 	urlPath := req.Dsn.Host + fmt.Sprintf("/api/datasources/name/%s", req.Name)
-	basicAuth, err := generateBaicAuth(req.GetDsn().Username, req.GetDsn().Password)
+	basicAuth, err := generateBasicAuth(req.GetDsn().Username, req.GetDsn().Password)
 	if err != nil {
 		return err
 	}

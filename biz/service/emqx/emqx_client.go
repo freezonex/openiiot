@@ -1,243 +1,38 @@
 package emqx
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
+	"context"
+	"encoding/base64"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-	"io"
-	"log"
-	"net/http"
+	"freezonex/openiiot/biz/service/utils/http_utils"
 	"net/url"
-	"os"
-	"path"
-	"strconv"
-	"time"
-
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
-
-	"github.com/hashicorp/go-cleanhttp"
 )
 
 // Client is a Grafana API client.
 type EmqxClient struct {
-	config  Config
-	baseURL url.URL
-	client  *http.Client
+	dsn freezonex_openiiot_api.EmqxDSN
 }
 
-type Config struct {
-	// APIKey is an optional API key or service account token.
-	APIKey string
-	// BasicAuth is optional basic auth credentials.
-	BasicAuth *url.Userinfo
-	// HTTPHeaders are optional HTTP headers.
-	HTTPHeaders map[string]string
-	// Client provides an optional HTTP client, otherwise a default will be used.
-	Client *http.Client
-	// NumRetries contains the number of attempted retries
-	NumRetries int
-	// RetryTimeout says how long to wait before retrying a request
-	RetryTimeout time.Duration
-	// RetryStatusCodes contains the list of status codes to retry, use "x" as a wildcard for a single digit (default: [429, 5xx])
-	RetryStatusCodes []string
+func generateBasicAuth(username string, password string) (string, error) {
+	auth := username + ":" + password
+	authBase64 := base64.StdEncoding.EncodeToString([]byte(auth))
+	return "Basic " + authBase64, nil
 }
 
-// New creates a new Grafana client.
-func New(baseURL string, cfg Config) (*EmqxClient, error) {
-	u, err := url.Parse(baseURL)
+func (c *EmqxClient) GetStatus(ctx context.Context, req *freezonex_openiiot_api.EmqxGetStatusRequest) (*freezonex_openiiot_api.EmqxStatusStruct, error) {
+	basicAuth, err := generateBasicAuth(req.GetDsn().Username, req.GetDsn().Password)
 	if err != nil {
 		return nil, err
 	}
 
-	if cfg.BasicAuth != nil {
-		u.User = cfg.BasicAuth
-	}
+	urlPath := req.Dsn.Host + "/api/v5/status"
 
-	cli := cfg.Client
-	if cli == nil {
-		cli = cleanhttp.DefaultClient()
-	}
-
-	return &EmqxClient{
-		config:  cfg,
-		baseURL: *u,
-		client:  cli,
-	}, nil
-}
-
-
-func (c *EmqxClient) request(method, requestPath string, query url.Values, body []byte, responseStruct interface{}) error {
-	var (
-		req          *http.Request
-		resp         *http.Response
-		err          error
-		bodyContents []byte
-	)
-	retryStatusCodes := c.config.RetryStatusCodes
-	if len(retryStatusCodes) == 0 {
-		retryStatusCodes = []string{"429", "5xx"}
-	}
-
-	// retry logic
-	for n := 0; n <= c.config.NumRetries; n++ {
-		req, err = c.newRequest(method, requestPath, query, bytes.NewReader(body))
-		if err != nil {
-			return err
-		}
-
-		// Wait a bit if that's not the first request
-		if n != 0 {
-			if c.config.RetryTimeout == 0 {
-				c.config.RetryTimeout = time.Second * 5
-			}
-			time.Sleep(c.config.RetryTimeout)
-		}
-
-		resp, err = c.client.Do(req)
-
-		// If err is not nil, retry again
-		// That's either caused by client policy, or failure to speak HTTP (such as network connectivity problem). A
-		// non-2xx status code doesn't cause an error.
-		if err != nil {
-			continue
-		}
-
-		// read the body (even on non-successful HTTP status codes), as that's what the unit tests expect
-		bodyContents, err = io.ReadAll(resp.Body)
-		resp.Body.Close() //nolint:errcheck
-
-		// if there was an error reading the body, try again
-		if err != nil {
-			continue
-		}
-
-		shouldRetry, err := matchRetryCode(resp.StatusCode, retryStatusCodes)
-		if err != nil {
-			return err
-		}
-		if !shouldRetry {
-			break
-		}
-	}
-	if err != nil {
-		return err
-	}
-
-	if os.Getenv("GF_LOG") != "" {
-		log.Printf("response status %d with body %v", resp.StatusCode, string(bodyContents))
-	}
-
-	// check status code.
-	switch {
-	case resp.StatusCode == http.StatusNotFound:
-		return fmt.Errorf("status: %d, body: %v", resp.StatusCode, string(bodyContents))
-	case resp.StatusCode >= 400:
-		return fmt.Errorf("status: %d, body: %v", resp.StatusCode, string(bodyContents))
-	}
-
-	if responseStruct == nil {
-		return nil
-	}
-
-	err = json.Unmarshal(bodyContents, responseStruct)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (c *EmqxClient) newRequest(method, requestPath string, query url.Values, body io.Reader) (*http.Request, error) {
-	url := c.baseURL
-	url.Path = path.Join(url.Path, requestPath)
-	url.RawQuery = query.Encode()
-	req, err := http.NewRequest(method, url.String(), body)
-	if err != nil {
-		return req, err
-	}
-
-	// cannot use both API key and org ID. API keys are scoped to single org
-	if c.config.APIKey != "" {
-		req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.config.APIKey))
-	}
-
-	if c.config.HTTPHeaders != nil {
-		for k, v := range c.config.HTTPHeaders {
-			req.Header.Add(k, v)
-		}
-	}
-
-	if os.Getenv("GF_LOG") != "" {
-		if body == nil {
-			log.Printf("request (%s) to %s with no body data", method, url.String())
-		} else {
-			reader := body.(*bytes.Reader)
-			if reader.Len() == 0 {
-				log.Printf("request (%s) to %s with no body data", method, url.String())
-			} else {
-				contents := make([]byte, reader.Len())
-				if _, err := reader.Read(contents); err != nil {
-					return nil, fmt.Errorf("cannot read body contents for logging: %w", err)
-				}
-				if _, err := reader.Seek(0, io.SeekStart); err != nil {
-					return nil, fmt.Errorf("failed to seek body reader to start after logging: %w", err)
-				}
-				log.Printf("request (%s) to %s with body data: %s", method, url.String(), string(contents))
-			}
-		}
-	}
-
-	req.Header.Add("Content-Type", "application/json")
-	return req, err
-}
-
-// matchRetryCode checks if the status code matches any of the configured retry status codes.
-func matchRetryCode(gottenCode int, retryCodes []string) (bool, error) {
-	gottenCodeStr := strconv.Itoa(gottenCode)
-	for _, retryCode := range retryCodes {
-		if len(retryCode) != 3 {
-			return false, fmt.Errorf("invalid retry status code: %s", retryCode)
-		}
-		matched := true
-		for i := range retryCode {
-			c := retryCode[i]
-			if c == 'x' {
-				continue
-			}
-			if gottenCodeStr[i] != c {
-				matched = false
-				break
-			}
-		}
-		if matched {
-			return true, nil
-		}
-	}
-
-	return false, nil
-}
-
-func (c *EmqxClient) GetStatus(DSN *freezonex_openiiot_api.EmqxDSN) (*freezonex_openiiot_api.EmqxStatusStruct, error) {
-	config := Config{
-		BasicAuth: url.UserPassword(DSN.Username, DSN.Password),
-		HTTPHeaders: map[string]string{
-			"Content-Type": "application/json",
-		},
-		Client: http.DefaultClient,
-	}
-	logs.Debug(config)
-
-	cli, err := New(DSN.Host, config)
-	if err != nil {
-		return nil, err
-	}
-	
 	query := url.Values{}
-    query.Set("format", "json")
+	query.Set("format", "json")
 
 	result := &freezonex_openiiot_api.EmqxStatusStruct{}
-	err = cli.request("GET", "api/v5/status", query, nil, &result)
+	err = http_utils.GetWithUnmarshal(ctx, result, urlPath, []http_utils.Query{{Key: "format", Value: "json"}}, []http_utils.Path{}, []http_utils.Header{{Key: "Authorization", Value: basicAuth}})
+
 	if err != nil {
 		return nil, err
 	}

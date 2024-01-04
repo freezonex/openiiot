@@ -6,12 +6,10 @@ import (
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
-func (a *EmqxService) GetStatus(ctx context.Context, req *freezonex_openiiot_api.EmqxGetStatusRequest, c *app.RequestContext)(*freezonex_openiiot_api.EmqxGetStatusResponse, error) {
-	logs.Debug("Service level")
-	status, err := a.client.GetStatus(req.Dsn)
+func (a *EmqxService) GetStatus(ctx context.Context, req *freezonex_openiiot_api.EmqxGetStatusRequest, c *app.RequestContext) (*freezonex_openiiot_api.EmqxGetStatusResponse, error) {
+	status, err := a.client.GetStatus(ctx, req)
 	if err != nil {
 		return nil, err
 	}
