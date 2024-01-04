@@ -8,8 +8,8 @@ package freezonex_openiiot_api
 
 import (
 	_ "freezonex/openiiot/biz/model/api"
-	"freezonex/openiiot/biz/model/base_req"
-	"freezonex/openiiot/biz/model/base_resp"
+	base_req "freezonex/openiiot/biz/model/base_req"
+	base_resp "freezonex/openiiot/biz/model/base_resp"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
