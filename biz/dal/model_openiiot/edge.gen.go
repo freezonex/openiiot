@@ -17,6 +17,8 @@ type Edge struct {
 	Description *string   `gorm:"column:description" json:"description"`
 	TenantID    int64     `gorm:"column:tenant_id;not null" json:"tenant_id"`
 	URL         string    `gorm:"column:url;not null" json:"url"`
+	Username    *string   `gorm:"column:username" json:"username"`
+	Password    *string   `gorm:"column:password" json:"password"`
 	Type        string    `gorm:"column:type;not null" json:"type"`
 	Source      *string   `gorm:"column:source" json:"source"`
 	UpdateTime  time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`

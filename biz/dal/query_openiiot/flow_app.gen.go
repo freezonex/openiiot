@@ -6,6 +6,7 @@ package query_openiiot
 
 import (
 	"context"
+	"freezonex/openiiot/biz/dal/model_openiiot"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -15,8 +16,6 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"freezonex/openiiot/biz/dal/model_openiiot"
 )
 
 func newFlowApp(db *gorm.DB, opts ...gen.DOOption) flowApp {
