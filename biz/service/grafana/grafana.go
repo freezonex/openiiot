@@ -82,12 +82,12 @@ func (a *GrafanaService) GetUser(ctx context.Context, req *freezonex_openiiot_ap
 	return resp, nil
 }
 
-func (a *GrafanaService) GetDatasource(ctx context.Context, req *freezonex_openiiot_api.GrafanaGetDataSourceRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaGetDataSourceResponse, error) {
-	dataSources, err := a.client.GetDataSource(req.Dsn)
+func (a *GrafanaService) GetDatasource(ctx context.Context, req *freezonex_openiiot_api.GrafanaGetDataSourceRequest, c *app.RequestContext) (*freezonex_openiiot_api.GrafanaGetDataSourceResponse, error) {
+	dataSources, err := a.client.GetDataSource(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	resp := new(freezonex_openiiot_api.GrafanaGetDataSourceResponse)
 	resp.DataSources = dataSources
 	resp.BaseResp = middleware.SuccessResponseOK
@@ -96,12 +96,12 @@ func (a *GrafanaService) GetDatasource(ctx context.Context, req *freezonex_openi
 
 }
 
-func (a *GrafanaService) NewDataSource(ctx context.Context, req *freezonex_openiiot_api.GrafanaCreateDataSourceRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaCreateDataSourceResponse, error) {
-	dataSource, err := a.client.NewDataSource(req.Dsn, req.DataSource)
+func (a *GrafanaService) NewDataSource(ctx context.Context, req *freezonex_openiiot_api.GrafanaCreateDataSourceRequest, c *app.RequestContext) (*freezonex_openiiot_api.GrafanaCreateDataSourceResponse, error) {
+	dataSource, err := a.client.NewDataSource(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	resp := new(freezonex_openiiot_api.GrafanaCreateDataSourceResponse)
 	resp.Message = fmt.Sprintf("New Data Scource %d created ", dataSource)
 	resp.BaseResp = middleware.SuccessResponseOK
@@ -109,20 +109,20 @@ func (a *GrafanaService) NewDataSource(ctx context.Context, req *freezonex_openi
 	return resp, nil
 
 }
-func (a *GrafanaService) DeleteDataSource(ctx context.Context, req *freezonex_openiiot_api.GrafanaDeleteDataSourceRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaDeleteDataSourceResponse, error) {
-	err := a.client.DeleteDataSourceByName(req.Dsn, req.Name)
+func (a *GrafanaService) DeleteDataSource(ctx context.Context, req *freezonex_openiiot_api.GrafanaDeleteDataSourceRequest, c *app.RequestContext) (*freezonex_openiiot_api.GrafanaDeleteDataSourceResponse, error) {
+	err := a.client.DeleteDataSourceByName(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	resp := new(freezonex_openiiot_api.GrafanaDeleteDataSourceResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
 	resp.Message = fmt.Sprintf("Data Scource %s deleted ", req.Name)
 	return resp, nil
 
 }
-func (a *GrafanaService) CreateDashBoard(ctx context.Context, req *freezonex_openiiot_api.GrafanaCreateDashboardRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaCreateDashboardResponse, error) {
-	saveResponse, err := a.client.CreateDashBoard(req.Dsn, req.Dashboard)
+func (a *GrafanaService) CreateDashBoard(ctx context.Context, req *freezonex_openiiot_api.GrafanaCreateDashboardRequest, c *app.RequestContext) (*freezonex_openiiot_api.GrafanaCreateDashboardResponse, error) {
+	saveResponse, err := a.client.CreateDashBoard(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -134,8 +134,8 @@ func (a *GrafanaService) CreateDashBoard(ctx context.Context, req *freezonex_ope
 
 }
 
-func (a *GrafanaService) SaveDashboardByUID(ctx context.Context, req *freezonex_openiiot_api.GrafanaSaveDashboardByUidRequest, c *app.RequestContext)(*freezonex_openiiot_api.GrafanaSaveDashboardByUidResponse, error) {
-	returnedDashboard, err := a.client.DashboardByUID(req.Dsn, req.Uid, req.SavePath)
+func (a *GrafanaService) SaveDashboardByUID(ctx context.Context, req *freezonex_openiiot_api.GrafanaSaveDashboardByUidRequest, c *app.RequestContext) (*freezonex_openiiot_api.GrafanaSaveDashboardByUidResponse, error) {
+	returnedDashboard, err := a.client.DashboardByUID(ctx, req)
 	if err != nil {
 		return nil, err
 	}
