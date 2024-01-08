@@ -254,6 +254,14 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 					emqxHandler.CreateBridge,
 					&iiotpb.EmqxCreateBridgeRequest{}))
 		}
+		emqxRuleGroup := emqxGroup.Group("/rule")
+		{
+			emqxRuleGroup.POST("/create",
+				middleware.Response(
+					"/emqx/rule/create",
+					emqxHandler.CreateRule,
+					&iiotpb.EmqxCreateRuleRequest{}))
+		}
 	}
 
 	grafanaGroup := r.Group("/grafana", middleware.Access())

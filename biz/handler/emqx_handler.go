@@ -39,3 +39,14 @@ func (a *EmqxHandler) CreateBridge(ctx context.Context, c *app.RequestContext) m
 	return resp
 
 }
+
+func (a *EmqxHandler) CreateRule(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.EmqxCreateRuleRequest)
+	resp, err := a.service.CreateRule(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=CreateEmqxRule error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+
+}

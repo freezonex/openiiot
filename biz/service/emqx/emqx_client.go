@@ -56,3 +56,20 @@ func (c *EmqxClient) CreateBridge(ctx context.Context, req *freezonex_openiiot_a
 	}
 	return result, err
 }
+
+func (c *EmqxClient) CreateRule(ctx context.Context, req *freezonex_openiiot_api.EmqxCreateRuleRequest) (*freezonex_openiiot_api.RuleResponseStruct, error) {
+	basicAuth, err := generateBasicAuth(req.GetDsn().Username, req.GetDsn().Password)
+	if err != nil {
+		return nil, err
+	}
+
+	urlPath := req.Dsn.Host + "/api/v5/rules"
+
+	result := &freezonex_openiiot_api.RuleResponseStruct{}
+	err = http_utils.PostWithUnmarshal(ctx, result, urlPath, req.Rule, []http_utils.Query{}, []http_utils.Path{}, []http_utils.Header{{Key: "Authorization", Value: basicAuth}})
+	logs.Debug("client level response", result)
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
