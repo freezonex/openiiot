@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/http_utils"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	"net/url"
 )
 
@@ -33,6 +34,23 @@ func (c *EmqxClient) GetStatus(ctx context.Context, req *freezonex_openiiot_api.
 	result := &freezonex_openiiot_api.EmqxStatusStruct{}
 	err = http_utils.GetWithUnmarshal(ctx, result, urlPath, []http_utils.Query{{Key: "format", Value: "json"}}, []http_utils.Path{}, []http_utils.Header{{Key: "Authorization", Value: basicAuth}})
 
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
+
+func (c *EmqxClient) CreateBridge(ctx context.Context, req *freezonex_openiiot_api.EmqxCreateBridgeRequest) (*freezonex_openiiot_api.BridgeStatusResponse, error) {
+	basicAuth, err := generateBasicAuth(req.GetDsn().Username, req.GetDsn().Password)
+	if err != nil {
+		return nil, err
+	}
+
+	urlPath := req.Dsn.Host + "/api/v5/bridges"
+
+	result := &freezonex_openiiot_api.BridgeStatusResponse{}
+	err = http_utils.PostWithUnmarshal(ctx, result, urlPath, req.Bridge, []http_utils.Query{}, []http_utils.Path{}, []http_utils.Header{{Key: "Authorization", Value: basicAuth}})
+	logs.Debug("client level response", result)
 	if err != nil {
 		return nil, err
 	}

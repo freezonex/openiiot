@@ -246,6 +246,14 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/emqx/status",
 				emqxHandler.GetStatus,
 				&iiotpb.EmqxGetStatusRequest{}))
+		emqxBridgeGroup := emqxGroup.Group("/bridge")
+		{
+			emqxBridgeGroup.POST("/create",
+				middleware.Response(
+					"/emqx/bridge/create",
+					emqxHandler.CreateBridge,
+					&iiotpb.EmqxCreateBridgeRequest{}))
+		}
 	}
 
 	grafanaGroup := r.Group("/grafana", middleware.Access())
@@ -283,13 +291,13 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 		grafanaDataSourceGroup := grafanaGroup.Group("/datasource")
 		{
 			grafanaDataSourceGroup.GET("/get", middleware.Response(
-					"/grafana/datasource/get",
-					grafanaHandler.GetDatasource,
-					&iiotpb.GrafanaGetDataSourceRequest{}))
+				"/grafana/datasource/get",
+				grafanaHandler.GetDatasource,
+				&iiotpb.GrafanaGetDataSourceRequest{}))
 			grafanaDataSourceGroup.POST("/create", middleware.Response(
-					"/grafana/datasource/create",
-					grafanaHandler.CreateDatasource,
-					&iiotpb.GrafanaCreateDataSourceRequest{}))
+				"/grafana/datasource/create",
+				grafanaHandler.CreateDatasource,
+				&iiotpb.GrafanaCreateDataSourceRequest{}))
 			grafanaDataSourceGroup.POST("/delete", middleware.Response(
 				"/grafana/datasource/delete",
 				grafanaHandler.DeleteDatasource,

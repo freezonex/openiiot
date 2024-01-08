@@ -20,7 +20,6 @@ func NewEmqxHandler(s *emqx.EmqxService) *EmqxHandler {
 }
 
 func (a *EmqxHandler) GetStatus(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
-	logs.Debug("Handler level")
 	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.EmqxGetStatusRequest)
 	resp, err := a.service.GetStatus(ctx, req, c)
 	if err != nil {
@@ -28,4 +27,15 @@ func (a *EmqxHandler) GetStatus(ctx context.Context, c *app.RequestContext) midd
 		return middleware.ErrorResp(http.StatusInternalServerError, err)
 	}
 	return resp
+}
+
+func (a *EmqxHandler) CreateBridge(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.EmqxCreateBridgeRequest)
+	resp, err := a.service.CreateBridge(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=CreateEmqxBridge error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+
 }
