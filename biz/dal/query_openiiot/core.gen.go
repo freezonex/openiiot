@@ -6,6 +6,7 @@ package query_openiiot
 
 import (
 	"context"
+	"freezonex/openiiot/biz/dal/model_openiiot"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -15,8 +16,6 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"freezonex/openiiot/biz/dal/model_openiiot"
 )
 
 func newCore(db *gorm.DB, opts ...gen.DOOption) core {
@@ -32,6 +31,8 @@ func newCore(db *gorm.DB, opts ...gen.DOOption) core {
 	_core.Description = field.NewString(tableName, "description")
 	_core.TenantID = field.NewInt64(tableName, "tenant_id")
 	_core.URL = field.NewString(tableName, "url")
+	_core.Username = field.NewString(tableName, "username")
+	_core.Password = field.NewString(tableName, "password")
 	_core.Type = field.NewString(tableName, "type")
 	_core.Source = field.NewString(tableName, "source")
 	_core.UpdateTime = field.NewTime(tableName, "update_time")
@@ -51,6 +52,8 @@ type core struct {
 	Description field.String
 	TenantID    field.Int64
 	URL         field.String
+	Username    field.String
+	Password    field.String
 	Type        field.String
 	Source      field.String
 	UpdateTime  field.Time
@@ -76,6 +79,8 @@ func (c *core) updateTableName(table string) *core {
 	c.Description = field.NewString(table, "description")
 	c.TenantID = field.NewInt64(table, "tenant_id")
 	c.URL = field.NewString(table, "url")
+	c.Username = field.NewString(table, "username")
+	c.Password = field.NewString(table, "password")
 	c.Type = field.NewString(table, "type")
 	c.Source = field.NewString(table, "source")
 	c.UpdateTime = field.NewTime(table, "update_time")
@@ -104,12 +109,14 @@ func (c *core) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *core) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 9)
+	c.fieldMap = make(map[string]field.Expr, 11)
 	c.fieldMap["id"] = c.ID
 	c.fieldMap["name"] = c.Name
 	c.fieldMap["description"] = c.Description
 	c.fieldMap["tenant_id"] = c.TenantID
 	c.fieldMap["url"] = c.URL
+	c.fieldMap["username"] = c.Username
+	c.fieldMap["password"] = c.Password
 	c.fieldMap["type"] = c.Type
 	c.fieldMap["source"] = c.Source
 	c.fieldMap["update_time"] = c.UpdateTime
