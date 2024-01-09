@@ -1,4 +1,4 @@
-package tenant
+package k8s
 
 func NoderedPersistentVolumeClaim(name string) *PersistentVolumeClaim {
 	return &PersistentVolumeClaim{

@@ -1,4 +1,4 @@
-package tenant
+package k8s
 
 func NewDeployment(name string) *Deployment {
 	return &Deployment{
