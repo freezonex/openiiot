@@ -56,7 +56,6 @@ tools/taosadapter/*
 tools/upx*
 
 # Doxygen Generated files
-html/
 /.vs
 /CMakeFiles/3.10.2
 /CMakeCache.txt

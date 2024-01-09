@@ -2,7 +2,7 @@
 FROM golang:alpine AS builder
 WORKDIR /openiiot
 COPY biz biz
-COPY *.go .
+COPY *.go ./
 COPY go.mod go.mod
 COPY go.sum go.sum
 RUN go build -o server .
