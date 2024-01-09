@@ -19,3 +19,27 @@ func (a *EmqxService) GetStatus(ctx context.Context, req *freezonex_openiiot_api
 
 	return resp, nil
 }
+
+func (a *EmqxService) CreateBridge(ctx context.Context, req *freezonex_openiiot_api.EmqxCreateBridgeRequest, c *app.RequestContext) (*freezonex_openiiot_api.EmqxCreateBridgeResponse, error) {
+	status, err := a.client.CreateBridge(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	resp := new(freezonex_openiiot_api.EmqxCreateBridgeResponse)
+	resp.BridgeStatus = status
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+}
+
+func (a *EmqxService) CreateRule(ctx context.Context, req *freezonex_openiiot_api.EmqxCreateRuleRequest, c *app.RequestContext) (*freezonex_openiiot_api.EmqxCreateRuleResponse, error) {
+	rule, err := a.client.CreateRule(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	resp := new(freezonex_openiiot_api.EmqxCreateRuleResponse)
+	resp.RuleResp = rule
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+}
