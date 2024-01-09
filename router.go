@@ -52,7 +52,7 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	tenantGroup := r.Group("/tenant", middleware.Access())
 	{
-		tenantHandler := handler.NewTenantHandler(tenant.NewTenantService(db))
+		tenantHandler := handler.NewTenantHandler(tenant.NewTenantService(db, &c.K8sConfig))
 		tenantGroup.POST(
 			"/add",
 			middleware.Response(
