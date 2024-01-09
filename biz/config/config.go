@@ -31,6 +31,11 @@ type SuposConfig struct {
 	LOGOUT string `yaml:"LOGOUT"`
 }
 
+type K8sConfig struct {
+	AuthorizationValue string `yaml:"AuthorizationValue"`
+	K8SURL             string `yaml:"K8SURL"`
+}
+
 type GrafanaConfig struct {
 	RedirectUri string `yaml:"RedirectUri"`
 }
@@ -55,6 +60,7 @@ type Config struct {
 	TDEngineConfig `yaml:"TDEngineConfig"`
 	HertzConfig    `yaml:"HertzConfig"`
 	GeneralConfig  `yaml:"GeneralConfig"`
+	K8sConfig      `yaml:"K8sConfig"`
 }
 
 func Init() (*Config, error) {
