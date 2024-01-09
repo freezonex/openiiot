@@ -1,4 +1,4 @@
-package tenant
+package k8s
 
 func NewNamespace(name string) *Namespace {
 	return &Namespace{

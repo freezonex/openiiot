@@ -1,4 +1,4 @@
-package tenant
+package k8s
 
 func NewService(name string, nodePort int) *Service {
 	return &Service{

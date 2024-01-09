@@ -1,4 +1,4 @@
-package tenant
+package k8s
 
 func NoderedPersistentVolume(name string) *PersistentVolume {
 	return &PersistentVolume{
