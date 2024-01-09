@@ -251,7 +251,6 @@ func (a *TenantService) DeleteTenantDB(ctx context.Context, id int64) error {
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx)
 
-
 	ax := table.WithContext(ctx).Select(field.ALL)
 	ax = ax.Where(table.ID.Eq(id))
 	data, err := ax.Find()
@@ -272,20 +271,18 @@ func (a *TenantService) DeleteTenantDB(ctx context.Context, id int64) error {
 	}
 	_, err = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/namespaces/%s", a.s.K8SURL, data[0].Name), nil, headers, ctx)
 
-
-	//kubectl delete pv openiiot-tdengine-volume-data-wenhao
-	//kubectl delete pv openiiot-tdengine-volume-log-wenhao
-	//kubectl delete pv openiiot-grafana-volume-wenhao
-	//kubectl delete pv openiiot-nodered-volume-wenhao
-	//kubectl delete pv openiiot-emqx-volume-wenhao
-	//kubectl delete pv openiiot-mysql-volume-wenhao
-
+	_, err = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", a.s.K8SURL, "openiiot-tdengine-volume-data-"+data[0].Name), nil, headers, ctx)
+	_, err = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", a.s.K8SURL, "openiiot-tdengine-volume-log-"+data[0].Name), nil, headers, ctx)
+	_, err = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", a.s.K8SURL, "openiiot-grafana-volume-"+data[0].Name), nil, headers, ctx)
+	_, err = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", a.s.K8SURL, "openiiot-nodered-volume-"+data[0].Name), nil, headers, ctx)
+	_, err = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", a.s.K8SURL, "openiiot-emqx-volume-"+data[0].Name), nil, headers, ctx)
+	_, err = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", a.s.K8SURL, "openiiot-mysql-volume-"+data[0].Name), nil, headers, ctx)
 
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
 	if existRecord == nil {
 		return errors.New("tenant does not exist")
 	}
 
-	_, err := tx.Where(table.ID.Eq(id)).Delete()
+	_, err = tx.Where(table.ID.Eq(id)).Delete()
 	return err
 }
