@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .image-container {
+            position: relative;
+            /*width: 2946px;
+            height: 1082px;*/
+            width: 1350px;
+            height: 496px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .highlight-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border: 4px solid silver;
+            box-sizing: border-box;
+            pointer-events: none;
+            /* Allows clicks to go through this div to the underlying image */
+        }
+
+        h1 {
+            color: Green;
+        }
+
+        body {
+            background: white;
+            margin-top: 4%;
+            margin-left: 10%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>OpenIIoT</h1>
+    <h2>A streamlined, open, and cost-effective solution</h2>
+    <div class="image-container">
+        <img src="images/openiiot_white.png" alt="Image" id="image" usemap="#gfg_map" />
+        <div class="highlight-border"></div>
+    </div>
+    <map name="gfg_map" class="map">
+        <!-- node-red -->
+        <area id="node-red" shape="rect" coords="250,70, 500,500" alt="GFG1" target="_blank"
+            onmouseover="highlightArea(230,70, 390,420)" onmouseout="resetAreaColor()" />
+        <!-- EMQX -->
+        <area id="emqx" shape="rect" coords="470,190, 630,310" alt="GFG2" target="_blank"
+            onmouseover="highlightArea(470,190, 630,310)" onmouseout="resetAreaColor()" />
+        <!-- TDEngine -->
+        <area id="tdengine" shape="rect" coords="780,190, 940,310" alt="GFG3" target="_blank"
+            onmouseover="highlightArea(780,190, 940,310)" onmouseout="resetAreaColor()" />
+        <!-- grafana -->
+        <area id="grafana" shape="rect" coords="1030,110, 1190,230" alt="GFG4" target="_blank"
+            onmouseover="highlightArea(1030,110, 1190,230)" onmouseout="resetAreaColor()" />
+    </map>
+    <script>
+        const highlight = document.querySelector('.highlight-border');
+
+        function highlightArea(left, top, right, bottom) {
+            highlight.style.left = left + 'px';
+            highlight.style.top = top + 'px';
+            highlight.style.width = (right - left) + 'px';
+            highlight.style.height = (bottom - top) + 'px';
+        }
+
+        function resetAreaColor() {
+            highlight.style.width = '0';
+            highlight.style.height = '0';
+        }
+
+        // Your JavaScript logic to determine the URLs
+        var server = "http://localhost"
+
+        var currentUrl = new URL(window.location.href);
+        let str = currentUrl.origin
+        console.log("currentUrl.origin: %s", str);
+        switch (true) {
+            case str.startsWith("file://"):
+                server = "http://localhost";
+                break;
+            case str.startsWith("http://localhost"):
+                server = "http://localhost";
+                break;
+            case str.startsWith("https://eco-p54s.beta010.devcloud.supos.net/"):
+                server = "https://eco-p54s.beta010.devcloud.supos.net/apps/freezonex-openiiot";
+                break;
+            case str.startsWith("http://47.236.10.165"):
+                server = "http://47.236.10.165";
+                break;
+            default:
+                server = "http://localhost";
+        }
+
+        var nodeRedUrl = server + ":1880";
+        var emqxUrl = server + ":18083";
+        var tdEngineUrl = server + ":6041";
+        var grafanaUrl = server + ":3000";
+
+        if(server == "http://47.236.10.165") {
+            nodeRedUrl = server + ":31880";
+            emqxUrl = server + ":31083";
+            tdEngineUrl = server + ":32041";
+            grafanaUrl = server + ":32000";
+        }
+
+        // Set the href attributes based on the variables
+        document.getElementById("node-red").href = nodeRedUrl;
+        document.getElementById("emqx").href = emqxUrl;
+        document.getElementById("tdengine").href = tdEngineUrl;
+        document.getElementById("grafana").href = grafanaUrl;
+    </script>
+</body>
+
+</html>
