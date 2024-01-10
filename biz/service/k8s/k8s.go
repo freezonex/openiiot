@@ -62,7 +62,7 @@ func K8sServiceCreate(name string, ctx context.Context, AuthorizationValue strin
 	return nil
 }
 
-func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationValue string, K8SURL string) *http.Response {
+func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationValue string, K8SURL string, id string) *http.Response {
 
 	// 共享的 HTTP 客户端配置
 	client := &http.Client{
@@ -86,11 +86,11 @@ func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationVal
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), webDeployment, headers, ctx)
 
-	noderedPersistentVolume := NoderedPersistentVolume(name)
+	noderedPersistentVolume := NoderedPersistentVolume(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/persistentvolumes", K8SURL), noderedPersistentVolume, headers, ctx)
 
-	noderedPersistentVolumeClaim := NoderedPersistentVolumeClaim(name)
+	noderedPersistentVolumeClaim := NoderedPersistentVolumeClaim(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/persistentvolumeclaims", K8SURL, name), noderedPersistentVolumeClaim, headers, ctx)
 
@@ -102,11 +102,11 @@ func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationVal
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), serverDeployment, headers, ctx)
 
-	grafanaPersistentVolume := GrafanaPersistentVolume(name)
+	grafanaPersistentVolume := GrafanaPersistentVolume(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/persistentvolumes", K8SURL), grafanaPersistentVolume, headers, ctx)
 
-	grafanaPersistentVolumeClaim := GrafanaPersistentVolumeClaim(name)
+	grafanaPersistentVolumeClaim := GrafanaPersistentVolumeClaim(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/persistentvolumeclaims", K8SURL, name), grafanaPersistentVolumeClaim, headers, ctx)
 
@@ -114,19 +114,19 @@ func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationVal
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), grafanaDeployment, headers, ctx)
 
-	tdenginePersistentVolumeData := TdenginePersistentVolumeData(name)
+	tdenginePersistentVolumeData := TdenginePersistentVolumeData(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/persistentvolumes", K8SURL), tdenginePersistentVolumeData, headers, ctx)
 
-	tdenginePersistentVolumeClaimData := TdenginePersistentVolumeClaimData(name)
+	tdenginePersistentVolumeClaimData := TdenginePersistentVolumeClaimData(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/persistentvolumeclaims", K8SURL, name), tdenginePersistentVolumeClaimData, headers, ctx)
 
-	tdenginePersistentVolumeLog := TdenginePersistentVolumeLog(name)
+	tdenginePersistentVolumeLog := TdenginePersistentVolumeLog(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/persistentvolumes", K8SURL), tdenginePersistentVolumeLog, headers, ctx)
 
-	tdenginePersistentVolumeClaimLog := TdenginePersistentVolumeClaimLog(name)
+	tdenginePersistentVolumeClaimLog := TdenginePersistentVolumeClaimLog(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/persistentvolumeclaims", K8SURL, name), tdenginePersistentVolumeClaimLog, headers, ctx)
 
@@ -134,11 +134,11 @@ func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationVal
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), tdenggineDeployment, headers, ctx)
 
-	emqxPersistentVolume := EmqxPersistentVolume(name)
+	emqxPersistentVolume := EmqxPersistentVolume(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/persistentvolumes", K8SURL), emqxPersistentVolume, headers, ctx)
 
-	emqxPersistentVolumeClaim := EmqxPersistentVolumeClaim(name)
+	emqxPersistentVolumeClaim := EmqxPersistentVolumeClaim(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/persistentvolumeclaims", K8SURL, name), emqxPersistentVolumeClaim, headers, ctx)
 
@@ -146,11 +146,11 @@ func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationVal
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), emqxDeployment, headers, ctx)
 
-	mysqlPersistentVolume := MysqlPersistentVolume(name)
+	mysqlPersistentVolume := MysqlPersistentVolume(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/persistentvolumes", K8SURL), mysqlPersistentVolume, headers, ctx)
 
-	mysqlPersistentVolumeClaim := MysqlPersistentVolumeClaim(name)
+	mysqlPersistentVolumeClaim := MysqlPersistentVolumeClaim(name, id)
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/persistentvolumeclaims", K8SURL, name), mysqlPersistentVolumeClaim, headers, ctx)
 
@@ -188,7 +188,7 @@ func K8sNamespaceCreate(name string, ctx context.Context, AuthorizationValue str
 
 }
 
-func K8sNamespacePvDelete(name string, ctx context.Context, AuthorizationValue string, K8SURL string) *http.Response {
+func K8sNamespacePvDelete(name string, ctx context.Context, AuthorizationValue string, K8SURL string, id string) *http.Response {
 
 	// 共享的 HTTP 客户端配置
 	client := &http.Client{
@@ -205,12 +205,12 @@ func K8sNamespacePvDelete(name string, ctx context.Context, AuthorizationValue s
 
 	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/namespaces/%s", K8SURL, name), nil, headers, ctx)
 
-	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-tdengine-volume-data-"+name), nil, headers, ctx)
-	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-tdengine-volume-log-"+name), nil, headers, ctx)
-	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-grafana-volume-"+name), nil, headers, ctx)
-	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-nodered-volume-"+name), nil, headers, ctx)
-	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-emqx-volume-"+name), nil, headers, ctx)
-	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-mysql-volume-"+name), nil, headers, ctx)
+	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-tdengine-volume-data-"+name+"-"+id), nil, headers, ctx)
+	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-tdengine-volume-log-"+name+"-"+id), nil, headers, ctx)
+	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-grafana-volume-"+name+"-"+id), nil, headers, ctx)
+	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-nodered-volume-"+name+"-"+id), nil, headers, ctx)
+	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-emqx-volume-"+name+"-"+id), nil, headers, ctx)
+	_, _ = sendRequest(client, "DELETE", fmt.Sprintf("%sapi/v1/persistentvolumes/%s", K8SURL, "openiiot-mysql-volume-"+name+"-"+id), nil, headers, ctx)
 
 	return nil
 }
