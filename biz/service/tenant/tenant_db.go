@@ -13,11 +13,11 @@ import (
 // AddTenantDB will add tenant record to the DB.
 func (a *TenantService) AddTenantDB(ctx context.Context, name string, description string, isDefault bool) (int64, error) {
 
-	_ = k8s.K8sNamespaceCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+	_ = k8s.K8sNamespaceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
-	_ = k8s.K8sDeploymentPvPvcCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+	_ = k8s.K8sDeploymentPvPvcCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
-	_ = k8s.K8sServiceCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+	_ = k8s.K8sServiceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx)
@@ -91,7 +91,7 @@ func (a *TenantService) DeleteTenantDB(ctx context.Context, id int64) error {
 		return err
 	}
 
-	_ = k8s.K8sNamespacePvDelete(data[0].Name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+	_ = k8s.K8sNamespacePvDelete("openiiot-"+data[0].Name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
 	if existRecord == nil {
