@@ -5,7 +5,7 @@ func NoderedPersistentVolumeClaim(name string) *PersistentVolumeClaim {
 		APIVersion: "v1",
 		Kind:       "PersistentVolumeClaim",
 		Metadata: Metadata{
-			Name: "openiiot-nodered-pvc",
+			Name: "openiiot-nodered-pvc-" + name,
 		},
 		Spec: PersistentVolumeClaimSpec{
 			AccessModes: []string{"ReadWriteMany"},
@@ -31,7 +31,7 @@ func GrafanaPersistentVolumeClaim(name string) *PersistentVolumeClaim {
 		APIVersion: "v1",
 		Kind:       "PersistentVolumeClaim",
 		Metadata: Metadata{
-			Name: "openiiot-grafana-pvc",
+			Name: "openiiot-grafana-pvc-" + name,
 		},
 		Spec: PersistentVolumeClaimSpec{
 			AccessModes: []string{"ReadWriteMany"},
@@ -57,7 +57,7 @@ func TdenginePersistentVolumeClaimData(name string) *PersistentVolumeClaim {
 		APIVersion: "v1",
 		Kind:       "PersistentVolumeClaim",
 		Metadata: Metadata{
-			Name: "openiiot-tdengine-pvc-data",
+			Name: "openiiot-tdengine-pvc-data-" + name,
 		},
 		Spec: PersistentVolumeClaimSpec{
 			AccessModes: []string{"ReadWriteMany"},
@@ -83,7 +83,7 @@ func TdenginePersistentVolumeClaimLog(name string) *PersistentVolumeClaim {
 		APIVersion: "v1",
 		Kind:       "PersistentVolumeClaim",
 		Metadata: Metadata{
-			Name: "openiiot-tdengine-pvc-log",
+			Name: "openiiot-tdengine-pvc-log-" + name,
 		},
 		Spec: PersistentVolumeClaimSpec{
 			AccessModes: []string{"ReadWriteMany"},
@@ -109,7 +109,7 @@ func EmqxPersistentVolumeClaim(name string) *PersistentVolumeClaim {
 		APIVersion: "v1",
 		Kind:       "PersistentVolumeClaim",
 		Metadata: Metadata{
-			Name: "openiiot-emqx-pvc",
+			Name: "openiiot-emqx-pvc-" + name,
 		},
 		Spec: PersistentVolumeClaimSpec{
 			AccessModes: []string{"ReadWriteMany"},
@@ -135,7 +135,7 @@ func MysqlPersistentVolumeClaim(name string) *PersistentVolumeClaim {
 		APIVersion: "v1",
 		Kind:       "PersistentVolumeClaim",
 		Metadata: Metadata{
-			Name: "openiiot-mysql-pvc",
+			Name: "openiiot-mysql-pvc-" + name,
 		},
 		Spec: PersistentVolumeClaimSpec{
 			AccessModes: []string{"ReadWriteMany"},

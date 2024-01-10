@@ -30,7 +30,7 @@ func WebService(name string, nodePort int) *Service {
 		APIVersion: "v1",
 		Kind:       "Service",
 		Metadata: Metadata{
-			Name: "web" + name,
+			Name: "web-" + name,
 		},
 		Spec: ServiceSpec{
 			Ports: []Port{
@@ -55,7 +55,7 @@ func NoderedService(name string, nodePort int) *Service {
 		APIVersion: "v1",
 		Kind:       "Service",
 		Metadata: Metadata{
-			Name: "nodered" + name,
+			Name: "nodered-" + name,
 		},
 		Spec: ServiceSpec{
 			Ports: []Port{
@@ -80,7 +80,7 @@ func ServerService(name string, nodePort int) *Service {
 		APIVersion: "v1",
 		Kind:       "Service",
 		Metadata: Metadata{
-			Name: "server" + name,
+			Name: "server-" + name,
 		},
 		Spec: ServiceSpec{
 			Ports: []Port{
@@ -105,7 +105,7 @@ func GrafanaService(name string, nodePort int) *Service {
 		APIVersion: "v1",
 		Kind:       "Service",
 		Metadata: Metadata{
-			Name: "grafana" + name,
+			Name: "grafana-" + name,
 		},
 		Spec: ServiceSpec{
 			Ports: []Port{
@@ -130,7 +130,7 @@ func TdengineService(name string, nodePort int) *Service {
 		APIVersion: "v1",
 		Kind:       "Service",
 		Metadata: Metadata{
-			Name: "tdengine" + name,
+			Name: "tdengine-" + name,
 		},
 		Spec: ServiceSpec{
 			Ports: []Port{
@@ -155,7 +155,7 @@ func EmqxService(name string, nodePort int) *Service {
 		APIVersion: "v1",
 		Kind:       "Service",
 		Metadata: Metadata{
-			Name: "emqx" + name,
+			Name: "emqx-" + name,
 		},
 		Spec: ServiceSpec{
 			Ports: []Port{
@@ -180,7 +180,7 @@ func MysqlService(name string, nodePort int) *Service {
 		APIVersion: "v1",
 		Kind:       "Service",
 		Metadata: Metadata{
-			Name: "mysql" + name,
+			Name: "mysql-" + name,
 		},
 		Spec: ServiceSpec{
 			Ports: []Port{
@@ -205,7 +205,7 @@ func ConsolemanagerService(name string, nodePort int) *Service {
 		APIVersion: "v1",
 		Kind:       "Service",
 		Metadata: Metadata{
-			Name: "consolemanager" + name,
+			Name: "consolemanager-" + name,
 		},
 		Spec: ServiceSpec{
 			Ports: []Port{

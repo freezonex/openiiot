@@ -32,8 +32,8 @@ func K8sServiceCreate(name string, ctx context.Context, AuthorizationValue strin
 		"Authorization": AuthorizationValue, // 确保 AuthorizationValue 已定义
 	}
 
-	service := NewService(name, random())
-	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/services", K8SURL, name), service, headers, ctx)
+	//service := NewService(name, random())
+	//_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/services", K8SURL, name), service, headers, ctx)
 
 	webService := WebService(name, random())
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/services", K8SURL, name), webService, headers, ctx)
@@ -78,9 +78,9 @@ func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationVal
 	}
 
 	// 创建 Deployment 结构体的实例
-	deployment := NewDeployment(name)
-
-	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), deployment, headers, ctx)
+	//deployment := NewDeployment(name)
+	//
+	//_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), deployment, headers, ctx)
 
 	webDeployment := WebDeployment(name)
 

@@ -46,7 +46,7 @@ func WebDeployment(name string) *Deployment {
 			Replicas: 1,
 			Selector: Selector{
 				MatchLabels: map[string]string{
-					"app": "web" + name,
+					"app": "web-" + name,
 				},
 			},
 			Template: PodTemplate{
@@ -83,7 +83,7 @@ func NoderedDeployment(name string) *Deployment {
 		APIVersion: "apps/v1",
 		Kind:       "Deployment",
 		Metadata: Metadata{
-			Name:      "nodered" + name,
+			Name:      "nodered-" + name,
 			Namespace: name,
 		},
 		Spec: Spec{
@@ -117,7 +117,7 @@ func NoderedDeployment(name string) *Deployment {
 							VolumeMounts: []VolumeMount{
 								{
 									Name:      "nodered-data",
-									MountPath: "/data",
+									MountPath: "/data/" + name,
 								},
 							},
 						},
@@ -127,7 +127,7 @@ func NoderedDeployment(name string) *Deployment {
 						{
 							Name: "nodered-data",
 							PersistentVolumeClaim: PersistentVolumeClaim{
-								ClaimName: "openiiot-nodered-pvc",
+								ClaimName: "openiiot-nodered-pvc-" + name,
 							},
 						},
 					},
@@ -142,7 +142,7 @@ func ServerDeployment(name string) *Deployment {
 		APIVersion: "apps/v1",
 		Kind:       "Deployment",
 		Metadata: Metadata{
-			Name:      "server" + name,
+			Name:      "server-" + name,
 			Namespace: name,
 		},
 		Spec: Spec{
@@ -182,7 +182,7 @@ func ServerDeployment(name string) *Deployment {
 }
 
 func GrafanaDeployment(name string) *Deployment {
-	grafanaName := "grafana" + name // 组合名字
+	grafanaName := "grafana-" + name // 组合名字
 	return &Deployment{
 		APIVersion: "apps/v1",
 		Kind:       "Deployment",
@@ -231,7 +231,7 @@ func GrafanaDeployment(name string) *Deployment {
 						{
 							Name: "grafana-data",
 							PersistentVolumeClaim: PersistentVolumeClaim{
-								ClaimName: "openiiot-grafana-pvc",
+								ClaimName: "openiiot-grafana-pvc-" + name,
 							},
 						},
 					},
@@ -242,7 +242,7 @@ func GrafanaDeployment(name string) *Deployment {
 }
 
 func TdenggineDeployment(name string) *Deployment {
-	tdengineName := "tdengine" + name // 组合名字
+	tdengineName := "tdengine-" + name // 组合名字
 	return &Deployment{
 		APIVersion: "apps/v1",
 		Kind:       "Deployment",
@@ -291,13 +291,13 @@ func TdenggineDeployment(name string) *Deployment {
 						{
 							Name: "tdengine-data",
 							PersistentVolumeClaim: PersistentVolumeClaim{
-								ClaimName: "openiiot-tdengine-pvc-data",
+								ClaimName: "openiiot-tdengine-pvc-data-" + name,
 							},
 						},
 						{
 							Name: "tdengine-log",
 							PersistentVolumeClaim: PersistentVolumeClaim{
-								ClaimName: "openiiot-tdengine-pvc-log",
+								ClaimName: "openiiot-tdengine-pvc-log-" + name,
 							},
 						},
 					},
@@ -308,7 +308,7 @@ func TdenggineDeployment(name string) *Deployment {
 }
 
 func EmqxDeployment(name string) *Deployment {
-	emqxName := "emqx" + name // 组合名字
+	emqxName := "emqx-" + name // 组合名字
 	return &Deployment{
 		APIVersion: "apps/v1",
 		Kind:       "Deployment",
@@ -357,7 +357,7 @@ func EmqxDeployment(name string) *Deployment {
 						{
 							Name: "emqx-data",
 							PersistentVolumeClaim: PersistentVolumeClaim{
-								ClaimName: "openiiot-emqx-pvc",
+								ClaimName: "openiiot-emqx-pvc-" + name,
 							},
 						},
 					},
@@ -368,7 +368,7 @@ func EmqxDeployment(name string) *Deployment {
 }
 
 func MysqlDeployment(name string) *Deployment {
-	mysqlName := "mysql" + name // 组合名字
+	mysqlName := "mysql-" + name // 组合名字
 	return &Deployment{
 		APIVersion: "apps/v1",
 		Kind:       "Deployment",
@@ -435,7 +435,7 @@ func MysqlDeployment(name string) *Deployment {
 						{
 							Name: "mysql-data",
 							PersistentVolumeClaim: PersistentVolumeClaim{
-								ClaimName: "openiiot-mysql-pvc",
+								ClaimName: "openiiot-mysql-pvc-" + name,
 							},
 						},
 					},
@@ -450,7 +450,7 @@ func ConsolemanagerDeployment(name string) *Deployment {
 		APIVersion: "apps/v1",
 		Kind:       "Deployment",
 		Metadata: Metadata{
-			Name:      "consolemanager" + name,
+			Name:      "consolemanager-" + name,
 			Namespace: name,
 		},
 		Spec: Spec{
