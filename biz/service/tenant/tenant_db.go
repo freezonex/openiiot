@@ -3,16 +3,22 @@ package tenant
 import (
 	"context"
 	"errors"
-
-	"gorm.io/gen/field"
-
 	"freezonex/openiiot/biz/config/consts"
 	"freezonex/openiiot/biz/dal/model_openiiot"
+	"freezonex/openiiot/biz/service/k8s"
 	"freezonex/openiiot/biz/service/utils/common"
+	"gorm.io/gen/field"
 )
 
 // AddTenantDB will add tenant record to the DB.
 func (a *TenantService) AddTenantDB(ctx context.Context, name string, description string, isDefault bool) (int64, error) {
+
+	_ = k8s.K8sNamespaceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
+	_ = k8s.K8sDeploymentPvPvcCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
+	_ = k8s.K8sServiceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.Name.Eq(name)).First()
@@ -78,11 +84,20 @@ func (a *TenantService) DeleteTenantDB(ctx context.Context, id int64) error {
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx)
 
+	ax := table.WithContext(ctx).Select(field.ALL)
+	ax = ax.Where(table.ID.Eq(id))
+	data, err := ax.Find()
+	if err != nil {
+		return err
+	}
+
+	_ = k8s.K8sNamespacePvDelete("openiiot-"+data[0].Name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
 	if existRecord == nil {
 		return errors.New("tenant does not exist")
 	}
 
-	_, err := tx.Where(table.ID.Eq(id)).Delete()
+	_, err = tx.Where(table.ID.Eq(id)).Delete()
 	return err
 }

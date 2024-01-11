@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	"moul.io/http2curl"
+	//"moul.io/http2curl"
 
 	"freezonex/openiiot/biz/service/utils/error_utils"
 	"freezonex/openiiot/biz/service/utils/monad/result"
@@ -59,7 +59,9 @@ func SendHttpRequest(ctx context.Context, method, url string, data interface{}, 
 	for _, h := range header {
 		req.Header.Add(h.Key, h.Value)
 	}
-	command, err := http2curl.GetCurlCommand(req)
+	// Determine whether to skip SSL verification based on the URL scheme
+	insecureSkipVerify := req.URL.Scheme == "https"
+	command, err := GetCurlCommand(req, insecureSkipVerify)
 	if err != nil {
 		logs.CtxWarnf(ctx, "Couldn't generate curl")
 	} else {

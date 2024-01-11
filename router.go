@@ -12,12 +12,14 @@ import (
 	"freezonex/openiiot/biz/service/application"
 	"freezonex/openiiot/biz/service/core"
 	"freezonex/openiiot/biz/service/edge"
+	"freezonex/openiiot/biz/service/emqx"
 	"freezonex/openiiot/biz/service/flow"
 	"freezonex/openiiot/biz/service/grafana"
 	"freezonex/openiiot/biz/service/supos"
 	"freezonex/openiiot/biz/service/tdengine"
 	"freezonex/openiiot/biz/service/tenant"
 	"freezonex/openiiot/biz/service/user"
+
 	"github.com/cloudwego/hertz/pkg/app/server"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
@@ -50,7 +52,7 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	tenantGroup := r.Group("/tenant", middleware.Access())
 	{
-		tenantHandler := handler.NewTenantHandler(tenant.NewTenantService(db))
+		tenantHandler := handler.NewTenantHandler(tenant.NewTenantService(db, &c.K8sConfig))
 		tenantGroup.POST(
 			"/add",
 			middleware.Response(
@@ -235,6 +237,33 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.DeleteFlowRequest{}))
 	}
 
+	emqxGroup := r.Group("/emqx", middleware.Access())
+	{
+		emqxHandler := handler.NewEmqxHandler(emqx.NewEmqxService(db))
+		emqxGroup.GET(
+			"/status",
+			middleware.Response(
+				"/emqx/status",
+				emqxHandler.GetStatus,
+				&iiotpb.EmqxGetStatusRequest{}))
+		emqxBridgeGroup := emqxGroup.Group("/bridge")
+		{
+			emqxBridgeGroup.POST("/create",
+				middleware.Response(
+					"/emqx/bridge/create",
+					emqxHandler.CreateBridge,
+					&iiotpb.EmqxCreateBridgeRequest{}))
+		}
+		emqxRuleGroup := emqxGroup.Group("/rule")
+		{
+			emqxRuleGroup.POST("/create",
+				middleware.Response(
+					"/emqx/rule/create",
+					emqxHandler.CreateRule,
+					&iiotpb.EmqxCreateRuleRequest{}))
+		}
+	}
+
 	grafanaGroup := r.Group("/grafana", middleware.Access())
 	{
 		grafanaHandler := handler.NewGrafanaHandler(grafana.NewGrafanaService(db, &c.GrafanaConfig))
@@ -270,13 +299,13 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 		grafanaDataSourceGroup := grafanaGroup.Group("/datasource")
 		{
 			grafanaDataSourceGroup.GET("/get", middleware.Response(
-					"/grafana/datasource/get",
-					grafanaHandler.GetDatasource,
-					&iiotpb.GrafanaDataSourcesRequest{}))
+				"/grafana/datasource/get",
+				grafanaHandler.GetDatasource,
+				&iiotpb.GrafanaGetDataSourceRequest{}))
 			grafanaDataSourceGroup.POST("/create", middleware.Response(
-					"/grafana/datasource/create",
-					grafanaHandler.CreateDatasource,
-					&iiotpb.GrafanaCreateDataSourceRequest{}))
+				"/grafana/datasource/create",
+				grafanaHandler.CreateDatasource,
+				&iiotpb.GrafanaCreateDataSourceRequest{}))
 			grafanaDataSourceGroup.POST("/delete", middleware.Response(
 				"/grafana/datasource/delete",
 				grafanaHandler.DeleteDatasource,
