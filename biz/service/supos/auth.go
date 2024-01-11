@@ -4,13 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"freezonex/openiiot/biz/service/user"
 	"strings"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-
 	"freezonex/openiiot/biz/service/utils/cache"
-
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/google/uuid"
 )
@@ -46,7 +45,7 @@ func (a *SuposService) GetAccessToken(ctx context.Context, req *freezonex_openii
 		if err != nil {
 			return nil, fmt.Errorf("error unmarshaling JSON when get access token: %w", err)
 		}
-
+		//accessToken1 := result["accessToken"].(string)
 		username, _ := result["username"].(string)
 		/*personCode := result["personCode"]
 		companyCode := result["companyCode"]
@@ -63,18 +62,33 @@ func (a *SuposService) GetAccessToken(ctx context.Context, req *freezonex_openii
 			}
 
 			if apiResponse1.HttpCode == 200 {
-				var user UserDetail
-				err := json.Unmarshal([]byte(apiResponse1.ResponseBody), &user)
+				var user1 UserDetail
+				err := json.Unmarshal([]byte(apiResponse1.ResponseBody), &user1)
 				if err != nil {
 					return nil, fmt.Errorf("error unmarshaling JSON when get userdetail: %w", err)
 				}
 
-				userid := user.PersonCode
-				username1 := user.PersonCode
-				userRole := classifyUserRole(user)
-				cache.Set("CurrentUserId", userid)
+				username1 := user1.PersonCode
+				userid := user1.PersonCode
+				userRole := classifyUserRole(user1)
+				cache.Set("CurrentUserId", userid) //authid,tenantid?
 				cache.Set("CurrentUsername", username1)
 				cache.Set("CurrentUserRole", userRole)
+
+				userService := user.DefaultUserService()
+				id, err := userService.AddSuposUserID(ctx, username1, userid, userRole)
+				context.WithValue(ctx, "currentuserid", id)
+				context.WithValue(ctx, "currentusername", username1)
+				context.WithValue(ctx, "currentuserrole", userRole)
+				if err != nil {
+					return nil, err
+				}
+
+				err = userService.UpdateSuposToken(ctx, id, token)
+				if err != nil {
+					return nil, err
+				}
+
 			}
 		}
 	}
@@ -109,6 +123,9 @@ func classifyUserRole(user UserDetail) string {
 func (a *SuposService) Logout(ctx context.Context, req *freezonex_openiiot_api.LogoutRequest, c *app.RequestContext) (*freezonex_openiiot_api.LogoutResponse, error) {
 	tokenKey := req.TokenKey
 	cache.Delete(tokenKey)
+
+	userservice := user.DefaultUserService()
+	userservice.DeleteUserToken(ctx, tokenKey)
 	resp := new(freezonex_openiiot_api.LogoutResponse)
 	resp.Code = 0
 	resp.Msg = "Success"

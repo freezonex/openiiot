@@ -2,13 +2,13 @@ package middleware
 
 import (
 	"context"
+	"freezonex/openiiot/biz/service/callback_mgr"
 	"net/http"
 	"regexp"
 	"strings"
+	"time"
 
 	"freezonex/openiiot/biz/model/base_resp"
-	"freezonex/openiiot/biz/service/utils/cache"
-
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/common/utils"
@@ -17,7 +17,7 @@ import (
 
 const (
 	userTokenHeader = "userToken" // This is the name of the header where the token is expected to be
-	whiteList       = "/auth/*;/ping;/grafana/*;/tdengine;/public"
+	whiteList       = "/auth/*;/ping;/grafana/*;/tdengine;/public;"
 )
 
 func AuthMiddleware() app.HandlerFunc {
@@ -33,12 +33,25 @@ func AuthMiddleware() app.HandlerFunc {
 		// Get the userToken from the header
 		userToken := string(c.Request.Header.Peek(userTokenHeader))
 
-		// Check if the userToken is not blank and is in the cache
+		// Check if the userToken is not blank and is in the database
 		if userToken != "" {
-			// Check the token against the cache
-			if cachedToken, exists := cache.Get(userToken); exists && cachedToken != "" {
+			// Check the token
+			foundUpdatetime, foundUser, err := CallGetUserByTokenDB(ctx, userToken)
+
+			if err != nil {
+				c.AbortWithStatusJSON(http.StatusInternalServerError, map[string]interface{}{
+					"code": http.StatusInternalServerError,
+					"msg":  "Internal server error",
+				})
+				return
+			}
+
+			//current time - token update time <= 1200
+			if foundUser != "" && foundUpdatetime != nil && time.Since(*foundUpdatetime) <= 1200*time.Second {
 				// If the token exists and is valid, continue with the next middleware or handler
-				c.Next(ctx)
+				// Add username to context and continue
+				ctxWithUsername := context.WithValue(ctx, "currentusername", foundUser)
+				c.Next(ctxWithUsername)
 				return
 			}
 		}
@@ -138,4 +151,15 @@ func AuthResponse(mkey string, f MyHandler, req proto.Message) app.HandlerFunc {
 	}
 	app.SetHandlerName(handlerFunc, utils.NameOfFunction(f))
 	return handlerFunc
+}
+
+// use callback to call user's function
+func CallGetUserByTokenDB(ctx context.Context, usertoken string) (*time.Time, string, error) {
+	updatetime, username, err := callback_mgr.CallUserByTokenDBFunc("GetUserByTokenDB", ctx, usertoken)
+	if err != nil {
+		return nil, "", err
+	}
+	// Use reflection to call the function dynamically
+
+	return updatetime, username, err
 }
