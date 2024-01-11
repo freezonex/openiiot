@@ -17,7 +17,7 @@ import (
 
 const (
 	userTokenHeader = "userToken" // This is the name of the header where the token is expected to be
-	whiteList       = "/auth/*;/ping;/grafana/*;/tdengine;/public;"
+	whiteList       = "/auth/*;/ping;/grafana/*;/emqx/*;/tdengine;/public;"
 )
 
 func AuthMiddleware() app.HandlerFunc {
