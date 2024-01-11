@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS user (
     role VARCHAR(50) NOT NULL,     -- Viewer, Editor, Admin, SuperAdmin
     auth_id VARCHAR(100),          -- auth_id is userid from 3rd party, for example person_code in SupOS
     source VARCHAR(100),           -- openiiot: created by openiiot, supos: created by supos
+    token VARCHAR(2048),
+    token_updatetime TIMESTAMP,
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
