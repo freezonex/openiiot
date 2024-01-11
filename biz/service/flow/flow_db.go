@@ -18,13 +18,16 @@ func (a *FlowService) AddFlowDB(ctx context.Context, name string, description st
 	if existRecord != nil {
 		return -1, errors.New("flow name exist")
 	}
+	currentusername := ctx.Value("currentusername").(string)
+
 	id := common.GetUUID()
 	newRecord := &model_openiiot.Flow{
-		ID:          id,
-		Name:        name,
-		Description: &description,
-		TenantID:    tenantid,
-		FlowType:    &flowtype,
+		ID:             id,
+		Name:           name,
+		Description:    &description,
+		LastModifiedBy: &currentusername,
+		TenantID:       tenantid,
+		FlowType:       &flowtype,
 	}
 	err := tx.Create(newRecord)
 	if err != nil {
@@ -196,7 +199,7 @@ func (a *FlowService) UpdateFlowDB(ctx context.Context, id int64, name string, d
 	if existRecord == nil {
 		return errors.New("flow does not exist")
 	}
-
+	currentusername := ctx.Value("currentusername").(string)
 	updates := make(map[string]interface{})
 	if name != "" {
 		updates[table.Name.ColumnName().String()] = name
@@ -206,6 +209,9 @@ func (a *FlowService) UpdateFlowDB(ctx context.Context, id int64, name string, d
 	}
 	if tenantid != 0 {
 		updates[table.TenantID.ColumnName().String()] = tenantid
+	}
+	if currentusername != "" {
+		updates[table.LastModifiedBy.ColumnName().String()] = currentusername
 	}
 	if flowtype != "" {
 		updates[table.FlowType.ColumnName().String()] = flowtype
