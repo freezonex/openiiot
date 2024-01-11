@@ -75,3 +75,21 @@ func NewSuposService(db *mysql.MySQL, c *config.SuposConfig) *SuposService {
 	})
 	return service
 }
+
+type UserService struct {
+	db *mysql.MySQL
+}
+
+var (
+	service1 *UserService
+	once1    sync.Once
+)
+
+func NewUserService(db *mysql.MySQL) *UserService {
+	once1.Do(func() {
+		service1 = &UserService{
+			db: db,
+		}
+	})
+	return service1
+}
