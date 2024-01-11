@@ -3,8 +3,10 @@ package user
 import (
 	"context"
 	"errors"
-
+	"fmt"
 	"gorm.io/gen/field"
+
+	"time"
 
 	"freezonex/openiiot/biz/config/consts"
 	"freezonex/openiiot/biz/dal/model_openiiot"
@@ -114,5 +116,91 @@ func (a *UserService) DeleteUserDB(ctx context.Context, id int64) error {
 		return errors.New("user does not exist")
 	}
 	_, err := tx.Where(table.ID.Eq(id)).Delete()
+	return err
+}
+
+func (a *UserService) GetUserByTokenDB(ctx context.Context, usertoken string) (*time.Time, string, error) {
+	table := a.db.DBOpeniiotQuery.User
+	tx := table.WithContext(ctx)
+
+	if usertoken == "" {
+		return nil, "", fmt.Errorf("usertoken is empty")
+	}
+
+	var data *model_openiiot.User
+	data, err := tx.Where(table.Token.Eq(usertoken)).First()
+	if err != nil {
+		return nil, "", err
+	}
+
+	return data.TokenUpdatetime, data.Username, nil
+}
+
+func (a *UserService) AddSuposUserID(ctx context.Context, username string, userid string, userrole string) (int64, error) {
+	table1 := a.db.DBOpeniiotQuery.Tenant
+	tx1 := table1.WithContext(ctx)
+
+	defaultTenant, _ := tx1.Where(table1.IsDefault.Is(true)).First()
+	defaultTenantID := defaultTenant.ID
+
+	table := a.db.DBOpeniiotQuery.User
+	tx := table.WithContext(ctx)
+	// Insert new edge IDs
+	exist_username, err := tx.Where(table.TenantID.Eq(defaultTenantID), table.Username.Eq(username)).First() //tenantid ? is_default
+	if exist_username == nil {
+		id := common.GetUUID()
+		newUser := model_openiiot.User{
+			ID:       id,
+			Username: username,
+			Role:     userrole,
+			AuthID:   &userid,
+			TenantID: defaultTenantID,
+		}
+		err := tx.Create(&newUser)
+		if err != nil {
+			// Handle the error, possibly return or log it
+			return 0, err
+		}
+		return newUser.ID, nil
+	} else {
+		return exist_username.ID, err
+	}
+}
+
+func (a *UserService) UpdateSuposToken(ctx context.Context, id int64, token string) error {
+	table := a.db.DBOpeniiotQuery.User
+	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
+	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
+	// Insert new edge IDs
+	if existRecord == nil {
+		return errors.New("user does not exist")
+	}
+
+	updates := make(map[string]interface{})
+
+	if token != "" {
+		updates[table.Token.ColumnName().String()] = token
+		updates[table.TokenUpdatetime.ColumnName().String()] = time.Now()
+	}
+
+	_, err := tx.Updates(updates)
+	return err
+}
+
+// DeleteUserDB will delete user record from the DB.
+func (a *UserService) DeleteUserToken(ctx context.Context, token string) error {
+	table := a.db.DBOpeniiotQuery.User
+	tx := table.WithContext(ctx)
+	existRecord, _ := tx.Where(table.Token.Eq(token)).First()
+	// Insert new edge IDs
+	if existRecord == nil {
+		return errors.New("user does not exist")
+	}
+
+	updates := make(map[string]interface{})
+
+	updates[table.Token.ColumnName().String()] = ""
+
+	_, err := tx.Updates(updates)
 	return err
 }
