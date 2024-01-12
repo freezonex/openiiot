@@ -17,7 +17,7 @@ func NoderedIngress(name string) *Ingress {
 					HTTP: HTTPIngressRuleValue{
 						Paths: []Path{
 							{
-								Path:     "/" + name + "nodered/(.*)",
+								Path:     "/" + name + "/nodered/(.*)",
 								PathType: "Prefix",
 								Backend: Backend{
 									ServiceName: "nginx-openiiot-" + name,
@@ -49,7 +49,7 @@ func GrafanaIngress(name string) *Ingress {
 					HTTP: HTTPIngressRuleValue{
 						Paths: []Path{
 							{
-								Path:     "/" + name + "grafana/(.*)",
+								Path:     "/" + name + "/grafana/(.*)",
 								PathType: "Prefix",
 								Backend: Backend{
 									ServiceName: "nginx-openiiot-" + name,
@@ -81,7 +81,7 @@ func WebIngress(name string) *Ingress {
 					HTTP: HTTPIngressRuleValue{
 						Paths: []Path{
 							{
-								Path:     "/" + name + "web/(.*)",
+								Path:     "/" + name + "/web/(.*)",
 								PathType: "Prefix",
 								Backend: Backend{
 									ServiceName: "nginx-openiiot-" + name,
