@@ -26,12 +26,12 @@ func NoderedPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim
 	}
 }
 
-func GrafanaPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim {
+func GrafanaDataPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim {
 	return &PersistentVolumeClaim{
 		APIVersion: "v1",
 		Kind:       "PersistentVolumeClaim",
 		Metadata: Metadata{
-			Name: "openiiot-grafana-pvc-" + name,
+			Name: "openiiot-grafana-data-pvc-" + name,
 		},
 		Spec: PersistentVolumeClaimSpec{
 			AccessModes: []string{"ReadWriteMany"},
@@ -46,7 +46,33 @@ func GrafanaPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim
 					Storage: "1Gi",
 				},
 			},
-			VolumeName:       "openiiot-grafana-volume-" + name + "-" + id,
+			VolumeName:       "openiiot-grafana-data-volume-" + name + "-" + id,
+			StorageClassName: "managed-nfs-storage",
+		},
+	}
+}
+
+func GrafanaConfigPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim {
+	return &PersistentVolumeClaim{
+		APIVersion: "v1",
+		Kind:       "PersistentVolumeClaim",
+		Metadata: Metadata{
+			Name: "openiiot-grafana-config-pvc-" + name,
+		},
+		Spec: PersistentVolumeClaimSpec{
+			AccessModes: []string{"ReadWriteMany"},
+			Resources: struct {
+				Requests struct {
+					Storage string `json:"storage"`
+				} `json:"requests"`
+			}{
+				Requests: struct {
+					Storage string `json:"storage"`
+				}{
+					Storage: "1Gi",
+				},
+			},
+			VolumeName:       "openiiot-grafana-config-volume-" + name + "-" + id,
 			StorageClassName: "managed-nfs-storage",
 		},
 	}

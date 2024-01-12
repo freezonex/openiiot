@@ -136,13 +136,21 @@ func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationVal
 
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), serverDeployment, headers, ctx)
 
-	grafanaPersistentVolume := GrafanaPersistentVolume(name, id)
+	grafanaDataPersistentVolume := GrafanaDataPersistentVolume(name, id)
 
-	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/persistentvolumes", K8SURL), grafanaPersistentVolume, headers, ctx)
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/persistentvolumes", K8SURL), grafanaDataPersistentVolume, headers, ctx)
 
-	grafanaPersistentVolumeClaim := GrafanaPersistentVolumeClaim(name, id)
+	grafanaDataPersistentVolumeClaim := GrafanaDataPersistentVolumeClaim(name, id)
 
-	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/persistentvolumeclaims", K8SURL, name), grafanaPersistentVolumeClaim, headers, ctx)
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/persistentvolumeclaims", K8SURL, name), grafanaDataPersistentVolumeClaim, headers, ctx)
+
+	grafanaConfigPersistentVolume := GrafanaConfigPersistentVolume(name, id)
+
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/persistentvolumes", K8SURL), grafanaConfigPersistentVolume, headers, ctx)
+
+	grafanaConfigPersistentVolumeClaim := GrafanaConfigPersistentVolumeClaim(name, id)
+
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/persistentvolumeclaims", K8SURL, name), grafanaConfigPersistentVolumeClaim, headers, ctx)
 
 	grafanaDeployment := GrafanaDeployment(name)
 

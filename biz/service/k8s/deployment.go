@@ -267,6 +267,10 @@ func GrafanaDeployment(name string) *Deployment {
 									Name:      "grafana-data",
 									MountPath: "/data",
 								},
+								{
+									Name:      "grafana-config",
+									MountPath: "/etc/grafana",
+								},
 							},
 						},
 					},
@@ -275,7 +279,13 @@ func GrafanaDeployment(name string) *Deployment {
 						{
 							Name: "grafana-data",
 							PersistentVolumeClaim: PersistentVolumeClaim{
-								ClaimName: "openiiot-grafana-pvc-" + name,
+								ClaimName: "openiiot-grafana-data-pvc-" + name,
+							},
+						},
+						{
+							Name: "grafana-config",
+							PersistentVolumeClaim: PersistentVolumeClaim{
+								ClaimName: "openiiot-grafana-config-pvc-" + name,
 							},
 						},
 					},
