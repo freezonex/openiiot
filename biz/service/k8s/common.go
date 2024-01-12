@@ -2,9 +2,10 @@ package k8s
 
 // namespace
 type Metadata struct {
-	Name      string            `json:"name"`
-	Namespace string            `json:"namespace,omitempty"`
-	Labels    map[string]string `json:"labels,omitempty"`
+	Name        string            `json:"name"`
+	Namespace   string            `json:"namespace,omitempty"`
+	Labels      map[string]string `json:"labels,omitempty"`
+	Annotations map[string]string `json:"annotations"`
 }
 
 // 定义主结构体
@@ -135,4 +136,40 @@ type PersistentVolume struct {
 		Name string `json:"name"`
 	} `json:"metadata"`
 	Spec PersistentVolumeSpec `json:"spec"`
+}
+
+// Backend defines the backend service and port for the Ingress path
+type Backend struct {
+	ServiceName string `json:"serviceName"`
+	ServicePort int    `json:"servicePort"`
+}
+
+// Path defines the individual path and its backend
+type Path struct {
+	Path     string  `json:"path"`
+	PathType string  `json:"pathType"`
+	Backend  Backend `json:"backend"`
+}
+
+// HTTPIngressRuleValue holds a list of HTTP paths
+type HTTPIngressRuleValue struct {
+	Paths []Path `json:"paths"`
+}
+
+// Rule defines the rules for the Ingress resource
+type Rule struct {
+	HTTP HTTPIngressRuleValue `json:"http"`
+}
+
+// IngressSpec defines the spec of the Ingress
+type IngressSpec struct {
+	Rules []Rule `json:"rules"`
+}
+
+// Ingress defines the Ingress resource
+type Ingress struct {
+	APIVersion string      `json:"apiVersion"`
+	Kind       string      `json:"kind"`
+	Metadata   Metadata    `json:"metadata"`
+	Spec       IngressSpec `json:"spec"`
 }

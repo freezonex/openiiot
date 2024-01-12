@@ -23,6 +23,8 @@ func (a *TenantService) AddTenantDB(ctx context.Context, name string, descriptio
 
 	_ = k8s.K8sServiceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
+	_ = k8s.K8sIngressCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.Name.Eq(name)).First()

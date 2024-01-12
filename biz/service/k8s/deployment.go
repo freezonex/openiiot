@@ -52,7 +52,7 @@ func WebDeployment(name string) *Deployment {
 			Template: PodTemplate{
 				Metadata: Metadata{
 					Labels: map[string]string{
-						"app": "web" + name,
+						"app": "web-" + name,
 					},
 				},
 				Spec: PodSpec{
@@ -60,6 +60,50 @@ func WebDeployment(name string) *Deployment {
 						{
 							Image: "openiiot_web:1.0.0",
 							Name:  "web" + name,
+							Resources: ResourceRequirements{
+								Requests: map[string]string{
+									"cpu":    "10m",
+									"memory": "128Mi",
+								},
+								Limits: map[string]string{
+									"cpu":    "1000m",
+									"memory": "2Gi",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func NginxDeployment(name string) *Deployment {
+	return &Deployment{
+		APIVersion: "apps/v1",
+		Kind:       "Deployment",
+		Metadata: Metadata{
+			Name:      "nginx-" + name,
+			Namespace: name,
+		},
+		Spec: Spec{
+			Replicas: 1,
+			Selector: Selector{
+				MatchLabels: map[string]string{
+					"app": "nginx-" + name,
+				},
+			},
+			Template: PodTemplate{
+				Metadata: Metadata{
+					Labels: map[string]string{
+						"app": "nginx-" + name,
+					},
+				},
+				Spec: PodSpec{
+					Containers: []Container{
+						{
+							Image: "nginxw:1.0.0",
+							Name:  "nginx-" + name,
 							Resources: ResourceRequirements{
 								Requests: map[string]string{
 									"cpu":    "10m",
@@ -90,13 +134,13 @@ func NoderedDeployment(name string) *Deployment {
 			Replicas: 1,
 			Selector: Selector{
 				MatchLabels: map[string]string{
-					"app": "nodered" + name,
+					"app": "nodered-" + name,
 				},
 			},
 			Template: PodTemplate{
 				Metadata: Metadata{
 					Labels: map[string]string{
-						"app": "nodered" + name,
+						"app": "nodered-" + name,
 					},
 				},
 				Spec: PodSpec{
@@ -149,13 +193,13 @@ func ServerDeployment(name string) *Deployment {
 			Replicas: 1,
 			Selector: Selector{
 				MatchLabels: map[string]string{
-					"app": "server" + name,
+					"app": "server-" + name,
 				},
 			},
 			Template: PodTemplate{
 				Metadata: Metadata{
 					Labels: map[string]string{
-						"app": "server" + name,
+						"app": "server-" + name,
 					},
 				},
 				Spec: PodSpec{
@@ -457,20 +501,20 @@ func ConsolemanagerDeployment(name string) *Deployment {
 			Replicas: 1,
 			Selector: Selector{
 				MatchLabels: map[string]string{
-					"app": "consolemanager" + name,
+					"app": "consolemanager-" + name,
 				},
 			},
 			Template: PodTemplate{
 				Metadata: Metadata{
 					Labels: map[string]string{
-						"app": "consolemanager" + name,
+						"app": "consolemanager-" + name,
 					},
 				},
 				Spec: PodSpec{
 					Containers: []Container{
 						{
 							Image: "openiiot_consolemanager:1.0.0",
-							Name:  "consolemanager" + name,
+							Name:  "consolemanager-" + name,
 							Resources: ResourceRequirements{
 								Requests: map[string]string{
 									"cpu":    "10m",

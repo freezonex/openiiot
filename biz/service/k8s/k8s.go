@@ -35,6 +35,9 @@ func K8sServiceCreate(name string, ctx context.Context, AuthorizationValue strin
 	//service := NewService(name, random())
 	//_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/services", K8SURL, name), service, headers, ctx)
 
+	nginxService := NginxService(name, random())
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/services", K8SURL, name), nginxService, headers, ctx)
+
 	webService := WebService(name, random())
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/services", K8SURL, name), webService, headers, ctx)
 
@@ -62,6 +65,33 @@ func K8sServiceCreate(name string, ctx context.Context, AuthorizationValue strin
 	return nil
 }
 
+func K8sIngressCreate(name string, ctx context.Context, AuthorizationValue string, K8SURL string) *http.Response {
+
+	// 共享的 HTTP 客户端配置
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
+
+	// 设置公共头部
+	headers := map[string]string{
+		"Content-Type":  "application/json",
+		"Authorization": AuthorizationValue, // 确保 AuthorizationValue 已定义
+	}
+
+	noderedIngress := NoderedIngress(name)
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/networking.k8s.io/v1beta1/namespaces/openiiot-%s/ingresses", K8SURL, name), noderedIngress, headers, ctx)
+
+	grafanaIngress := GrafanaIngress(name)
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/networking.k8s.io/v1beta1/namespaces/openiiot-%s/ingresses", K8SURL, name), grafanaIngress, headers, ctx)
+
+	webIngress := WebIngress(name)
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/networking.k8s.io/v1beta1/namespaces/openiiot-%s/ingresses", K8SURL, name), webIngress, headers, ctx)
+
+	return nil
+}
+
 func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationValue string, K8SURL string, id string) *http.Response {
 
 	// 共享的 HTTP 客户端配置
@@ -81,6 +111,10 @@ func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationVal
 	//deployment := NewDeployment(name)
 	//
 	//_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), deployment, headers, ctx)
+
+	nginxDeployment := NginxDeployment(name)
+
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/apps/v1/namespaces/%s/deployments", K8SURL, name), nginxDeployment, headers, ctx)
 
 	webDeployment := WebDeployment(name)
 
