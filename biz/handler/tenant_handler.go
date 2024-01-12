@@ -59,3 +59,13 @@ func (a *TenantHandler) DeleteTenant(ctx context.Context, c *app.RequestContext)
 	}
 	return resp
 }
+
+func (a *TenantHandler) GetAllTenantName(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GetAllTenantNameRequest)
+	resp, err := a.tenantService.GetAllTenantName(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=GetAllTenantName error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}

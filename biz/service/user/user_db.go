@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"gorm.io/gen/field"
+	"strings"
 
 	"time"
 
@@ -203,4 +205,37 @@ func (a *UserService) DeleteUserToken(ctx context.Context, token string) error {
 
 	_, err := tx.Updates(updates)
 	return err
+}
+
+func (a *UserService) UserLoginDB(ctx context.Context, username string, password string, tenant_name string) (int64, string, error) {
+	table1 := a.db.DBOpeniiotQuery.Tenant
+	tx1 := table1.WithContext(ctx)
+	existTenant, err := tx1.Where(table1.Name.Eq(tenant_name)).First()
+	if existTenant == nil {
+		return 0, "", errors.New("tenant does not exist")
+	}
+	if err != nil {
+		return 0, "", err
+	}
+
+	tenant_id := existTenant.ID
+	table := a.db.DBOpeniiotQuery.User
+	tx := table.WithContext(ctx)
+
+	existUser, err := tx.Where(table.Username.Eq(username), table.TenantID.Eq(tenant_id)).First()
+
+	if err != nil {
+		return 0, "", err
+	}
+	// Insert new edge IDs
+	if existUser == nil {
+		return 0, "", errors.New("user does not exist")
+	}
+
+	if *existUser.Password != password {
+		return 0, "", errors.New("wrong password")
+	}
+	Accesstoken := strings.Replace(uuid.New().String(), "-", "", -1)
+	id := existUser.ID
+	return id, Accesstoken, err
 }

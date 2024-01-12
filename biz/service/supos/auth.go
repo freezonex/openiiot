@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"freezonex/openiiot/biz/service/user"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	"strings"
 
 	"freezonex/openiiot/biz/middleware"
@@ -129,6 +130,27 @@ func (a *SuposService) Logout(ctx context.Context, req *freezonex_openiiot_api.L
 	resp := new(freezonex_openiiot_api.LogoutResponse)
 	resp.Code = 0
 	resp.Msg = "Success"
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+}
+
+func (a *SuposService) Login(ctx context.Context, req *freezonex_openiiot_api.LoginRequest, c *app.RequestContext) (*freezonex_openiiot_api.LoginResponse, error) {
+	userService := user.DefaultUserService()
+
+	id, Accesstoken, err := userService.UserLoginDB(ctx, req.Username, req.Password, req.TenantName)
+	if err != nil {
+		logs.Error(ctx, "event=GetUser error=%v", err.Error())
+		return nil, err
+	}
+
+	err = userService.UpdateSuposToken(ctx, id, Accesstoken)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := new(freezonex_openiiot_api.LoginResponse)
+	resp.Accesstoken = Accesstoken
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil
