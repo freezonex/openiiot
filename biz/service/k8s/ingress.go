@@ -121,6 +121,22 @@ func CombinedIngress(name string) *Ingress {
 								},
 							},
 							{
+								Path:     "/" + name + "/nodered/home",
+								PathType: "Prefix",
+								Backend: Backend{
+									ServiceName: "nodered-openiiot-" + name,
+									ServicePort: 1880,
+								},
+							},
+							{
+								Path:     "/" + name + "/nodered/home/(.*)",
+								PathType: "Prefix",
+								Backend: Backend{
+									ServiceName: "nodered-openiiot-" + name,
+									ServicePort: 1880,
+								},
+							},
+							{
 								Path:     "/" + name + "/grafana/(.*)",
 								PathType: "Prefix",
 								Backend: Backend{
@@ -129,7 +145,39 @@ func CombinedIngress(name string) *Ingress {
 								},
 							},
 							{
+								Path:     "/" + name + "/grafana/home",
+								PathType: "Prefix",
+								Backend: Backend{
+									ServiceName: "grafana-openiiot-" + name,
+									ServicePort: 3000,
+								},
+							},
+							{
+								Path:     "/" + name + "/grafana/home/(.*)",
+								PathType: "Prefix",
+								Backend: Backend{
+									ServiceName: "grafana-openiiot-" + name,
+									ServicePort: 3000,
+								},
+							},
+							{
 								Path:     "/" + name + "/web/(.*)",
+								PathType: "Prefix",
+								Backend: Backend{
+									ServiceName: "web-openiiot-" + name,
+									ServicePort: 80,
+								},
+							},
+							{
+								Path:     "/" + name + "/web/home",
+								PathType: "Prefix",
+								Backend: Backend{
+									ServiceName: "web-openiiot-" + name,
+									ServicePort: 80,
+								},
+							},
+							{
+								Path:     "/" + name + "/web/home/(.*)",
 								PathType: "Prefix",
 								Backend: Backend{
 									ServiceName: "web-openiiot-" + name,
