@@ -19,6 +19,8 @@ func (a *TenantService) AddTenantDB(ctx context.Context, name string, descriptio
 
 	_ = k8s.K8sNamespaceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
+	//_ = k8s.K8sConfigmapCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
 	_ = k8s.K8sDeploymentPvPvcCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL, idStr)
 
 	_ = k8s.K8sServiceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)

@@ -66,6 +66,18 @@ type VolumeMount struct {
 	MountPath string `json:"mountPath"`
 }
 
+// ConfigMap represents a Kubernetes ConfigMap
+type ConfigMap struct {
+	APIVersion string            `json:"apiVersion"`
+	Kind       string            `json:"kind"`
+	Metadata   Metadata          `json:"metadata"`
+	Data       map[string]string `json:"data"`
+}
+
+type ConfigMapVolumeSource struct {
+	Name string `json:"name"`
+}
+
 type Volume struct {
 	Name                  string                `json:"name"`
 	PersistentVolumeClaim PersistentVolumeClaim `json:"persistentVolumeClaim,omitempty"`

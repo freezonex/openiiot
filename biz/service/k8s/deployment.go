@@ -1,5 +1,7 @@
 package k8s
 
+import "strings"
+
 func NewDeployment(name string) *Deployment {
 	return &Deployment{
 		APIVersion: "apps/v1",
@@ -252,6 +254,12 @@ func GrafanaDeployment(name string) *Deployment {
 						{
 							Image: "openiiot_grafana:1.0.0",
 							Name:  grafanaName,
+							Env: []EnvVar{
+								{
+									Name:  "GF_SERVER_ROOT_URL", // 设置环境变量
+									Value: "%(protocol)s://%(domain)s:%(http_port)s/" + strings.TrimPrefix(name, "openiiot-") + "/grafana/",
+								},
+							},
 							Resources: ResourceRequirements{
 								Requests: map[string]string{
 									"cpu":    "10m",
@@ -267,14 +275,13 @@ func GrafanaDeployment(name string) *Deployment {
 									Name:      "grafana-data",
 									MountPath: "/data",
 								},
-								{
-									Name:      "grafana-config",
-									MountPath: "/etc/grafana",
-								},
+								//{
+								//	Name:      "grafana-config",
+								//	MountPath: "/etc/grafana",
+								//},
 							},
 						},
 					},
-					//未创建PersistentVolumeClaim会报错
 					Volumes: []Volume{
 						{
 							Name: "grafana-data",
@@ -282,12 +289,12 @@ func GrafanaDeployment(name string) *Deployment {
 								ClaimName: "openiiot-grafana-data-pvc-" + name,
 							},
 						},
-						{
-							Name: "grafana-config",
-							PersistentVolumeClaim: PersistentVolumeClaim{
-								ClaimName: "openiiot-grafana-config-pvc-" + name,
-							},
-						},
+						//{
+						//	Name: "grafana-config",
+						//	PersistentVolumeClaim: PersistentVolumeClaim{
+						//		ClaimName: "openiiot-grafana-config-pvc-" + name,
+						//	},
+						//},
 					},
 				},
 			},

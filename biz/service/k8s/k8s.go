@@ -210,6 +210,28 @@ func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationVal
 	return nil
 }
 
+func K8sConfigmapCreate(name string, ctx context.Context, AuthorizationValue string, K8SURL string) *http.Response {
+
+	// 共享的 HTTP 客户端配置
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
+
+	// 设置公共头部
+	headers := map[string]string{
+		"Content-Type":  "application/json",
+		"Authorization": AuthorizationValue, // 确保 AuthorizationValue 已定义
+	}
+
+	grafanaConfigmap := GrafanaConfigmap(name)
+
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/openiiot-%s/configmaps", K8SURL, name), grafanaConfigmap, headers, ctx)
+
+	return nil
+}
+
 func K8sNamespaceCreate(name string, ctx context.Context, AuthorizationValue string, K8SURL string) *http.Response {
 
 	namespace := NewNamespace(name)
