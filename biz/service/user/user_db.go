@@ -24,6 +24,13 @@ func (a *UserService) AddUserDB(ctx context.Context, username string, password s
 		return -1, errors.New("username exist")
 	}
 	id := common.GetUUID()
+	if auth_id == "" {
+		auth_id = username
+	}
+
+	if source == "" {
+		source = "useradd"
+	}
 	newRecord := &model_openiiot.User{
 		ID:          id,
 		Username:    username,
@@ -147,6 +154,7 @@ func (a *UserService) AddSuposUserID(ctx context.Context, username string, useri
 
 	table := a.db.DBOpeniiotQuery.User
 	tx := table.WithContext(ctx)
+	source := "supOS"
 	// Insert new edge IDs
 	exist_username, err := tx.Where(table.TenantID.Eq(defaultTenantID), table.Username.Eq(username)).First() //tenantid ? is_default
 	if exist_username == nil {
@@ -157,6 +165,7 @@ func (a *UserService) AddSuposUserID(ctx context.Context, username string, useri
 			Role:     userrole,
 			AuthID:   &userid,
 			TenantID: defaultTenantID,
+			Source:   &source,
 		}
 		err := tx.Create(&newUser)
 		if err != nil {
@@ -207,15 +216,15 @@ func (a *UserService) DeleteUserToken(ctx context.Context, token string) error {
 	return err
 }
 
-func (a *UserService) UserLoginDB(ctx context.Context, username string, password string, tenant_name string) (int64, string, error) {
+func (a *UserService) UserLoginDB(ctx context.Context, username string, password string, tenant_name string) (int64, string, string, error) {
 	table1 := a.db.DBOpeniiotQuery.Tenant
 	tx1 := table1.WithContext(ctx)
 	existTenant, err := tx1.Where(table1.Name.Eq(tenant_name)).First()
 	if existTenant == nil {
-		return 0, "", errors.New("tenant does not exist")
+		return 0, "", "", errors.New("tenant does not exist")
 	}
 	if err != nil {
-		return 0, "", err
+		return 0, "", "", err
 	}
 
 	tenant_id := existTenant.ID
@@ -225,17 +234,19 @@ func (a *UserService) UserLoginDB(ctx context.Context, username string, password
 	existUser, err := tx.Where(table.Username.Eq(username), table.TenantID.Eq(tenant_id)).First()
 
 	if err != nil {
-		return 0, "", err
+		return 0, "", "", err
 	}
 	// Insert new edge IDs
 	if existUser == nil {
-		return 0, "", errors.New("user does not exist")
+		return 0, "", "", errors.New("user does not exist")
+	}
+	if *existUser.Password != password {
+		return 0, "", "", errors.New("wrong password")
 	}
 
-	if *existUser.Password != password {
-		return 0, "", errors.New("wrong password")
-	}
 	Accesstoken := strings.Replace(uuid.New().String(), "-", "", -1)
 	id := existUser.ID
-	return id, Accesstoken, err
+	role := existUser.Role
+
+	return id, Accesstoken, role, err
 }

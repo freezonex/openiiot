@@ -72,7 +72,7 @@ func (a *UserService) UpdateUser(ctx context.Context, req *freezonex_openiiot_ap
 
 // DeleteUser will delete user record
 func (a *UserService) DeleteUser(ctx context.Context, req *freezonex_openiiot_api.DeleteUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteUserResponse, error) {
-	//Delete user also should delete user user, edge pool, core pool, application pool, flow
+	//Delete user also should delete user , edge pool, core pool, application pool, flow
 	/*err := a.DeleteUserUserDB(ctx, req.Id)
 	if err != nil {
 		logs.Error(ctx, "event=DeleteUser user error=%v", err.Error())
