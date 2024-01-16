@@ -1,13 +1,13 @@
 package k8s
 
-func NoderedPersistentVolume(name string) *PersistentVolume {
+func NoderedPersistentVolume(name string, id string) *PersistentVolume {
 	return &PersistentVolume{
 		APIVersion: "v1",
 		Kind:       "PersistentVolume",
 		Metadata: struct {
 			Name string `json:"name"`
 		}{
-			Name: "openiiot-nodered-volume-" + name,
+			Name: "openiiot-nodered-volume-" + name + "-" + id,
 		},
 		Spec: PersistentVolumeSpec{
 			Capacity: map[string]string{
@@ -27,14 +27,14 @@ func NoderedPersistentVolume(name string) *PersistentVolume {
 	}
 }
 
-func GrafanaPersistentVolume(name string) *PersistentVolume {
+func GrafanaDataPersistentVolume(name string, id string) *PersistentVolume {
 	return &PersistentVolume{
 		APIVersion: "v1",
 		Kind:       "PersistentVolume",
 		Metadata: struct {
 			Name string `json:"name"`
 		}{
-			Name: "openiiot-grafana-volume-" + name,
+			Name: "openiiot-grafana-data-volume-" + name + "-" + id,
 		},
 		Spec: PersistentVolumeSpec{
 			Capacity: map[string]string{
@@ -54,14 +54,41 @@ func GrafanaPersistentVolume(name string) *PersistentVolume {
 	}
 }
 
-func TdenginePersistentVolumeData(name string) *PersistentVolume {
+func GrafanaConfigPersistentVolume(name string, id string) *PersistentVolume {
 	return &PersistentVolume{
 		APIVersion: "v1",
 		Kind:       "PersistentVolume",
 		Metadata: struct {
 			Name string `json:"name"`
 		}{
-			Name: "openiiot-tdengine-volume-data-" + name,
+			Name: "openiiot-grafana-config-volume-" + name + "-" + id,
+		},
+		Spec: PersistentVolumeSpec{
+			Capacity: map[string]string{
+				"storage": "5Gi",
+			},
+			AccessModes: []string{
+				"ReadWriteMany",
+			},
+			PersistentVolumeReclaimPolicy: "Retain",
+			HostPath: struct {
+				Path string `json:"path"`
+			}{
+				Path: "/volumes/nfs/openiiot/grafana_config/" + name,
+			},
+			StorageClassName: "managed-nfs-storage",
+		},
+	}
+}
+
+func TdenginePersistentVolumeData(name string, id string) *PersistentVolume {
+	return &PersistentVolume{
+		APIVersion: "v1",
+		Kind:       "PersistentVolume",
+		Metadata: struct {
+			Name string `json:"name"`
+		}{
+			Name: "openiiot-tdengine-volume-data-" + name + "-" + id,
 		},
 		Spec: PersistentVolumeSpec{
 			Capacity: map[string]string{
@@ -81,14 +108,14 @@ func TdenginePersistentVolumeData(name string) *PersistentVolume {
 	}
 }
 
-func TdenginePersistentVolumeLog(name string) *PersistentVolume {
+func TdenginePersistentVolumeLog(name string, id string) *PersistentVolume {
 	return &PersistentVolume{
 		APIVersion: "v1",
 		Kind:       "PersistentVolume",
 		Metadata: struct {
 			Name string `json:"name"`
 		}{
-			Name: "openiiot-tdengine-volume-log-" + name,
+			Name: "openiiot-tdengine-volume-log-" + name + "-" + id,
 		},
 		Spec: PersistentVolumeSpec{
 			Capacity: map[string]string{
@@ -108,14 +135,14 @@ func TdenginePersistentVolumeLog(name string) *PersistentVolume {
 	}
 }
 
-func EmqxPersistentVolume(name string) *PersistentVolume {
+func EmqxPersistentVolume(name string, id string) *PersistentVolume {
 	return &PersistentVolume{
 		APIVersion: "v1",
 		Kind:       "PersistentVolume",
 		Metadata: struct {
 			Name string `json:"name"`
 		}{
-			Name: "openiiot-emqx-volume-" + name,
+			Name: "openiiot-emqx-volume-" + name + "-" + id,
 		},
 		Spec: PersistentVolumeSpec{
 			Capacity: map[string]string{
@@ -135,14 +162,14 @@ func EmqxPersistentVolume(name string) *PersistentVolume {
 	}
 }
 
-func MysqlPersistentVolume(name string) *PersistentVolume {
+func MysqlPersistentVolume(name string, id string) *PersistentVolume {
 	return &PersistentVolume{
 		APIVersion: "v1",
 		Kind:       "PersistentVolume",
 		Metadata: struct {
 			Name string `json:"name"`
 		}{
-			Name: "openiiot-mysql-volume-" + name,
+			Name: "openiiot-mysql-volume-" + name + "-" + id,
 		},
 		Spec: PersistentVolumeSpec{
 			Capacity: map[string]string{

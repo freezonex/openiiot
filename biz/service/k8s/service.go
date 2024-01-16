@@ -42,7 +42,7 @@ func WebService(name string, nodePort int) *Service {
 				},
 			},
 			Selector: map[string]string{
-				"app": "web" + name,
+				"app": "web-" + name,
 			},
 			//Type: "ClusterIP",
 			Type: "NodePort",
@@ -67,7 +67,7 @@ func NoderedService(name string, nodePort int) *Service {
 				},
 			},
 			Selector: map[string]string{
-				"app": "nodered" + name,
+				"app": "nodered-" + name,
 			},
 			//Type: "ClusterIP",
 			Type: "NodePort",
@@ -92,7 +92,7 @@ func ServerService(name string, nodePort int) *Service {
 				},
 			},
 			Selector: map[string]string{
-				"app": "server" + name,
+				"app": "server-" + name,
 			},
 			//Type: "ClusterIP",
 			Type: "NodePort",
@@ -117,7 +117,7 @@ func GrafanaService(name string, nodePort int) *Service {
 				},
 			},
 			Selector: map[string]string{
-				"app": "grafana" + name,
+				"app": "grafana-" + name,
 			},
 			//Type: "ClusterIP",
 			Type: "NodePort",
@@ -142,7 +142,7 @@ func TdengineService(name string, nodePort int) *Service {
 				},
 			},
 			Selector: map[string]string{
-				"app": "tdengine" + name,
+				"app": "tdengine-" + name,
 			},
 			//Type: "ClusterIP",
 			Type: "NodePort",
@@ -167,7 +167,7 @@ func EmqxService(name string, nodePort int) *Service {
 				},
 			},
 			Selector: map[string]string{
-				"app": "emqx" + name,
+				"app": "emqx-" + name,
 			},
 			//Type: "ClusterIP",
 			Type: "NodePort",
@@ -192,7 +192,7 @@ func MysqlService(name string, nodePort int) *Service {
 				},
 			},
 			Selector: map[string]string{
-				"app": "mysql" + name,
+				"app": "mysql-" + name,
 			},
 			//Type: "ClusterIP",
 			Type: "NodePort",
@@ -217,7 +217,32 @@ func ConsolemanagerService(name string, nodePort int) *Service {
 				},
 			},
 			Selector: map[string]string{
-				"app": "consolemanager" + name,
+				"app": "consolemanager-" + name,
+			},
+			//Type: "ClusterIP",
+			Type: "NodePort",
+		},
+	}
+}
+
+func NginxService(name string, nodePort int) *Service {
+	return &Service{
+		APIVersion: "v1",
+		Kind:       "Service",
+		Metadata: Metadata{
+			Name: "nginx-" + name,
+		},
+		Spec: ServiceSpec{
+			Ports: []Port{
+				{
+					NodePort:   nodePort,
+					Port:       80,
+					Protocol:   "TCP",
+					TargetPort: 80,
+				},
+			},
+			Selector: map[string]string{
+				"app": "nginx-" + name,
 			},
 			//Type: "ClusterIP",
 			Type: "NodePort",

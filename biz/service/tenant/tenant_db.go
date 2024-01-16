@@ -8,16 +8,24 @@ import (
 	"freezonex/openiiot/biz/service/k8s"
 	"freezonex/openiiot/biz/service/utils/common"
 	"gorm.io/gen/field"
+	"strconv"
 )
 
 // AddTenantDB will add tenant record to the DB.
 func (a *TenantService) AddTenantDB(ctx context.Context, name string, description string, isDefault bool) (int64, error) {
 
+	id := common.GetUUID()
+	idStr := strconv.FormatInt(id, 10) // 将 id 转换为 string
+
 	_ = k8s.K8sNamespaceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
-	_ = k8s.K8sDeploymentPvPvcCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+	//_ = k8s.K8sConfigmapCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
+	_ = k8s.K8sDeploymentPvPvcCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL, idStr)
 
 	_ = k8s.K8sServiceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
+	_ = k8s.K8sIngressCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx)
@@ -25,12 +33,10 @@ func (a *TenantService) AddTenantDB(ctx context.Context, name string, descriptio
 	if existRecord != nil {
 		return -1, errors.New("tenant exist")
 	}
-	id := common.GetUUID()
 	newRecord := &model_openiiot.Tenant{
 		ID:          id,
 		Name:        name,
 		Description: &description,
-		IsDefault:   &isDefault,
 	}
 	err := tx.Create(newRecord)
 	if err != nil {
@@ -91,7 +97,8 @@ func (a *TenantService) DeleteTenantDB(ctx context.Context, id int64) error {
 		return err
 	}
 
-	_ = k8s.K8sNamespacePvDelete("openiiot-"+data[0].Name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+	idStr := strconv.FormatInt(id, 10) // 将 id 转换为 string
+	_ = k8s.K8sNamespacePvDelete("openiiot-"+data[0].Name, ctx, a.S.AuthorizationValue, a.S.K8SURL, idStr)
 
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
 	if existRecord == nil {
