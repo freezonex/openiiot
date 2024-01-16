@@ -62,3 +62,13 @@ func (a *AuthHandler) Logout(ctx context.Context, c *app.RequestContext) middlew
 	}
 	return resp
 }
+
+func (a *AuthHandler) Login(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.LoginRequest)
+	resp, err := a.service.Login(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=Login error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}

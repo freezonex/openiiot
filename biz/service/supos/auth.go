@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"freezonex/openiiot/biz/service/user"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	"strconv"
 	"strings"
 
 	"freezonex/openiiot/biz/middleware"
@@ -69,14 +71,15 @@ func (a *SuposService) GetAccessToken(ctx context.Context, req *freezonex_openii
 				}
 
 				username1 := user1.PersonCode
-				userid := user1.PersonCode
+				authid := user1.PersonCode
 				userRole := classifyUserRole(user1)
-				cache.Set("CurrentUserId", userid) //authid,tenantid?
+				userService := user.DefaultUserService()
+				id, err := userService.AddSuposUserID(ctx, username1, authid, userRole)
+
+				cache.Set("CurrentUserId", strconv.FormatInt(id, 10)) //authid,tenantid?
 				cache.Set("CurrentUsername", username1)
 				cache.Set("CurrentUserRole", userRole)
 
-				userService := user.DefaultUserService()
-				id, err := userService.AddSuposUserID(ctx, username1, userid, userRole)
 				context.WithValue(ctx, "currentuserid", id)
 				context.WithValue(ctx, "currentusername", username1)
 				context.WithValue(ctx, "currentuserrole", userRole)
@@ -129,6 +132,34 @@ func (a *SuposService) Logout(ctx context.Context, req *freezonex_openiiot_api.L
 	resp := new(freezonex_openiiot_api.LogoutResponse)
 	resp.Code = 0
 	resp.Msg = "Success"
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+}
+
+func (a *SuposService) Login(ctx context.Context, req *freezonex_openiiot_api.LoginRequest, c *app.RequestContext) (*freezonex_openiiot_api.LoginResponse, error) {
+	userService := user.DefaultUserService()
+
+	id, userRole, Accesstoken, err := userService.UserLoginDB(ctx, req.Username, req.Password, req.TenantName)
+	if err != nil {
+		logs.Error(ctx, "event=GetUser error=%v", err.Error())
+		return nil, err
+	}
+	cache.Set("CurrentUserId", strconv.FormatInt(id, 10)) //authid,tenantid?
+	cache.Set("CurrentUsername", req.Username)
+	cache.Set("CurrentUserRole", userRole)
+
+	context.WithValue(ctx, "currentid", id)
+	context.WithValue(ctx, "currentusername", req.Username)
+	context.WithValue(ctx, "currentuserrole", userRole)
+	err = userService.UpdateSuposToken(ctx, id, Accesstoken)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp := new(freezonex_openiiot_api.LoginResponse)
+	resp.Accesstoken = Accesstoken
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil

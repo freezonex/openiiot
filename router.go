@@ -48,6 +48,12 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/auth/logout",
 				authHandler.Logout,
 				&iiotpb.LogoutRequest{}))
+		authGroup.POST(
+			"/login",
+			middleware.Response(
+				"/auth/login",
+				authHandler.Login,
+				&iiotpb.LoginRequest{}))
 	}
 
 	tenantGroup := r.Group("/tenant", middleware.Access())
@@ -77,6 +83,12 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/tenant/delete",
 				tenantHandler.DeleteTenant,
 				&iiotpb.DeleteTenantRequest{}))
+		tenantGroup.GET(
+			"/allname",
+			middleware.Response(
+				"/tenant/allname",
+				tenantHandler.GetAllTenantName,
+				&iiotpb.GetAllTenantNameRequest{}))
 	}
 
 	userGroup := r.Group("/user", middleware.Access())

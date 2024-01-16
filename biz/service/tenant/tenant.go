@@ -87,3 +87,23 @@ func (a *TenantService) DeleteTenant(ctx context.Context, req *freezonex_openiio
 
 	return resp, nil
 }
+
+func (a *TenantService) GetAllTenantName(ctx context.Context, req *freezonex_openiiot_api.GetAllTenantNameRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetAllTenantNameResponse, error) {
+	tenants, err := a.GetTenantDB(ctx, 0, "")
+
+	if err != nil {
+		logs.Error(ctx, "event=GetTenant error=%v", err.Error())
+		return nil, err
+	}
+
+	resp := new(freezonex_openiiot_api.GetAllTenantNameResponse)
+	tenantNames := make([]string, 0) // Change to slice of strings
+	for _, v := range tenants {
+		tenantNames = append(tenantNames, v.Name) // Append only the name
+	}
+
+	resp.TenantNames = tenantNames
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+}
