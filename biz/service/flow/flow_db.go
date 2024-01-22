@@ -36,62 +36,70 @@ func (a *FlowService) AddFlowDB(ctx context.Context, name string, description st
 	return id, nil
 }
 
-func (a *FlowService) AddFlowEdge(ctx context.Context, flowID int64, edgeIDs []int64) error {
+func (a *FlowService) AddFlowEdge(ctx context.Context, flowID int64, edgeIDs []int64) ([]int64, error) {
 	table := a.db.DBOpeniiotQuery.FlowEdge
 	tx := table.WithContext(ctx)
-	id := common.GetUUID()
+	var ids []int64
+
 	for _, edgeID := range edgeIDs {
+		id := common.GetUUID()
 		newRecord := &model_openiiot.FlowEdge{
 			ID:     id,
 			FlowID: flowID,
 			EdgeID: edgeID,
 		}
 		err := tx.Create(newRecord)
+		ids = append(ids, id)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 	}
 
-	return nil
+	return ids, nil
 }
 
-func (a *FlowService) AddFlowCore(ctx context.Context, flowID int64, coreIDs []int64) error {
+func (a *FlowService) AddFlowCore(ctx context.Context, flowID int64, coreIDs []int64) ([]int64, error) {
 	table := a.db.DBOpeniiotQuery.FlowCore
 	tx := table.WithContext(ctx)
-	id := common.GetUUID()
+
+	var ids []int64
 	for _, coreID := range coreIDs {
+		id := common.GetUUID()
 		newRecord := &model_openiiot.FlowCore{
 			ID:     id,
 			FlowID: flowID,
 			CoreID: coreID,
 		}
 		err := tx.Create(newRecord)
+		ids = append(ids, id)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
 
-	return nil
+	return ids, nil
 }
 
-func (a *FlowService) AddFlowApp(ctx context.Context, flowID int64, appIDs []int64) error {
+func (a *FlowService) AddFlowApp(ctx context.Context, flowID int64, appIDs []int64) ([]int64, error) {
 	table := a.db.DBOpeniiotQuery.FlowApp
 	tx := table.WithContext(ctx)
-	id := common.GetUUID()
+	var ids []int64
 	for _, appID := range appIDs {
+		id := common.GetUUID()
 		newRecord := &model_openiiot.FlowApp{
 			ID:     id,
 			FlowID: flowID,
 			AppID:  appID,
 		}
 		err := tx.Create(newRecord)
+		ids = append(ids, id)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
 
-	return nil
+	return ids, nil
 }
 
 // GetUserDB will get user record from the DB in condition

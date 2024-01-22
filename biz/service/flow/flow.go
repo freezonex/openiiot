@@ -18,13 +18,13 @@ func (a *FlowService) AddFlow(ctx context.Context, req *freezonex_openiiot_api.A
 		return nil, err
 	}
 
-	if err := a.AddFlowEdge(ctx, flowID, req.EdgeIds); err != nil {
+	if _, err := a.AddFlowEdge(ctx, flowID, req.EdgeIds); err != nil {
 		return nil, err
 	}
-	if err := a.AddFlowCore(ctx, flowID, req.CoreIds); err != nil {
+	if _, err := a.AddFlowCore(ctx, flowID, req.CoreIds); err != nil {
 		return nil, err
 	}
-	if err := a.AddFlowApp(ctx, flowID, req.AppIds); err != nil {
+	if _, err := a.AddFlowApp(ctx, flowID, req.AppIds); err != nil {
 		return nil, err
 	}
 
