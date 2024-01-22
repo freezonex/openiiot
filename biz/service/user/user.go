@@ -40,14 +40,15 @@ func (a *UserService) GetUser(ctx context.Context, req *freezonex_openiiot_api.G
 	data := make([]*freezonex_openiiot_api.User, 0)
 	for _, v := range users {
 		data = append(data, &freezonex_openiiot_api.User{
-			Id:         v.ID,
-			Username:   v.Username,
-			TenantId:   v.TenantID,
-			Role:       v.Role,
-			AuthId:     *v.AuthID,
-			Source:     *v.Source,
-			CreateTime: common.GetTimeStringFromTime(&v.CreateTime), // Format time as needed
-			UpdateTime: common.GetTimeStringFromTime(&v.UpdateTime),
+			Id:          v.ID,
+			Username:    v.Username,
+			Description: *v.Description,
+			TenantId:    v.TenantID,
+			Role:        v.Role,
+			AuthId:      *v.AuthID,
+			Source:      *v.Source,
+			CreateTime:  common.GetTimeStringFromTime(&v.CreateTime), // Format time as needed
+			UpdateTime:  common.GetTimeStringFromTime(&v.UpdateTime),
 		})
 	}
 	resp.Data = data
