@@ -2,10 +2,9 @@ package flow
 
 import (
 	"context"
+	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/service/utils/common"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
-
-	"freezonex/openiiot/biz/middleware"
 
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 
@@ -19,13 +18,13 @@ func (a *FlowService) AddFlow(ctx context.Context, req *freezonex_openiiot_api.A
 		return nil, err
 	}
 
-	if _, err := a.AddFlowEdge(ctx, flowID); err != nil {
+	if err := a.AddFlowEdge(ctx, flowID, req.EdgeIds); err != nil {
 		return nil, err
 	}
-	if _, err := a.AddFlowCore(ctx, flowID); err != nil {
+	if err := a.AddFlowCore(ctx, flowID, req.CoreIds); err != nil {
 		return nil, err
 	}
-	if _, err := a.AddFlowApp(ctx, flowID); err != nil {
+	if err := a.AddFlowApp(ctx, flowID, req.AppIds); err != nil {
 		return nil, err
 	}
 

@@ -36,49 +36,62 @@ func (a *FlowService) AddFlowDB(ctx context.Context, name string, description st
 	return id, nil
 }
 
-func (a *FlowService) AddFlowEdge(ctx context.Context, flowID int64) (int64, error) {
+func (a *FlowService) AddFlowEdge(ctx context.Context, flowID int64, edgeIDs []int64) error {
 	table := a.db.DBOpeniiotQuery.FlowEdge
 	tx := table.WithContext(ctx)
 	id := common.GetUUID()
-	newRecord := &model_openiiot.FlowEdge{
-		ID:     id,
-		FlowID: flowID,
+	for _, edgeID := range edgeIDs {
+		newRecord := &model_openiiot.FlowEdge{
+			ID:     id,
+			FlowID: flowID,
+			EdgeID: edgeID,
+		}
+		err := tx.Create(newRecord)
+		if err != nil {
+			return err
+		}
+
 	}
-	err := tx.Create(newRecord)
-	if err != nil {
-		return -1, err
-	}
-	return id, nil
+
+	return nil
 }
 
-func (a *FlowService) AddFlowCore(ctx context.Context, flowID int64) (int64, error) {
+func (a *FlowService) AddFlowCore(ctx context.Context, flowID int64, coreIDs []int64) error {
 	table := a.db.DBOpeniiotQuery.FlowCore
 	tx := table.WithContext(ctx)
 	id := common.GetUUID()
-	newRecord := &model_openiiot.FlowCore{
-		ID:     id,
-		FlowID: flowID,
+	for _, coreID := range coreIDs {
+		newRecord := &model_openiiot.FlowCore{
+			ID:     id,
+			FlowID: flowID,
+			CoreID: coreID,
+		}
+		err := tx.Create(newRecord)
+		if err != nil {
+			return err
+		}
 	}
-	err := tx.Create(newRecord)
-	if err != nil {
-		return -1, err
-	}
-	return id, nil
+
+	return nil
 }
 
-func (a *FlowService) AddFlowApp(ctx context.Context, flowID int64) (int64, error) {
+func (a *FlowService) AddFlowApp(ctx context.Context, flowID int64, appIDs []int64) error {
 	table := a.db.DBOpeniiotQuery.FlowApp
 	tx := table.WithContext(ctx)
 	id := common.GetUUID()
-	newRecord := &model_openiiot.FlowApp{
-		ID:     id,
-		FlowID: flowID,
+	for _, appID := range appIDs {
+		newRecord := &model_openiiot.FlowApp{
+			ID:     id,
+			FlowID: flowID,
+			AppID:  appID,
+		}
+		err := tx.Create(newRecord)
+		if err != nil {
+			return err
+		}
 	}
-	err := tx.Create(newRecord)
-	if err != nil {
-		return -1, err
-	}
-	return id, nil
+
+	return nil
 }
 
 // GetUserDB will get user record from the DB in condition
@@ -293,7 +306,7 @@ func (a *FlowService) UpdateFlowEdgeDB(ctx context.Context, flowid int64, edgeid
 
 func (a *FlowService) UpdateFlowCoreDB(ctx context.Context, flowid int64, coreids []int64) error {
 	table := a.db.DBOpeniiotQuery.FlowCore
-	tx := table.WithContext(ctx).Where(table.FlowID.Eq(flowid))
+	tx := table.WithContext(ctx)
 
 	for _, coreID := range coreids {
 
@@ -336,7 +349,7 @@ func (a *FlowService) UpdateFlowCoreDB(ctx context.Context, flowid int64, coreid
 
 func (a *FlowService) UpdateFlowAppDB(ctx context.Context, flowid int64, appids []int64) error {
 	table := a.db.DBOpeniiotQuery.FlowApp
-	tx := table.WithContext(ctx).Where(table.FlowID.Eq(flowid))
+	tx := table.WithContext(ctx)
 
 	for _, appID := range appids {
 
