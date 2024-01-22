@@ -20,7 +20,7 @@ func NoderedPersistentVolume(name string, id string) *PersistentVolume {
 			HostPath: struct {
 				Path string `json:"path"`
 			}{
-				Path: "/volumes/nfs/openiiot/nodered_data/" + name,
+				Path: "/volumes/nfs/openiiot/nodered_data/" + name + "-" + id,
 			},
 			StorageClassName: "managed-nfs-storage",
 		},
@@ -47,7 +47,7 @@ func GrafanaDataPersistentVolume(name string, id string) *PersistentVolume {
 			HostPath: struct {
 				Path string `json:"path"`
 			}{
-				Path: "/volumes/nfs/openiiot/grafana_data/" + name,
+				Path: "/volumes/nfs/openiiot/grafana_data/" + name + "-" + id,
 			},
 			StorageClassName: "managed-nfs-storage",
 		},
@@ -74,7 +74,7 @@ func GrafanaConfigPersistentVolume(name string, id string) *PersistentVolume {
 			HostPath: struct {
 				Path string `json:"path"`
 			}{
-				Path: "/volumes/nfs/openiiot/grafana_config/" + name,
+				Path: "/volumes/nfs/openiiot/grafana_config/" + name + "-" + id,
 			},
 			StorageClassName: "managed-nfs-storage",
 		},
@@ -101,7 +101,7 @@ func TdenginePersistentVolumeData(name string, id string) *PersistentVolume {
 			HostPath: struct {
 				Path string `json:"path"`
 			}{
-				Path: "/volumes/nfs/openiiot/tdengine_data/" + name,
+				Path: "/volumes/nfs/openiiot/tdengine_data/" + name + "-" + id,
 			},
 			StorageClassName: "managed-nfs-storage",
 		},
@@ -128,7 +128,7 @@ func TdenginePersistentVolumeLog(name string, id string) *PersistentVolume {
 			HostPath: struct {
 				Path string `json:"path"`
 			}{
-				Path: "/volumes/nfs/openiiot/tdengine_log/" + name,
+				Path: "/volumes/nfs/openiiot/tdengine_log/" + name + "-" + id,
 			},
 			StorageClassName: "managed-nfs-storage",
 		},
@@ -155,7 +155,7 @@ func EmqxPersistentVolume(name string, id string) *PersistentVolume {
 			HostPath: struct {
 				Path string `json:"path"`
 			}{
-				Path: "/volumes/nfs/openiiot/emqx_data/" + name,
+				Path: "/volumes/nfs/openiiot/emqx_data/" + name + "-" + id,
 			},
 			StorageClassName: "managed-nfs-storage",
 		},
@@ -182,7 +182,7 @@ func MysqlPersistentVolume(name string, id string) *PersistentVolume {
 			HostPath: struct {
 				Path string `json:"path"`
 			}{
-				Path: "/volumes/nfs/openiiot/mysql_data/" + name,
+				Path: "/volumes/nfs/openiiot/mysql_data/" + name + "-" + id,
 			},
 			StorageClassName: "managed-nfs-storage",
 		},

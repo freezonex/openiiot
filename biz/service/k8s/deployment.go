@@ -146,6 +146,21 @@ func NoderedDeployment(name string) *Deployment {
 					},
 				},
 				Spec: PodSpec{
+					InitContainers: []Container{
+						{
+							Name:  "init-chmod",
+							Image: "busybox",
+							Command: []string{
+								"chmod", "-R", "777", "/data",
+							},
+							VolumeMounts: []VolumeMount{
+								{
+									Name:      "nodered-data",
+									MountPath: "/data",
+								},
+							},
+						},
+					},
 					Containers: []Container{
 						{
 							Image: "openiiot_nodered:1.0.0",
@@ -163,7 +178,7 @@ func NoderedDeployment(name string) *Deployment {
 							VolumeMounts: []VolumeMount{
 								{
 									Name:      "nodered-data",
-									MountPath: "/data/" + name,
+									MountPath: "/data",
 								},
 							},
 						},
