@@ -42,8 +42,9 @@ func (a *UserService) GetUser(ctx context.Context, req *freezonex_openiiot_api.G
 		data = append(data, &freezonex_openiiot_api.User{
 			Id:          v.ID,
 			Username:    v.Username,
-			Description: *v.Description,
+			Password:    *v.Password,
 			TenantId:    v.TenantID,
+			Description: *v.Description,
 			Role:        v.Role,
 			AuthId:      *v.AuthID,
 			Source:      *v.Source,

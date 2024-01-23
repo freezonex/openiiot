@@ -48,8 +48,9 @@ type PodTemplate struct {
 
 // PodSpec 定义了 Pod 的规格
 type PodSpec struct {
-	Containers []Container `json:"containers"`
-	Volumes    []Volume    `json:"volumes,omitempty"`
+	Containers     []Container `json:"containers"`
+	Volumes        []Volume    `json:"volumes,omitempty"`
+	InitContainers []Container `json:"initContainers,omitempty"`
 }
 
 // Container 定义了 Pod 中的容器
@@ -59,6 +60,7 @@ type Container struct {
 	Resources    ResourceRequirements `json:"resources"`
 	VolumeMounts []VolumeMount        `json:"volumeMounts,omitempty"`
 	Env          []EnvVar             `json:"env"`
+	Command      []string             `json:"command,omitempty"`
 }
 
 type VolumeMount struct {

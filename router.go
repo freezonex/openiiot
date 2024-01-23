@@ -9,7 +9,7 @@ import (
 	"freezonex/openiiot/biz/handler"
 	"freezonex/openiiot/biz/middleware"
 	iiotpb "freezonex/openiiot/biz/model/freezonex_openiiot_api"
-	"freezonex/openiiot/biz/service/application"
+	"freezonex/openiiot/biz/service/app"
 	"freezonex/openiiot/biz/service/core"
 	"freezonex/openiiot/biz/service/edge"
 	"freezonex/openiiot/biz/service/emqx"
@@ -193,7 +193,7 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	appGroup := r.Group("/app", middleware.Access())
 	{
-		appHandler := handler.NewAppHandler(application.NewAppService(db))
+		appHandler := handler.NewAppHandler(app.NewAppService(db))
 		appGroup.POST(
 			"/add",
 			middleware.Response(
