@@ -6,7 +6,6 @@ package query_openiiot
 
 import (
 	"context"
-	"freezonex/openiiot/biz/dal/model_openiiot"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -16,6 +15,8 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
+
+	"freezonex/openiiot/biz/dal/model_openiiot"
 )
 
 func newUser(db *gorm.DB, opts ...gen.DOOption) user {
@@ -35,6 +36,7 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	_user.AuthID = field.NewString(tableName, "auth_id")
 	_user.Source = field.NewString(tableName, "source")
 	_user.Token = field.NewString(tableName, "token")
+	_user.TokenUpdatetime = field.NewTime(tableName, "token_updatetime")
 	_user.UpdateTime = field.NewTime(tableName, "update_time")
 	_user.CreateTime = field.NewTime(tableName, "create_time")
 
@@ -46,18 +48,19 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 type user struct {
 	userDo userDo
 
-	ALL         field.Asterisk
-	ID          field.Int64
-	Username    field.String
-	Password    field.String
-	Description field.String
-	TenantID    field.Int64
-	Role        field.String
-	AuthID      field.String
-	Source      field.String
-	Token       field.String
-	UpdateTime  field.Time
-	CreateTime  field.Time
+	ALL             field.Asterisk
+	ID              field.Int64
+	Username        field.String
+	Password        field.String
+	Description     field.String
+	TenantID        field.Int64
+	Role            field.String
+	AuthID          field.String
+	Source          field.String
+	Token           field.String
+	TokenUpdatetime field.Time
+	UpdateTime      field.Time
+	CreateTime      field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -83,6 +86,7 @@ func (u *user) updateTableName(table string) *user {
 	u.AuthID = field.NewString(table, "auth_id")
 	u.Source = field.NewString(table, "source")
 	u.Token = field.NewString(table, "token")
+	u.TokenUpdatetime = field.NewTime(table, "token_updatetime")
 	u.UpdateTime = field.NewTime(table, "update_time")
 	u.CreateTime = field.NewTime(table, "create_time")
 
@@ -109,7 +113,7 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 11)
+	u.fieldMap = make(map[string]field.Expr, 12)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["username"] = u.Username
 	u.fieldMap["password"] = u.Password
@@ -119,6 +123,7 @@ func (u *user) fillFieldMap() {
 	u.fieldMap["auth_id"] = u.AuthID
 	u.fieldMap["source"] = u.Source
 	u.fieldMap["token"] = u.Token
+	u.fieldMap["token_updatetime"] = u.TokenUpdatetime
 	u.fieldMap["update_time"] = u.UpdateTime
 	u.fieldMap["create_time"] = u.CreateTime
 }
