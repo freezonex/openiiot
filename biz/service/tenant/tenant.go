@@ -2,14 +2,13 @@ package tenant
 
 import (
 	"context"
-	"freezonex/openiiot/biz/service/utils/common"
 
+	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-
-	"github.com/cloudwego/hertz/pkg/app"
+	"freezonex/openiiot/biz/service/utils/common"
 )
 
 func (a *TenantService) AddTenant(ctx context.Context, req *freezonex_openiiot_api.AddTenantRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddTenantResponse, error) {
@@ -21,14 +20,14 @@ func (a *TenantService) AddTenant(ctx context.Context, req *freezonex_openiiot_a
 
 	resp := new(freezonex_openiiot_api.AddTenantResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
-	resp.Id = tenantID
+	resp.Id = common.Int64ToString(tenantID)
 
 	return resp, nil
 }
 
 // GetTenant will get tenant record in condition
 func (a *TenantService) GetTenant(ctx context.Context, req *freezonex_openiiot_api.GetTenantRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetTenantResponse, error) {
-	tenants, err := a.GetTenantDB(ctx, req.Id, req.Name)
+	tenants, err := a.GetTenantDB(ctx, common.StringToInt64(req.Id), req.Name)
 
 	if err != nil {
 		logs.Error(ctx, "event=GetTenant error=%v", err.Error())
@@ -39,10 +38,10 @@ func (a *TenantService) GetTenant(ctx context.Context, req *freezonex_openiiot_a
 	data := make([]*freezonex_openiiot_api.Tenant, 0)
 	for _, v := range tenants {
 		data = append(data, &freezonex_openiiot_api.Tenant{
-			Id:          v.ID,
+			Id:          common.Int64ToString(v.ID),
 			Name:        v.Name,
 			Description: *v.Description,
-			IsDefault:   *v.IsDefault,
+			IsDefault:   common.ProtectNullBoolPointer(v.IsDefault),
 			CreateTime:  common.GetTimeStringFromTime(&v.CreateTime), // Format time as needed
 			UpdateTime:  common.GetTimeStringFromTime(&v.UpdateTime),
 		})
@@ -55,7 +54,7 @@ func (a *TenantService) GetTenant(ctx context.Context, req *freezonex_openiiot_a
 
 // UpdateTenant will update tenant record
 func (a *TenantService) UpdateTenant(ctx context.Context, req *freezonex_openiiot_api.UpdateTenantRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateTenantResponse, error) {
-	err := a.UpdateTenantDB(ctx, req.Id, req.Name, req.Description)
+	err := a.UpdateTenantDB(ctx, common.StringToInt64(req.Id), req.Name, req.Description)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateTenant error=%v", err.Error())
 		return nil, err
@@ -77,7 +76,7 @@ func (a *TenantService) DeleteTenant(ctx context.Context, req *freezonex_openiio
 	}*/
 
 	// Delete tenant
-	err := a.DeleteTenantDB(ctx, req.Id)
+	err := a.DeleteTenantDB(ctx, common.StringToInt64(req.Id))
 	if err != nil {
 		logs.Error(ctx, "event=DeleteTenant error=%v", err.Error())
 		return nil, err

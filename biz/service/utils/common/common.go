@@ -28,6 +28,13 @@ func ProtectNullStringPointer(s *string) string {
 	return *s
 }
 
+func ProtectNullBoolPointer(b *bool) bool {
+	if b == nil {
+		return false
+	}
+	return *b
+}
+
 func GetTimeStringFromTime(t *time.Time) string {
 	if t == nil {
 		return ""
@@ -120,4 +127,18 @@ func IsOpenChatId(id string) bool {
 
 func GetRuntimeIdc() string {
 	return os.Getenv("RUNTIME_IDC_NAME")
+}
+
+// Int64ToString converts an int64 to a string.
+func Int64ToString(num int64) string {
+	return strconv.FormatInt(num, 10)
+}
+
+// StringToInt64 converts a string to an int64. It returns 0 if the conversion is not successful.
+func StringToInt64(str string) int64 {
+	num, err := strconv.ParseInt(str, 10, 64)
+	if err != nil {
+		return 0
+	}
+	return num
 }
