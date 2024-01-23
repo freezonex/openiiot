@@ -63,7 +63,7 @@ func generateDbOpeniiotModels() {
 		g.GenerateModel("user"),
 		g.GenerateModel("edge"),
 		g.GenerateModel("core"),
-		g.GenerateModel("application"),
+		g.GenerateModel("app"),
 		g.GenerateModel("flow"),
 		g.GenerateModel("flow_edge"),
 		g.GenerateModel("flow_core"),

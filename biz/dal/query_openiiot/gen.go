@@ -18,7 +18,7 @@ import (
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:           db,
-		Application:  newApplication(db, opts...),
+		App:          newApp(db, opts...),
 		Core:         newCore(db, opts...),
 		Edge:         newEdge(db, opts...),
 		Flow:         newFlow(db, opts...),
@@ -34,7 +34,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 type Query struct {
 	db *gorm.DB
 
-	Application  application
+	App          app
 	Core         core
 	Edge         edge
 	Flow         flow
@@ -51,7 +51,7 @@ func (q *Query) Available() bool { return q.db != nil }
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:           db,
-		Application:  q.Application.clone(db),
+		App:          q.App.clone(db),
 		Core:         q.Core.clone(db),
 		Edge:         q.Edge.clone(db),
 		Flow:         q.Flow.clone(db),
@@ -75,7 +75,7 @@ func (q *Query) WriteDB() *Query {
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:           db,
-		Application:  q.Application.replaceDB(db),
+		App:          q.App.replaceDB(db),
 		Core:         q.Core.replaceDB(db),
 		Edge:         q.Edge.replaceDB(db),
 		Flow:         q.Flow.replaceDB(db),
@@ -89,7 +89,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 }
 
 type queryCtx struct {
-	Application  *applicationDo
+	App          *appDo
 	Core         *coreDo
 	Edge         *edgeDo
 	Flow         *flowDo
@@ -103,7 +103,7 @@ type queryCtx struct {
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Application:  q.Application.WithContext(ctx),
+		App:          q.App.WithContext(ctx),
 		Core:         q.Core.WithContext(ctx),
 		Edge:         q.Edge.WithContext(ctx),
 		Flow:         q.Flow.WithContext(ctx),

@@ -1,4 +1,4 @@
-package application
+package app
 
 import (
 	"context"
@@ -13,14 +13,14 @@ import (
 
 // AddUserDB will add User record to the DB.
 func (a *AppService) AddAppDB(ctx context.Context, name string, description string, tenantid int64, url string, username string, password string, type1 string) (int64, error) {
-	table := a.db.DBOpeniiotQuery.Application
+	table := a.db.DBOpeniiotQuery.App
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.Name.Eq(name)).First()
 	if existRecord != nil {
 		return -1, errors.New("app name exist")
 	}
 	id := common.GetUUID()
-	newRecord := &model_openiiot.Application{
+	newRecord := &model_openiiot.App{
 		ID:          id,
 		Name:        name,
 		Description: &description,
@@ -38,8 +38,8 @@ func (a *AppService) AddAppDB(ctx context.Context, name string, description stri
 }
 
 // GetUserDB will get user record from the DB in condition
-func (a *AppService) GetAppDB(ctx context.Context, id int64, name string, tenantid int64, url string, type1 string) ([]*model_openiiot.Application, error) {
-	table := a.db.DBOpeniiotQuery.Application
+func (a *AppService) GetAppDB(ctx context.Context, id int64, name string, tenantid int64, url string, type1 string) ([]*model_openiiot.App, error) {
+	table := a.db.DBOpeniiotQuery.App
 	tx := table.WithContext(ctx).Select(field.ALL)
 	if id != 0 {
 		tx = tx.Where(table.ID.Eq(id))
@@ -68,7 +68,7 @@ func (a *AppService) GetAppDB(ctx context.Context, id int64, name string, tenant
 
 // UpdateUserDB will update user record from the DB.
 func (a *AppService) UpdateAppDB(ctx context.Context, id int64, name string, description string, tenantid int64, url string, username string, password string, type1 string) error {
-	table := a.db.DBOpeniiotQuery.Application
+	table := a.db.DBOpeniiotQuery.App
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
 
@@ -106,7 +106,7 @@ func (a *AppService) UpdateAppDB(ctx context.Context, id int64, name string, des
 
 // DeleteUserDB will delete user record from the DB.
 func (a *AppService) DeleteAppDB(ctx context.Context, id int64) error {
-	table := a.db.DBOpeniiotQuery.Application
+	table := a.db.DBOpeniiotQuery.App
 	tx := table.WithContext(ctx)
 
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
