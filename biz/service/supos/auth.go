@@ -140,7 +140,7 @@ func (a *SuposService) Logout(ctx context.Context, req *freezonex_openiiot_api.L
 func (a *SuposService) Login(ctx context.Context, req *freezonex_openiiot_api.LoginRequest, c *app.RequestContext) (*freezonex_openiiot_api.LoginResponse, error) {
 	userService := user.DefaultUserService()
 
-	id, userRole, Accesstoken, err := userService.UserLoginDB(ctx, req.Username, req.Password, req.TenantName)
+	id, Accesstoken, userRole, tenantId, err := userService.UserLoginDB(ctx, req.Username, req.Password, req.TenantName)
 	if err != nil {
 		logs.Error(ctx, "event=GetUser error=%v", err.Error())
 		return nil, err
@@ -148,10 +148,12 @@ func (a *SuposService) Login(ctx context.Context, req *freezonex_openiiot_api.Lo
 	cache.Set("CurrentUserId", strconv.FormatInt(id, 10)) //authid,tenantid?
 	cache.Set("CurrentUsername", req.Username)
 	cache.Set("CurrentUserRole", userRole)
+	cache.Set("CurrentTenantId", strconv.FormatInt(tenantId, 10))
 
 	context.WithValue(ctx, "currentid", id)
 	context.WithValue(ctx, "currentusername", req.Username)
 	context.WithValue(ctx, "currentuserrole", userRole)
+	context.WithValue(ctx, "currenttenantid", tenantId)
 	err = userService.UpdateSuposToken(ctx, id, Accesstoken)
 
 	if err != nil {
