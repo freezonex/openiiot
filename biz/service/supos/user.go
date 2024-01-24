@@ -12,7 +12,6 @@ import (
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/cache"
-
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
@@ -69,6 +68,7 @@ func (a *SuposService) GetSuposUser(ctx context.Context, req *freezonex_openiiot
 func (a *SuposService) GetCurrentUser(ctx context.Context, req *freezonex_openiiot_api.GetCurrentUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetCurrentUserResponse, error) {
 	loginUsername, _ := cache.Get("CurrentUsername")
 	loginUserRoleList, _ := cache.Get("CurrentUserRole")
+	loginTenantId, _ := cache.Get("CurrentTenantId")
 	//loginUsername = "hongzhi"
 
 	resp := new(freezonex_openiiot_api.GetCurrentUserResponse)
@@ -80,6 +80,7 @@ func (a *SuposService) GetCurrentUser(ctx context.Context, req *freezonex_openii
 
 	data.Username = loginUsername
 	data.Role = loginUserRoleList
+	data.TenantId = loginTenantId
 	resp.BaseResp = middleware.SuccessResponseOK
 	resp.Data = data
 

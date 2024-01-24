@@ -216,15 +216,15 @@ func (a *UserService) DeleteUserToken(ctx context.Context, token string) error {
 	return err
 }
 
-func (a *UserService) UserLoginDB(ctx context.Context, username string, password string, tenant_name string) (int64, string, string, error) {
+func (a *UserService) UserLoginDB(ctx context.Context, username string, password string, tenant_name string) (int64, string, string, int64, error) {
 	table1 := a.db.DBOpeniiotQuery.Tenant
 	tx1 := table1.WithContext(ctx)
 	existTenant, err := tx1.Where(table1.Name.Eq(tenant_name)).First()
 	if existTenant == nil {
-		return 0, "", "", errors.New("tenant does not exist")
+		return 0, "", "", 0, errors.New("tenant does not exist")
 	}
 	if err != nil {
-		return 0, "", "", err
+		return 0, "", "", 0, err
 	}
 
 	tenant_id := existTenant.ID
@@ -234,19 +234,19 @@ func (a *UserService) UserLoginDB(ctx context.Context, username string, password
 	existUser, err := tx.Where(table.Username.Eq(username), table.TenantID.Eq(tenant_id)).First()
 
 	if err != nil {
-		return 0, "", "", err
+		return 0, "", "", 0, err
 	}
 	// Insert new edge IDs
 	if existUser == nil {
-		return 0, "", "", errors.New("user does not exist")
+		return 0, "", "", 0, errors.New("user does not exist")
 	}
 	if *existUser.Password != password {
-		return 0, "", "", errors.New("wrong password")
+		return 0, "", "", 0, errors.New("wrong password")
 	}
 
 	Accesstoken := strings.Replace(uuid.New().String(), "-", "", -1)
 	id := existUser.ID
 	role := existUser.Role
 
-	return id, Accesstoken, role, err
+	return id, Accesstoken, role, tenant_id, err
 }

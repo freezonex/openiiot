@@ -43,7 +43,7 @@ func (a *UserService) GetUser(ctx context.Context, req *freezonex_openiiot_api.G
 			Id:          v.ID,
 			Username:    v.Username,
 			Password:    *v.Password,
-			TenantId:    v.TenantID,
+			TenantId:    common.Int64ToString(v.TenantID),
 			Description: *v.Description,
 			Role:        v.Role,
 			AuthId:      *v.AuthID,
