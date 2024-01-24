@@ -265,6 +265,21 @@ func GrafanaDeployment(name string) *Deployment {
 					},
 				},
 				Spec: PodSpec{
+					InitContainers: []Container{
+						{
+							Name:  "init-chmod",
+							Image: "busybox",
+							Command: []string{
+								"chmod", "-R", "777", "/var/lib/grafana",
+							},
+							VolumeMounts: []VolumeMount{
+								{
+									Name:      "grafana-data",
+									MountPath: "/var/lib/grafana",
+								},
+							},
+						},
+					},
 					Containers: []Container{
 						{
 							Image: "openiiot_grafana:1.0.0",
@@ -288,7 +303,7 @@ func GrafanaDeployment(name string) *Deployment {
 							VolumeMounts: []VolumeMount{
 								{
 									Name:      "grafana-data",
-									MountPath: "/data",
+									MountPath: "/var/lib/grafana",
 								},
 								//{
 								//	Name:      "grafana-config",
@@ -357,7 +372,11 @@ func TdenggineDeployment(name string) *Deployment {
 							VolumeMounts: []VolumeMount{
 								{
 									Name:      "tdengine-data",
-									MountPath: "/data",
+									MountPath: "/var/lib/taosw",
+								},
+								{
+									Name:      "tdengine-log",
+									MountPath: "/var/lib/taos",
 								},
 							},
 						},
@@ -406,6 +425,21 @@ func EmqxDeployment(name string) *Deployment {
 					},
 				},
 				Spec: PodSpec{
+					InitContainers: []Container{
+						{
+							Name:  "init-chmod",
+							Image: "busybox",
+							Command: []string{
+								"chmod", "-R", "777", "/opt/emqx/data",
+							},
+							VolumeMounts: []VolumeMount{
+								{
+									Name:      "emqx-data",
+									MountPath: "/opt/emqx/data",
+								},
+							},
+						},
+					},
 					Containers: []Container{
 						{
 							Image: "openiiot_emqx:1.0.0",
@@ -423,7 +457,7 @@ func EmqxDeployment(name string) *Deployment {
 							VolumeMounts: []VolumeMount{
 								{
 									Name:      "emqx-data",
-									MountPath: "/data",
+									MountPath: "/opt/emqx/data",
 								},
 							},
 						},
@@ -501,7 +535,7 @@ func MysqlDeployment(name string) *Deployment {
 							VolumeMounts: []VolumeMount{
 								{
 									Name:      "mysql-data",
-									MountPath: "/data",
+									MountPath: "/var/lib/mysql",
 								},
 							},
 						},
