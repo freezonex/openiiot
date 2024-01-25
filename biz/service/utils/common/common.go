@@ -142,3 +142,19 @@ func StringToInt64(str string) int64 {
 	}
 	return num
 }
+
+func Int64ToStringArray(arr []int64) []string {
+	var stringArr []string
+	for _, v := range arr {
+		stringArr = append(stringArr, Int64ToString(v))
+	}
+	return stringArr
+}
+
+func StringToInt64Array(arr []string) []int64 {
+	var int64Arr []int64
+	for _, v := range arr {
+		int64Arr = append(int64Arr, StringToInt64(v))
+	}
+	return int64Arr
+}

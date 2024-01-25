@@ -12,25 +12,25 @@ import (
 )
 
 func (a *FlowService) AddFlow(ctx context.Context, req *freezonex_openiiot_api.AddFlowRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddFlowResponse, error) {
-	flowID, err := a.AddFlowDB(ctx, req.Name, req.Description, req.TenantId, req.FlowType)
+	flowID, err := a.AddFlowDB(ctx, req.Name, req.Description, common.StringToInt64(req.TenantId), req.FlowType)
 	if err != nil {
 		logs.Error(ctx, "event=AddFlow error=%v", err.Error())
 		return nil, err
 	}
 
-	if _, err := a.AddFlowEdge(ctx, flowID, req.EdgeIds); err != nil {
+	if _, err := a.AddFlowEdge(ctx, flowID, common.StringToInt64Array(req.EdgeIds)); err != nil {
 		return nil, err
 	}
-	if _, err := a.AddFlowCore(ctx, flowID, req.CoreIds); err != nil {
+	if _, err := a.AddFlowCore(ctx, flowID, common.StringToInt64Array(req.CoreIds)); err != nil {
 		return nil, err
 	}
-	if _, err := a.AddFlowApp(ctx, flowID, req.AppIds); err != nil {
+	if _, err := a.AddFlowApp(ctx, flowID, common.StringToInt64Array(req.AppIds)); err != nil {
 		return nil, err
 	}
 
 	resp := new(freezonex_openiiot_api.AddFlowResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
-	resp.Id = flowID
+	resp.Id = common.Int64ToString(flowID)
 
 	return resp, nil
 }
@@ -38,7 +38,7 @@ func (a *FlowService) AddFlow(ctx context.Context, req *freezonex_openiiot_api.A
 // GetFlow will get flow record in condition
 func (a *FlowService) GetFlow(ctx context.Context, req *freezonex_openiiot_api.GetFlowRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetFlowResponse, error) {
 	// Fetch flows from the database
-	flows, err := a.GetFlowDB(ctx, req.Id, req.Name, req.TenantId, req.LastModifiedBy, req.FlowType)
+	flows, err := a.GetFlowDB(ctx, common.StringToInt64(req.Id), req.Name, common.StringToInt64(req.TenantId), req.LastModifiedBy, req.FlowType)
 	if err != nil {
 		logs.Error(ctx, "event=GetFlow error=%v", err.Error())
 		return nil, err
@@ -62,15 +62,15 @@ func (a *FlowService) GetFlow(ctx context.Context, req *freezonex_openiiot_api.G
 		}
 
 		data = append(data, &freezonex_openiiot_api.Flow{
-			Id:             v.ID,
+			Id:             common.Int64ToString(v.ID),
 			Name:           v.Name,
 			Description:    *v.Description,
-			TenantId:       v.TenantID,
+			TenantId:       common.Int64ToString(v.TenantID),
 			LastModifiedBy: *v.LastModifiedBy,
 			FlowType:       *v.FlowType,
-			EdgeIds:        edgeIds,
-			CoreIds:        coreIds,
-			AppIds:         appIds,
+			EdgeIds:        common.Int64ToStringArray(edgeIds),
+			CoreIds:        common.Int64ToStringArray(coreIds),
+			AppIds:         common.Int64ToStringArray(appIds),
 			CreateTime:     common.GetTimeStringFromTime(&v.CreateTime), // Format time as needed
 			UpdateTime:     common.GetTimeStringFromTime(&v.UpdateTime),
 		})
@@ -85,28 +85,28 @@ func (a *FlowService) GetFlow(ctx context.Context, req *freezonex_openiiot_api.G
 
 // UpdateFlow will update flow record
 func (a *FlowService) UpdateFlow(ctx context.Context, req *freezonex_openiiot_api.UpdateFlowRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateFlowResponse, error) {
-	err := a.UpdateFlowDB(ctx, req.Id, req.Name, req.Description, req.TenantId, req.FlowType)
+	err := a.UpdateFlowDB(ctx, common.StringToInt64(req.Id), req.Name, req.Description, common.StringToInt64(req.TenantId), req.FlowType)
 
 	if err != nil {
 		logs.Error(ctx, "event=UpdateFlow error=%v", err.Error())
 		return nil, err
 	}
 	// Update the flow_edge table
-	err = a.UpdateFlowEdgeDB(ctx, req.Id, req.EdgeIds)
+	err = a.UpdateFlowEdgeDB(ctx, common.StringToInt64(req.Id), req.EdgeIds)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateFlow error=%v", err.Error())
 		return nil, err
 	}
 
 	// Update the flow_core table
-	err = a.UpdateFlowCoreDB(ctx, req.Id, req.CoreIds)
+	err = a.UpdateFlowCoreDB(ctx, common.StringToInt64(req.Id), req.CoreIds)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateFlow error=%v", err.Error())
 		return nil, err
 	}
 
 	// Update the flow_app table
-	err = a.UpdateFlowAppDB(ctx, req.Id, req.AppIds)
+	err = a.UpdateFlowAppDB(ctx, common.StringToInt64(req.Id), req.AppIds)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateFlow error=%v", err.Error())
 		return nil, err
@@ -120,25 +120,25 @@ func (a *FlowService) UpdateFlow(ctx context.Context, req *freezonex_openiiot_ap
 
 func (a *FlowService) DeleteFlow(ctx context.Context, req *freezonex_openiiot_api.DeleteFlowRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteFlowResponse, error) {
 	// Delete related records in the flow_edge table
-	if err := a.DeleteFlowEdgeRecords(ctx, req.Id); err != nil {
+	if err := a.DeleteFlowEdgeRecords(ctx, common.StringToInt64(req.Id)); err != nil {
 		logs.Error(ctx, "event=DeleteFlow error=%v", err.Error())
 		return nil, err
 	}
 
 	// Delete related records in the flow_core table
-	if err := a.DeleteFlowCoreRecords(ctx, req.Id); err != nil {
+	if err := a.DeleteFlowCoreRecords(ctx, common.StringToInt64(req.Id)); err != nil {
 		logs.Error(ctx, "event=DeleteFlow error=%v", err.Error())
 		return nil, err
 	}
 
 	// Delete related records in the flow_app table
-	if err := a.DeleteFlowAppRecords(ctx, req.Id); err != nil {
+	if err := a.DeleteFlowAppRecords(ctx, common.StringToInt64(req.Id)); err != nil {
 		logs.Error(ctx, "event=DeleteFlow error=%v", err.Error())
 		return nil, err
 	}
 
 	// Finally, delete the main flow record
-	if err := a.DeleteFlowDB(ctx, req.Id); err != nil {
+	if err := a.DeleteFlowDB(ctx, common.StringToInt64(req.Id)); err != nil {
 		logs.Error(ctx, "event=DeleteFlow error=%v", err.Error())
 		return nil, err
 	}
