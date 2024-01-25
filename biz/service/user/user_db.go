@@ -145,7 +145,7 @@ func (a *UserService) GetUserByTokenDB(ctx context.Context, usertoken string) (*
 	return data.TokenUpdatetime, data.Username, nil
 }
 
-func (a *UserService) AddSuposUserID(ctx context.Context, username string, userid string, userrole string) (int64, error) {
+func (a *UserService) AddSuposUserID(ctx context.Context, username string, userid string, userrole string) (int64, int64, error) {
 	table1 := a.db.DBOpeniiotQuery.Tenant
 	tx1 := table1.WithContext(ctx)
 
@@ -170,11 +170,11 @@ func (a *UserService) AddSuposUserID(ctx context.Context, username string, useri
 		err := tx.Create(&newUser)
 		if err != nil {
 			// Handle the error, possibly return or log it
-			return 0, err
+			return 0, 0, err
 		}
-		return newUser.ID, nil
+		return newUser.ID, defaultTenantID, nil
 	} else {
-		return exist_username.ID, err
+		return exist_username.ID, defaultTenantID, err
 	}
 }
 

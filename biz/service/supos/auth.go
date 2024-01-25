@@ -74,15 +74,17 @@ func (a *SuposService) GetAccessToken(ctx context.Context, req *freezonex_openii
 				authid := user1.PersonCode
 				userRole := classifyUserRole(user1)
 				userService := user.DefaultUserService()
-				id, err := userService.AddSuposUserID(ctx, username1, authid, userRole)
+				id, tenantId, err := userService.AddSuposUserID(ctx, username1, authid, userRole)
 
 				cache.Set("CurrentUserId", strconv.FormatInt(id, 10)) //authid,tenantid?
 				cache.Set("CurrentUsername", username1)
 				cache.Set("CurrentUserRole", userRole)
+				cache.Set("CurrentTenantId", strconv.FormatInt(tenantId, 10))
 
 				context.WithValue(ctx, "currentuserid", id)
 				context.WithValue(ctx, "currentusername", username1)
 				context.WithValue(ctx, "currentuserrole", userRole)
+				context.WithValue(ctx, "currenttenantid", tenantId)
 				if err != nil {
 					return nil, err
 				}
