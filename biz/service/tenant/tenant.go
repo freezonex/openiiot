@@ -2,9 +2,10 @@ package tenant
 
 import (
 	"context"
-
+	"freezonex/openiiot/biz/service/k8s"
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	"strconv"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
@@ -17,6 +18,19 @@ func (a *TenantService) AddTenant(ctx context.Context, req *freezonex_openiiot_a
 		logs.Error(ctx, "event=AddTenant error=%v", err.Error())
 		return nil, err
 	}
+
+	name := req.Name
+	idStr := strconv.FormatInt(tenantID, 10) // 将 id 转换为 string
+
+	_ = k8s.K8sNamespaceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
+	//_ = k8s.K8sConfigmapCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
+	_ = k8s.K8sDeploymentPvPvcCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL, idStr)
+
+	_ = k8s.K8sServiceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
+	_ = k8s.K8sIngressCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
 	resp := new(freezonex_openiiot_api.AddTenantResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
@@ -76,7 +90,11 @@ func (a *TenantService) DeleteTenant(ctx context.Context, req *freezonex_openiio
 	}*/
 
 	// Delete tenant
-	err := a.DeleteTenantDB(ctx, common.StringToInt64(req.Id))
+	name, err := a.DeleteTenantDB(ctx, common.StringToInt64(req.Id))
+
+	idStr := strconv.FormatInt(common.StringToInt64(req.Id), 10) // 将 id 转换为 string
+	_ = k8s.K8sNamespacePvDelete("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL, idStr)
+
 	if err != nil {
 		logs.Error(ctx, "event=DeleteTenant error=%v", err.Error())
 		return nil, err
