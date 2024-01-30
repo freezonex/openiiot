@@ -145,6 +145,20 @@ func (a *UserService) GetUserByTokenDB(ctx context.Context, usertoken string) (*
 	return data.TokenUpdatetime, data.Username, nil
 }
 
+func (a *UserService) GetUserByToken2DB(ctx context.Context, usertoken string) ([]*model_openiiot.User, error) {
+	table := a.db.DBOpeniiotQuery.User
+	tx := table.WithContext(ctx).Select(field.ALL)
+	if usertoken == "" {
+		return nil, fmt.Errorf("accesstoken is empty")
+	}
+	tx = tx.Where(table.Token.Eq(usertoken))
+	data, err := tx.Find()
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 func (a *UserService) AddSuposUserID(ctx context.Context, username string, userid string, userrole string) (int64, int64, error) {
 	table1 := a.db.DBOpeniiotQuery.Tenant
 	tx1 := table1.WithContext(ctx)

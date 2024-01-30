@@ -92,3 +92,32 @@ func (a *UserService) DeleteUser(ctx context.Context, req *freezonex_openiiot_ap
 
 	return resp, nil
 }
+
+func (a *UserService) GetUserByToken(ctx context.Context, req *freezonex_openiiot_api.GetUserByTokenRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetUserByTokenResponse, error) {
+	users, err := a.GetUserByToken2DB(ctx, req.Accesstoken)
+
+	if err != nil {
+		logs.Error(ctx, "event=GetUser error=%v", err.Error())
+		return nil, err
+	}
+
+	resp := new(freezonex_openiiot_api.GetUserByTokenResponse)
+	if len(users) > 0 {
+		v := users[0]
+		resp.Data = &freezonex_openiiot_api.User{
+			Id:          common.Int64ToString(v.ID),
+			Username:    v.Username,
+			Password:    *v.Password,
+			TenantId:    common.Int64ToString(v.TenantID),
+			Description: *v.Description,
+			Role:        v.Role,
+			AuthId:      *v.AuthID,
+			Source:      *v.Source,
+			CreateTime:  common.GetTimeStringFromTime(&v.CreateTime),
+			UpdateTime:  common.GetTimeStringFromTime(&v.UpdateTime),
+		}
+	}
+
+	resp.BaseResp = middleware.SuccessResponseOK
+	return resp, nil
+}

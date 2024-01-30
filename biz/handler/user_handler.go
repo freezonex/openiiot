@@ -85,3 +85,13 @@ func (a *UserHandler) AddUser(ctx context.Context, c *app.RequestContext) middle
 	}
 	return resp
 }
+
+func (a *UserHandler) GetUserByToken(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GetUserByTokenRequest)
+	resp, err := a.userService.GetUserByToken(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=GetUserByToken error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}
