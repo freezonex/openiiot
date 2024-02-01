@@ -150,7 +150,7 @@ func TdengineService(name string, nodePort int) *Service {
 	}
 }
 
-func EmqxService(name string, nodePort int) *Service {
+func EmqxService(name string, nodePort int, nodePort1 int) *Service {
 	return &Service{
 		APIVersion: "v1",
 		Kind:       "Service",
@@ -160,10 +160,18 @@ func EmqxService(name string, nodePort int) *Service {
 		Spec: ServiceSpec{
 			Ports: []Port{
 				{
+					Name:       "api",
 					NodePort:   nodePort,
 					Port:       1883,
 					Protocol:   "TCP",
 					TargetPort: 1883,
+				},
+				{
+					Name:       "page",
+					NodePort:   nodePort1,
+					Port:       18083,
+					Protocol:   "TCP",
+					TargetPort: 18083,
 				},
 			},
 			Selector: map[string]string{
