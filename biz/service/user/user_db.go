@@ -17,6 +17,16 @@ import (
 
 // AddUserDB will add User record to the DB.
 func (a *UserService) AddUserDB(ctx context.Context, username string, password string, description string, tenant_id int64, role string, auth_id string, source string) (int64, error) {
+
+	if username == "" {
+		return -1, errors.New("username can not be empty")
+	}
+	if password == "" {
+		return -1, errors.New("password can not be empty")
+	}
+	if tenant_id == 0 {
+		return -1, errors.New("tenant_id can not be empty")
+	}
 	table := a.db.DBOpeniiotQuery.User
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.Username.Eq(username)).First()
@@ -24,6 +34,11 @@ func (a *UserService) AddUserDB(ctx context.Context, username string, password s
 		return -1, errors.New("username exist")
 	}
 	id := common.GetUUID()
+
+	if description == "" {
+		description = "user"
+	}
+
 	if auth_id == "" {
 		auth_id = username
 	}
@@ -31,6 +46,7 @@ func (a *UserService) AddUserDB(ctx context.Context, username string, password s
 	if source == "" {
 		source = "useradd"
 	}
+
 	newRecord := &model_openiiot.User{
 		ID:          id,
 		Username:    username,
@@ -169,17 +185,21 @@ func (a *UserService) AddSuposUserID(ctx context.Context, username string, useri
 	table := a.db.DBOpeniiotQuery.User
 	tx := table.WithContext(ctx)
 	source := "supOS"
+	password := "Supos@1304"
+	description := "supOS"
 	// Insert new edge IDs
 	exist_username, err := tx.Where(table.TenantID.Eq(defaultTenantID), table.Username.Eq(username)).First() //tenantid ? is_default
 	if exist_username == nil {
 		id := common.GetUUID()
 		newUser := model_openiiot.User{
-			ID:       id,
-			Username: username,
-			Role:     userrole,
-			AuthID:   &userid,
-			TenantID: defaultTenantID,
-			Source:   &source,
+			ID:          id,
+			Username:    username,
+			Password:    &password,
+			Description: &description,
+			Role:        userrole,
+			AuthID:      &userid,
+			TenantID:    defaultTenantID,
+			Source:      &source,
 		}
 		err := tx.Create(&newUser)
 		if err != nil {
