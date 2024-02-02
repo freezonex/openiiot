@@ -1175,6 +1175,124 @@ func (x *DeleteUserResponse) GetBaseResp() *base_resp.BaseResponse {
 	return nil
 }
 
+type GetUserByTokenRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	BaseRequest *base_req.BaseRequest `protobuf:"bytes,1,opt,name=base_request,json=baseRequest,proto3" json:"base_request" form:"base_request" query:"base_request"`
+	Accesstoken string                `protobuf:"bytes,2,opt,name=accesstoken,proto3" json:"accesstoken" form:"accesstoken" query:"accesstoken"`
+}
+
+func (x *GetUserByTokenRequest) Reset() {
+	*x = GetUserByTokenRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_freezonex_openiiot_api_user_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetUserByTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserByTokenRequest) ProtoMessage() {}
+
+func (x *GetUserByTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_freezonex_openiiot_api_user_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserByTokenRequest.ProtoReflect.Descriptor instead.
+func (*GetUserByTokenRequest) Descriptor() ([]byte, []int) {
+	return file_freezonex_openiiot_api_user_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *GetUserByTokenRequest) GetBaseRequest() *base_req.BaseRequest {
+	if x != nil {
+		return x.BaseRequest
+	}
+	return nil
+}
+
+func (x *GetUserByTokenRequest) GetAccesstoken() string {
+	if x != nil {
+		return x.Accesstoken
+	}
+	return ""
+}
+
+type GetUserByTokenResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	BaseResp *base_resp.BaseResponse `protobuf:"bytes,1,opt,name=base_resp,json=baseResp,proto3" json:"base_resp" form:"base_resp" query:"base_resp"`
+	User     *User                   `protobuf:"bytes,2,opt,name=user,proto3" json:"user" form:"user" query:"user"`
+	Exist    bool                    `protobuf:"varint,3,opt,name=exist,proto3" json:"exist" form:"exist" query:"exist"`
+}
+
+func (x *GetUserByTokenResponse) Reset() {
+	*x = GetUserByTokenResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_freezonex_openiiot_api_user_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetUserByTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserByTokenResponse) ProtoMessage() {}
+
+func (x *GetUserByTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_freezonex_openiiot_api_user_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserByTokenResponse.ProtoReflect.Descriptor instead.
+func (*GetUserByTokenResponse) Descriptor() ([]byte, []int) {
+	return file_freezonex_openiiot_api_user_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *GetUserByTokenResponse) GetBaseResp() *base_resp.BaseResponse {
+	if x != nil {
+		return x.BaseResp
+	}
+	return nil
+}
+
+func (x *GetUserByTokenResponse) GetUser() *User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
+func (x *GetUserByTokenResponse) GetExist() bool {
+	if x != nil {
+		return x.Exist
+	}
+	return false
+}
+
 var File_freezonex_openiiot_api_user_proto protoreflect.FileDescriptor
 
 var file_freezonex_openiiot_api_user_proto_rawDesc = []byte{
@@ -1349,11 +1467,28 @@ var file_freezonex_openiiot_api_user_proto_rawDesc = []byte{
 	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x34, 0x0a, 0x09, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x72, 0x65,
 	0x73, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x62, 0x61, 0x73, 0x65, 0x5f,
 	0x72, 0x65, 0x73, 0x70, 0x2e, 0x42, 0x61, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x52, 0x08, 0x62, 0x61, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x42, 0x35, 0x5a, 0x33, 0x66,
-	0x72, 0x65, 0x65, 0x7a, 0x6f, 0x6e, 0x65, 0x78, 0x2f, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x69, 0x6f,
-	0x74, 0x2f, 0x62, 0x69, 0x7a, 0x2f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2f, 0x66, 0x72, 0x65, 0x65,
-	0x7a, 0x6f, 0x6e, 0x65, 0x78, 0x5f, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x69, 0x6f, 0x74, 0x5f, 0x61,
-	0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x52, 0x08, 0x62, 0x61, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x22, 0x73, 0x0a, 0x15, 0x47,
+	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x42, 0x79, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x38, 0x0a, 0x0c, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x72, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x62, 0x61, 0x73,
+	0x65, 0x5f, 0x72, 0x65, 0x71, 0x2e, 0x42, 0x61, 0x73, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x52, 0x0b, 0x62, 0x61, 0x73, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x20,
+	0x0a, 0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x74, 0x6f, 0x6b, 0x65, 0x6e,
+	0x22, 0x96, 0x01, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x42, 0x79, 0x54, 0x6f,
+	0x6b, 0x65, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x34, 0x0a, 0x09, 0x62,
+	0x61, 0x73, 0x65, 0x5f, 0x72, 0x65, 0x73, 0x70, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x17,
+	0x2e, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x72, 0x65, 0x73, 0x70, 0x2e, 0x42, 0x61, 0x73, 0x65, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x08, 0x62, 0x61, 0x73, 0x65, 0x52, 0x65, 0x73,
+	0x70, 0x12, 0x30, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x1c, 0x2e, 0x66, 0x72, 0x65, 0x65, 0x7a, 0x6f, 0x6e, 0x65, 0x78, 0x2e, 0x6f, 0x70, 0x65, 0x6e,
+	0x69, 0x69, 0x6f, 0x74, 0x5f, 0x61, 0x70, 0x69, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75,
+	0x73, 0x65, 0x72, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x78, 0x69, 0x73, 0x74, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x08, 0x52, 0x05, 0x65, 0x78, 0x69, 0x73, 0x74, 0x42, 0x35, 0x5a, 0x33, 0x66, 0x72, 0x65,
+	0x65, 0x7a, 0x6f, 0x6e, 0x65, 0x78, 0x2f, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x69, 0x6f, 0x74, 0x2f,
+	0x62, 0x69, 0x7a, 0x2f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2f, 0x66, 0x72, 0x65, 0x65, 0x7a, 0x6f,
+	0x6e, 0x65, 0x78, 0x5f, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x69, 0x6f, 0x74, 0x5f, 0x61, 0x70, 0x69,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1368,7 +1503,7 @@ func file_freezonex_openiiot_api_user_proto_rawDescGZIP() []byte {
 	return file_freezonex_openiiot_api_user_proto_rawDescData
 }
 
-var file_freezonex_openiiot_api_user_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_freezonex_openiiot_api_user_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_freezonex_openiiot_api_user_proto_goTypes = []interface{}{
 	(*User)(nil),                   // 0: freezonex.openiiot_api.User
 	(*SuposUser)(nil),              // 1: freezonex.openiiot_api.SuposUser
@@ -1386,32 +1521,37 @@ var file_freezonex_openiiot_api_user_proto_goTypes = []interface{}{
 	(*UpdateUserResponse)(nil),     // 13: freezonex.openiiot_api.UpdateUserResponse
 	(*DeleteUserRequest)(nil),      // 14: freezonex.openiiot_api.DeleteUserRequest
 	(*DeleteUserResponse)(nil),     // 15: freezonex.openiiot_api.DeleteUserResponse
-	(*base_req.BaseRequest)(nil),   // 16: base_req.BaseRequest
-	(*base_resp.BaseResponse)(nil), // 17: base_resp.BaseResponse
+	(*GetUserByTokenRequest)(nil),  // 16: freezonex.openiiot_api.GetUserByTokenRequest
+	(*GetUserByTokenResponse)(nil), // 17: freezonex.openiiot_api.GetUserByTokenResponse
+	(*base_req.BaseRequest)(nil),   // 18: base_req.BaseRequest
+	(*base_resp.BaseResponse)(nil), // 19: base_resp.BaseResponse
 }
 var file_freezonex_openiiot_api_user_proto_depIdxs = []int32{
-	16, // 0: freezonex.openiiot_api.GetCurrentUserRequest.base_request:type_name -> base_req.BaseRequest
-	17, // 1: freezonex.openiiot_api.GetCurrentUserResponse.base_resp:type_name -> base_resp.BaseResponse
+	18, // 0: freezonex.openiiot_api.GetCurrentUserRequest.base_request:type_name -> base_req.BaseRequest
+	19, // 1: freezonex.openiiot_api.GetCurrentUserResponse.base_resp:type_name -> base_resp.BaseResponse
 	0,  // 2: freezonex.openiiot_api.GetCurrentUserResponse.data:type_name -> freezonex.openiiot_api.User
-	16, // 3: freezonex.openiiot_api.GetSuposUserRequest.base_request:type_name -> base_req.BaseRequest
+	18, // 3: freezonex.openiiot_api.GetSuposUserRequest.base_request:type_name -> base_req.BaseRequest
 	3,  // 4: freezonex.openiiot_api.GetSuposUserRequest.param:type_name -> freezonex.openiiot_api.SuposUserSearch
-	17, // 5: freezonex.openiiot_api.GetSuposUserResponse.base_resp:type_name -> base_resp.BaseResponse
+	19, // 5: freezonex.openiiot_api.GetSuposUserResponse.base_resp:type_name -> base_resp.BaseResponse
 	2,  // 6: freezonex.openiiot_api.GetSuposUserResponse.pagination:type_name -> freezonex.openiiot_api.Pagination
 	1,  // 7: freezonex.openiiot_api.GetSuposUserResponse.list:type_name -> freezonex.openiiot_api.SuposUser
-	16, // 8: freezonex.openiiot_api.AddUserRequest.base_request:type_name -> base_req.BaseRequest
-	17, // 9: freezonex.openiiot_api.AddUserResponse.base_resp:type_name -> base_resp.BaseResponse
-	16, // 10: freezonex.openiiot_api.GetUserRequest.base_request:type_name -> base_req.BaseRequest
-	17, // 11: freezonex.openiiot_api.GetUserResponse.base_resp:type_name -> base_resp.BaseResponse
+	18, // 8: freezonex.openiiot_api.AddUserRequest.base_request:type_name -> base_req.BaseRequest
+	19, // 9: freezonex.openiiot_api.AddUserResponse.base_resp:type_name -> base_resp.BaseResponse
+	18, // 10: freezonex.openiiot_api.GetUserRequest.base_request:type_name -> base_req.BaseRequest
+	19, // 11: freezonex.openiiot_api.GetUserResponse.base_resp:type_name -> base_resp.BaseResponse
 	0,  // 12: freezonex.openiiot_api.GetUserResponse.data:type_name -> freezonex.openiiot_api.User
-	16, // 13: freezonex.openiiot_api.UpdateUserRequest.base_request:type_name -> base_req.BaseRequest
-	17, // 14: freezonex.openiiot_api.UpdateUserResponse.base_resp:type_name -> base_resp.BaseResponse
-	16, // 15: freezonex.openiiot_api.DeleteUserRequest.base_request:type_name -> base_req.BaseRequest
-	17, // 16: freezonex.openiiot_api.DeleteUserResponse.base_resp:type_name -> base_resp.BaseResponse
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	18, // 13: freezonex.openiiot_api.UpdateUserRequest.base_request:type_name -> base_req.BaseRequest
+	19, // 14: freezonex.openiiot_api.UpdateUserResponse.base_resp:type_name -> base_resp.BaseResponse
+	18, // 15: freezonex.openiiot_api.DeleteUserRequest.base_request:type_name -> base_req.BaseRequest
+	19, // 16: freezonex.openiiot_api.DeleteUserResponse.base_resp:type_name -> base_resp.BaseResponse
+	18, // 17: freezonex.openiiot_api.GetUserByTokenRequest.base_request:type_name -> base_req.BaseRequest
+	19, // 18: freezonex.openiiot_api.GetUserByTokenResponse.base_resp:type_name -> base_resp.BaseResponse
+	0,  // 19: freezonex.openiiot_api.GetUserByTokenResponse.user:type_name -> freezonex.openiiot_api.User
+	20, // [20:20] is the sub-list for method output_type
+	20, // [20:20] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_freezonex_openiiot_api_user_proto_init() }
@@ -1612,6 +1752,30 @@ func file_freezonex_openiiot_api_user_proto_init() {
 				return nil
 			}
 		}
+		file_freezonex_openiiot_api_user_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetUserByTokenRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_freezonex_openiiot_api_user_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetUserByTokenResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1619,7 +1783,7 @@ func file_freezonex_openiiot_api_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_freezonex_openiiot_api_user_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
