@@ -184,6 +184,30 @@ func CombinedIngress(name string) *Ingress {
 									ServicePort: 80,
 								},
 							},
+							{
+								Path:     "/" + name + "/emqx/(.*)",
+								PathType: "Prefix",
+								Backend: Backend{
+									ServiceName: "emqx-openiiot-" + name,
+									ServicePort: 18083,
+								},
+							},
+							{
+								Path:     "/" + name + "/emqx/home",
+								PathType: "Prefix",
+								Backend: Backend{
+									ServiceName: "emqx-openiiot-" + name,
+									ServicePort: 18083,
+								},
+							},
+							{
+								Path:     "/" + name + "/emqx/home/(.*)",
+								PathType: "Prefix",
+								Backend: Backend{
+									ServiceName: "emqx-openiiot-" + name,
+									ServicePort: 18083,
+								},
+							},
 						},
 					},
 				},

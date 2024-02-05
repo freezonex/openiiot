@@ -110,6 +110,7 @@ type ServiceSpec struct {
 
 // Port 结构体定义了 Service 的端口配置
 type Port struct {
+	Name       string `json:"name"`
 	Port       int    `json:"port"`
 	Protocol   string `json:"protocol"`
 	TargetPort int    `json:"targetPort"`
