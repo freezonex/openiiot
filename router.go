@@ -131,6 +131,12 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/user/delete",
 				userHandler.DeleteUser,
 				&iiotpb.DeleteUserRequest{}))
+		userGroup.POST(
+			"/getuserbytoken",
+			middleware.Response(
+				"/user/getuserbytoken",
+				userHandler.GetUserByToken,
+				&iiotpb.GetUserByTokenRequest{}))
 	}
 
 	edgeGroup := r.Group("/edge", middleware.Access())

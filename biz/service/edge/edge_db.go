@@ -13,6 +13,22 @@ import (
 
 // AddUserDB will add User record to the DB.
 func (a *EdgeService) AddEdgeDB(ctx context.Context, name string, description string, tenant_id int64, url string, username string, password string, type1 string) (int64, error) {
+	if name == "" {
+		return -1, errors.New("name can not be empty")
+	}
+	if username == "" {
+		return -1, errors.New("username can not be empty")
+	}
+	if password == "" {
+		return -1, errors.New("password can not be empty")
+	}
+	if tenant_id == 0 {
+		return -1, errors.New("tenant_id can not be empty")
+	}
+	if url == "" {
+		return -1, errors.New("url can not be empty")
+	}
+
 	table := a.db.DBOpeniiotQuery.Edge
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.Name.Eq(name)).First()
@@ -20,6 +36,14 @@ func (a *EdgeService) AddEdgeDB(ctx context.Context, name string, description st
 		return -1, errors.New("edgename exist")
 	}
 	id := common.GetUUID()
+
+	if description == "" {
+		description = "edge"
+	}
+	if type1 == "" {
+		type1 = "other"
+	}
+
 	newRecord := &model_openiiot.Edge{
 		ID:          id,
 		Name:        name,

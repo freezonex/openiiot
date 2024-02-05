@@ -13,6 +13,23 @@ import (
 
 // AddUserDB will add User record to the DB.
 func (a *CoreService) AddCoreDB(ctx context.Context, name string, description string, tenant_id int64, url string, username string, password string, type1 string) (int64, error) {
+	//empty value rejection
+	if name == "" {
+		return -1, errors.New("name can not be empty")
+	}
+	if username == "" {
+		return -1, errors.New("username can not be empty")
+	}
+	if password == "" {
+		return -1, errors.New("password can not be empty")
+	}
+	if tenant_id == 0 {
+		return -1, errors.New("tenant_id can not be empty")
+	}
+	if url == "" {
+		return -1, errors.New("url can not be empty")
+	}
+
 	table := a.db.DBOpeniiotQuery.Core
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.Name.Eq(name)).First()
@@ -20,6 +37,14 @@ func (a *CoreService) AddCoreDB(ctx context.Context, name string, description st
 		return -1, errors.New("corename exist")
 	}
 	id := common.GetUUID()
+
+	if description == "" {
+		description = "edge"
+	}
+	if type1 == "" {
+		type1 = "other"
+	}
+
 	newRecord := &model_openiiot.Core{
 		ID:          id,
 		Name:        name,

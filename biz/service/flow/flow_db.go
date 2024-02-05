@@ -12,6 +12,12 @@ import (
 
 // AddUserDB will add User record to the DB.
 func (a *FlowService) AddFlowDB(ctx context.Context, name string, description string, tenantid int64, flowtype string) (int64, error) {
+	if name == "" {
+		return -1, errors.New("name can not be empty")
+	}
+	if tenantid == 0 {
+		return -1, errors.New("tenant_id can not be empty")
+	}
 	table := a.db.DBOpeniiotQuery.Flow
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.Name.Eq(name)).First()
@@ -19,8 +25,15 @@ func (a *FlowService) AddFlowDB(ctx context.Context, name string, description st
 		return -1, errors.New("flow name exist")
 	}
 	currentusername := ctx.Value("currentusername").(string)
-
 	id := common.GetUUID()
+
+	if description == "" {
+		description = "flow"
+	}
+	if flowtype == "" {
+		flowtype = "other"
+	}
+
 	newRecord := &model_openiiot.Flow{
 		ID:             id,
 		Name:           name,

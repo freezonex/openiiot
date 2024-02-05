@@ -11,6 +11,9 @@ import (
 
 // AddTenantDB will add tenant record to the DB.
 func (a *TenantService) AddTenantDB(ctx context.Context, name string, description string, isDefault bool) (int64, error) {
+	if name == "" {
+		return -1, errors.New("name can not be empty")
+	}
 	id := common.GetUUID()
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx)
@@ -18,10 +21,19 @@ func (a *TenantService) AddTenantDB(ctx context.Context, name string, descriptio
 	if existRecord != nil {
 		return -1, errors.New("tenant exist")
 	}
+
+	if description == "" {
+		description = "tenant"
+	}
+	if isDefault {
+		isDefault = false
+	}
+
 	newRecord := &model_openiiot.Tenant{
 		ID:          id,
 		Name:        name,
 		Description: &description,
+		IsDefault:   &isDefault,
 	}
 	err := tx.Create(newRecord)
 	if err != nil {
