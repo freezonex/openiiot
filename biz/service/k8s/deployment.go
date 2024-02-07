@@ -279,6 +279,18 @@ func GrafanaDeployment(name string) *Deployment {
 								},
 							},
 						},
+						// 添加的初始化容器
+						{
+							Name:    "install-plugins",
+							Image:   "openiiot_grafana:1.0.0",
+							Command: []string{"/bin/sh", "-c", "/opt/grafana/install-plugins.sh"},
+							VolumeMounts: []VolumeMount{
+								{
+									Name:      "grafana-data",
+									MountPath: "/var/lib/grafana",
+								},
+							},
+						},
 					},
 					Containers: []Container{
 						{
