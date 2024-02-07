@@ -95,6 +95,36 @@ func K8sIngressCreate(name string, ctx context.Context, AuthorizationValue strin
 	return nil
 }
 
+func K8sJobCreate(name string, ctx context.Context, AuthorizationValue string, K8SURL string) *http.Response {
+
+	// 共享的 HTTP 客户端配置
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
+
+	// 设置公共头部
+	headers := map[string]string{
+		"Content-Type":  "application/json",
+		"Authorization": AuthorizationValue, // 确保 AuthorizationValue 已定义
+	}
+
+	//noderedIngress := NoderedIngress(name)
+	//_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/networking.k8s.io/v1beta1/namespaces/openiiot-%s/ingresses", K8SURL, name), noderedIngress, headers, ctx)
+	//
+	//grafanaIngress := GrafanaIngress(name)
+	//_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/networking.k8s.io/v1beta1/namespaces/openiiot-%s/ingresses", K8SURL, name), grafanaIngress, headers, ctx)
+	//
+	//webIngress := WebIngress(name)
+	//_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/networking.k8s.io/v1beta1/namespaces/openiiot-%s/ingresses", K8SURL, name), webIngress, headers, ctx)
+
+	grafanaPluginsJob := CreateInstallGrafanaPluginsJob(name)
+	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapis/batch/v1/namespaces/%s/jobs", K8SURL, name), grafanaPluginsJob, headers, ctx)
+
+	return nil
+}
+
 func K8sDeploymentPvPvcCreate(name string, ctx context.Context, AuthorizationValue string, K8SURL string, id string) *http.Response {
 
 	// 共享的 HTTP 客户端配置

@@ -6,6 +6,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	"strconv"
+	"time"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
@@ -31,6 +32,9 @@ func (a *TenantService) AddTenant(ctx context.Context, req *freezonex_openiiot_a
 	_ = k8s.K8sServiceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
 	_ = k8s.K8sIngressCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+	// 在这段代码前面写上等待1分钟，在执行后面
+	time.Sleep(1 * time.Minute)
+	_ = k8s.K8sJobCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
 	resp := new(freezonex_openiiot_api.AddTenantResponse)
 	resp.BaseResp = middleware.SuccessResponseOK

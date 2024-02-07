@@ -1,5 +1,23 @@
 package k8s
 
+type Job struct {
+	APIVersion string   `json:"apiVersion"`
+	Kind       string   `json:"kind"`
+	Metadata   Metadata `json:"metadata"`
+	Spec       JobSpec  `json:"spec"`
+}
+
+// JobSpec 定义了 Job 的规格
+type JobSpec struct {
+	TTLSecondsAfterFinished *int32          `json:"ttlSecondsAfterFinished,omitempty"`
+	Template                PodTemplateSpec `json:"template"`
+}
+
+// PodTemplateSpec 定义了 Pod 的模板
+type PodTemplateSpec struct {
+	Spec PodSpec `json:"spec"`
+}
+
 // namespace
 type Metadata struct {
 	Name        string            `json:"name"`
@@ -51,6 +69,7 @@ type PodSpec struct {
 	Containers     []Container `json:"containers"`
 	Volumes        []Volume    `json:"volumes,omitempty"`
 	InitContainers []Container `json:"initContainers,omitempty"`
+	RestartPolicy  string      `json:"restartPolicy"`
 }
 
 // Container 定义了 Pod 中的容器
