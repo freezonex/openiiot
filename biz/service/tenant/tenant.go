@@ -2,14 +2,13 @@ package tenant
 
 import (
 	"context"
+	"freezonex/openiiot/biz/middleware"
+	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/k8s"
+	"freezonex/openiiot/biz/service/utils/common"
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	"strconv"
-
-	"freezonex/openiiot/biz/middleware"
-	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-	"freezonex/openiiot/biz/service/utils/common"
 )
 
 func (a *TenantService) AddTenant(ctx context.Context, req *freezonex_openiiot_api.AddTenantRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddTenantResponse, error) {
@@ -25,6 +24,9 @@ func (a *TenantService) AddTenant(ctx context.Context, req *freezonex_openiiot_a
 	_ = k8s.K8sNamespaceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
 	//_ = k8s.K8sConfigmapCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+
+	//_ = k8s.K8sJobCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
+	//time.Sleep(1 * time.Minute)
 
 	_ = k8s.K8sDeploymentPvPvcCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL, idStr)
 
