@@ -7,7 +7,7 @@ DOCKERFILE_FOLDER := deployment
 DOCKERFILE_NAME := Dockerfile
 SAVE_DIR ?= deployment/binary
 
-SERVICES := server nodered grafana tdengine emqx mysql web consolemanager
+SERVICES := server nodered grafana tdengine emqx mysql web consolemanager busybox
 .PHONY: docker_all clean_all $(SERVICES) clean tag help save
 
 docker_all: $(SERVICES)
