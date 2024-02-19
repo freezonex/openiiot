@@ -83,21 +83,27 @@ CREATE TABLE IF NOT EXISTS flow_edge (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     flow_id BIGINT UNSIGNED NOT NULL,
     edge_id BIGINT UNSIGNED NOT NULL,
-    script MEDIUMTEXT           -- save script here, for example, nodered flow script
+    script MEDIUMTEXT,           -- save script here, for example, nodered flow script
+    script2 MEDIUMTEXT,
+    script3 MEDIUMTEXT
 );
 
 CREATE TABLE IF NOT EXISTS flow_core (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     flow_id BIGINT UNSIGNED NOT NULL,
     core_id BIGINT UNSIGNED NOT NULL,
-    script MEDIUMTEXT           -- save script here
+    script MEDIUMTEXT,           -- save script here
+    script2 MEDIUMTEXT,
+    script3 MEDIUMTEXT
 );
 
 CREATE TABLE IF NOT EXISTS flow_app (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     flow_id BIGINT UNSIGNED NOT NULL,
     app_id BIGINT UNSIGNED NOT NULL,
-    script MEDIUMTEXT           -- save script here
+    script MEDIUMTEXT,          -- save script here
+    script2 MEDIUMTEXT,
+    script3 MEDIUMTEXT
 );
 
 -- CREATE TABLE IF NOT EXISTS tenant (
