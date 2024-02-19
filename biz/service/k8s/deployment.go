@@ -149,7 +149,7 @@ func NoderedDeployment(name string) *Deployment {
 					InitContainers: []Container{
 						{
 							Name:  "init-chmod",
-							Image: "busybox",
+							Image: "openiiot_busybox:1.0.0",
 							Command: []string{
 								"chmod", "-R", "777", "/data",
 							},
@@ -268,7 +268,7 @@ func GrafanaDeployment(name string) *Deployment {
 					InitContainers: []Container{
 						{
 							Name:  "init-chmod",
-							Image: "busybox",
+							Image: "openiiot_busybox:1.0.0",
 							Command: []string{
 								"chmod", "-R", "777", "/var/lib/grafana",
 							},
@@ -440,7 +440,7 @@ func EmqxDeployment(name string) *Deployment {
 					InitContainers: []Container{
 						{
 							Name:  "init-chmod",
-							Image: "busybox",
+							Image: "openiiot_busybox:1.0.0",
 							Command: []string{
 								"chmod", "-R", "777", "/opt/emqx/data",
 							},
