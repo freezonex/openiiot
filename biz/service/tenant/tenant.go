@@ -2,13 +2,19 @@ package tenant
 
 import (
 	"context"
+	"encoding/json"
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
+	application "freezonex/openiiot/biz/service/app"
+	"freezonex/openiiot/biz/service/core"
+	"freezonex/openiiot/biz/service/edge"
+	"freezonex/openiiot/biz/service/flow"
 	"freezonex/openiiot/biz/service/k8s"
 	"freezonex/openiiot/biz/service/utils/common"
 	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	"strconv"
+
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 func (a *TenantService) AddTenant(ctx context.Context, req *freezonex_openiiot_api.AddTenantRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddTenantResponse, error) {
@@ -20,6 +26,13 @@ func (a *TenantService) AddTenant(ctx context.Context, req *freezonex_openiiot_a
 
 	name := req.Name
 	idStr := strconv.FormatInt(tenantID, 10) // 将 id 转换为 string
+
+	err = a.AddDefaultFlow(ctx, tenantID, req.Name)
+
+	if err != nil {
+		logs.Error(ctx, "event=AddTenant error=%v", err.Error())
+		return nil, err
+	}
 
 	_ = k8s.K8sNamespaceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
@@ -92,6 +105,8 @@ func (a *TenantService) DeleteTenant(ctx context.Context, req *freezonex_openiio
 	}*/
 
 	// Delete tenant
+	//delete all the users and flows?
+	//_, err := a.DeleteTenantDB(ctx, common.StringToInt64(req.Id))
 	name, err := a.DeleteTenantDB(ctx, common.StringToInt64(req.Id))
 
 	idStr := strconv.FormatInt(common.StringToInt64(req.Id), 10) // 将 id 转换为 string
@@ -125,4 +140,78 @@ func (a *TenantService) GetAllTenantName(ctx context.Context, req *freezonex_ope
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil
+}
+
+func (a *TenantService) AddDefaultFlow(ctx context.Context, tenantid int64, name string) error {
+	edgeService := edge.DefaultEdgeService()
+	emqxname := "emqx-openiiot-" + name
+	emqxurl := "http://emqx-openiiot-" + name + ".openiiot-" + name + ".svc.cluster.local:18083"
+	edgeid, err := edgeService.AddEdgeDB(ctx, emqxname, "", tenantid, emqxurl, "admin", "public", "emqx")
+	if err != nil {
+		return err
+	}
+	var edgeids []int64
+	edgeids = append(edgeids, edgeid)
+
+	coreService := core.DefaultCoreService()
+	tdenginename := "tdengine-openiiot-" + name
+	tdengineurl := "http://tdengine-openiiot-" + name + ".openiiot-" + name + ".svc.cluster.local:6041"
+	coreid, err := coreService.AddCoreDB(ctx, tdenginename, "", tenantid, tdengineurl, "root", "taosdata", "tdengine")
+	if err != nil {
+		return err
+	}
+	var coreids []int64
+	coreids = append(coreids, coreid)
+
+	appService := application.DefaultAppService()
+	grafananame := "grafana-openiiot-" + name
+	grafanaurl := "http://grafana-openiiot-" + name + ".openiiot-" + name + ".svc.cluster.local:3000"
+	appid, err := appService.AddAppDB(ctx, grafananame, "", tenantid, grafanaurl, "admin", "admin", "grafana")
+	if err != nil {
+		return err
+	}
+	var appids []int64
+	appids = append(appids, appid)
+
+	flowService := flow.DefaultFlowService()
+	flowname := "flow-openiiot-" + name
+	flowid, err := flowService.AddFlowDB(ctx, flowname, "demoflow", tenantid, "demoflow", "system")
+
+	edgescripts1json := emqxreplace1(name)
+	edgescripts1, err := json.MarshalIndent(edgescripts1json, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	edgescripts2json := emqxreplace2(name)
+	edgescripts2, err := json.MarshalIndent(edgescripts2json, "", "  ")
+	if err != nil {
+		return err
+	}
+	edgescripts3 := staticText1
+	edgescripts4 := staticText2
+
+	_, err = flowService.AddFlowEdge(ctx, flowid, edgeids, string(edgescripts1), string(edgescripts2), edgescripts3, edgescripts4)
+	if err != nil {
+		return err
+	}
+
+	corescripts1 := staticText3
+	_, err = flowService.AddFlowCore(ctx, flowid, coreids, corescripts1, "")
+	if err != nil {
+		return err
+	}
+
+	appscripts1json := grafanareplace1(name)
+	appscripts1, err := json.MarshalIndent(appscripts1json, "", "  ")
+	appscripts2json := grafanareplace2(name)
+	appscripts2, err := json.MarshalIndent(appscripts2json, "", "  ")
+	appscripts3 := staticText4
+
+	_, err = flowService.AddFlowApp(ctx, flowid, appids, string(appscripts1), string(appscripts2), appscripts3)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -189,8 +189,6 @@ func (a *UserService) AddSuposUserID(ctx context.Context, username string, useri
 	description := "supOS"
 	// Insert new edge IDs
 	exist_username, err := tx.Where(table.TenantID.Eq(defaultTenantID), table.Username.Eq(username)).First() //tenantid ? is_default
-	password := "supOS@1304"
-	description := "supos"
 	if exist_username == nil {
 		id := common.GetUUID()
 		newUser := model_openiiot.User{

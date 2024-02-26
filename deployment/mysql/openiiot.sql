@@ -85,7 +85,9 @@ CREATE TABLE IF NOT EXISTS flow_edge (
     edge_id BIGINT UNSIGNED NOT NULL,
     script MEDIUMTEXT,           -- save script here, for example, nodered flow script
     script2 MEDIUMTEXT,
-    script3 MEDIUMTEXT
+    script3 MEDIUMTEXT,
+    script4 MEDIUMTEXT,
+
 );
 
 CREATE TABLE IF NOT EXISTS flow_core (

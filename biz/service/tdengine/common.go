@@ -14,7 +14,7 @@ import (
 type TDEngineService struct {
 	db *mysql.MySQL
 	c  *config.TDEngineConfig
-	t  *TDEngineClient
+	T  *TDEngineClient
 }
 
 type TDEngineDSN struct {
@@ -46,7 +46,7 @@ func NewTDEngineService(db *mysql.MySQL, c *config.TDEngineConfig) *TDEngineServ
 		service = &TDEngineService{
 			db: db,
 			c:  c,
-			t:  tClient,
+			T:  tClient,
 		}
 	})
 	return service
@@ -73,4 +73,8 @@ func ParseDSNString(dsn string) (*TDEngineDSN, error) {
 // ConstructDSNString constructs a DSN string from a TDEngineDSN struct
 func ConstructDSNString(username string, password string, host string) string {
 	return fmt.Sprintf("%s:%s@http(%s)/", username, password, host)
+}
+
+func DefaultTdengineService() *TDEngineService {
+	return service
 }

@@ -23,3 +23,7 @@ func NewCoreService(db *mysql.MySQL) *CoreService {
 	})
 	return service
 }
+
+func DefaultCoreService() *CoreService {
+	return service
+}

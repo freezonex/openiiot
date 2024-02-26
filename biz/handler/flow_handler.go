@@ -57,3 +57,13 @@ func (a *FlowHandler) AddFlow(ctx context.Context, c *app.RequestContext) middle
 	}
 	return resp
 }
+
+func (a *FlowHandler) LoadDemoFlow(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.LoadDemoFlowRequest)
+	resp, err := a.flowService.LoadDemoFlow(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=LoadDemo error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}
