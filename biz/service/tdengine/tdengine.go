@@ -12,7 +12,7 @@ import (
 // Token function requests an access token from the TDEngine API.
 func (a *TDEngineService) TestConnection(ctx context.Context, req *freezonex_openiiot_api.TDEngineTestConnectionRequest, c *app.RequestContext) (*freezonex_openiiot_api.TDEngineTestConnectionResponse, error) {
 	dsn := ConstructDSNString(req.Dsn.Username, req.Dsn.Password, req.Dsn.Host)
-	isSuccessful := a.t.TestConnect(dsn)
+	isSuccessful := a.T.TestConnect(dsn)
 	resp := new(freezonex_openiiot_api.TDEngineTestConnectionResponse)
 	resp.Successful = isSuccessful
 	resp.BaseResp = middleware.SuccessResponseOK
@@ -21,7 +21,7 @@ func (a *TDEngineService) TestConnection(ctx context.Context, req *freezonex_ope
 
 func (a *TDEngineService) Exec(ctx context.Context, req *freezonex_openiiot_api.TDEngineExecRequest, c *app.RequestContext) (*freezonex_openiiot_api.TDEngineExecResponse, error) {
 	dsn := ConstructDSNString(req.Dsn.Username, req.Dsn.Password, req.Dsn.Host)
-	rowsAffected, err := a.t.Exec(dsn, req.Sql)
+	rowsAffected, err := a.T.Exec(dsn, req.Sql)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (a *TDEngineService) Exec(ctx context.Context, req *freezonex_openiiot_api.
 
 func (a *TDEngineService) BatchExec(ctx context.Context, req *freezonex_openiiot_api.TDEngineBatchExecRequest, c *app.RequestContext) (*freezonex_openiiot_api.TDEngineBatchExecResponse, error) {
 	dsn := ConstructDSNString(req.Dsn.Username, req.Dsn.Password, req.Dsn.Host)
-	rowsAffected, err := a.t.BatchExec(dsn, req.Sql)
+	rowsAffected, err := a.T.BatchExec(dsn, req.Sql)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (a *TDEngineService) BatchExec(ctx context.Context, req *freezonex_openiiot
 
 func (a *TDEngineService) Query(ctx context.Context, req *freezonex_openiiot_api.TDEngineQueryRequest, c *app.RequestContext) (*freezonex_openiiot_api.TDEngineQueryResponse, error) {
 	dsn := ConstructDSNString(req.Dsn.Username, req.Dsn.Password, req.Dsn.Host)
-	result, err := a.t.Query(dsn, req.Sql)
+	result, err := a.T.Query(dsn, req.Sql)
 	if err != nil {
 		return nil, err
 	}

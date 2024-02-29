@@ -7,7 +7,7 @@ import (
 )
 
 type EmqxService struct {
-	db *mysql.MySQL
+	db     *mysql.MySQL
 	client *EmqxClient
 }
 
@@ -22,5 +22,9 @@ func NewEmqxService(db *mysql.MySQL) *EmqxService {
 			db: db,
 		}
 	})
+	return service
+}
+
+func DefaultEmqxService() *EmqxService {
 	return service
 }

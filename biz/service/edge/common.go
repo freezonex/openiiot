@@ -23,3 +23,7 @@ func NewEdgeService(db *mysql.MySQL) *EdgeService {
 	})
 	return service
 }
+
+func DefaultEdgeService() *EdgeService {
+	return service
+}

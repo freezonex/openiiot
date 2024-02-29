@@ -53,7 +53,7 @@ func K8sServiceCreate(name string, ctx context.Context, AuthorizationValue strin
 	tdengineService := TdengineService(name, random())
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/services", K8SURL, name), tdengineService, headers, ctx)
 
-	emqxService := EmqxService(name, random(), random())
+	emqxService := EmqxService(name, random())
 	_, _ = sendRequest(client, "POST", fmt.Sprintf("%sapi/v1/namespaces/%s/services", K8SURL, name), emqxService, headers, ctx)
 
 	mysqlService := MysqlService(name, random())

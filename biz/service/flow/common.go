@@ -23,3 +23,7 @@ func NewFlowService(db *mysql.MySQL) *FlowService {
 	})
 	return service
 }
+
+func DefaultFlowService() *FlowService {
+	return service
+}

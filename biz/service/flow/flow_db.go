@@ -11,7 +11,7 @@ import (
 )
 
 // AddUserDB will add User record to the DB.
-func (a *FlowService) AddFlowDB(ctx context.Context, name string, description string, tenantid int64, flowtype string) (int64, error) {
+func (a *FlowService) AddFlowDB(ctx context.Context, name string, description string, tenantid int64, flowtype string, currentusername string) (int64, error) {
 	if name == "" {
 		return -1, errors.New("name can not be empty")
 	}
@@ -24,7 +24,10 @@ func (a *FlowService) AddFlowDB(ctx context.Context, name string, description st
 	if existRecord != nil {
 		return -1, errors.New("flow name exist")
 	}
-	currentusername := ctx.Value("currentusername").(string)
+	if currentusername == "" {
+		currentusername = ctx.Value("currentusername").(string)
+	}
+
 	id := common.GetUUID()
 
 	if description == "" {
@@ -49,7 +52,7 @@ func (a *FlowService) AddFlowDB(ctx context.Context, name string, description st
 	return id, nil
 }
 
-func (a *FlowService) AddFlowEdge(ctx context.Context, flowID int64, edgeIDs []int64) ([]int64, error) {
+func (a *FlowService) AddFlowEdge(ctx context.Context, flowID int64, edgeIDs []int64, scripts string, scripts2 string, scripts3 string, scripts4 string) ([]int64, error) {
 	table := a.db.DBOpeniiotQuery.FlowEdge
 	tx := table.WithContext(ctx)
 	var ids []int64
@@ -57,9 +60,13 @@ func (a *FlowService) AddFlowEdge(ctx context.Context, flowID int64, edgeIDs []i
 	for _, edgeID := range edgeIDs {
 		id := common.GetUUID()
 		newRecord := &model_openiiot.FlowEdge{
-			ID:     id,
-			FlowID: flowID,
-			EdgeID: edgeID,
+			ID:      id,
+			FlowID:  flowID,
+			EdgeID:  edgeID,
+			Script:  &scripts,
+			Script2: &scripts2,
+			Script3: &scripts3,
+			Script4: &scripts4,
 		}
 		err := tx.Create(newRecord)
 		ids = append(ids, id)
@@ -72,7 +79,7 @@ func (a *FlowService) AddFlowEdge(ctx context.Context, flowID int64, edgeIDs []i
 	return ids, nil
 }
 
-func (a *FlowService) AddFlowCore(ctx context.Context, flowID int64, coreIDs []int64) ([]int64, error) {
+func (a *FlowService) AddFlowCore(ctx context.Context, flowID int64, coreIDs []int64, script string, script2 string) ([]int64, error) {
 	table := a.db.DBOpeniiotQuery.FlowCore
 	tx := table.WithContext(ctx)
 
@@ -80,9 +87,11 @@ func (a *FlowService) AddFlowCore(ctx context.Context, flowID int64, coreIDs []i
 	for _, coreID := range coreIDs {
 		id := common.GetUUID()
 		newRecord := &model_openiiot.FlowCore{
-			ID:     id,
-			FlowID: flowID,
-			CoreID: coreID,
+			ID:      id,
+			FlowID:  flowID,
+			CoreID:  coreID,
+			Script:  &script,
+			Script2: &script2,
 		}
 		err := tx.Create(newRecord)
 		ids = append(ids, id)
@@ -94,16 +103,19 @@ func (a *FlowService) AddFlowCore(ctx context.Context, flowID int64, coreIDs []i
 	return ids, nil
 }
 
-func (a *FlowService) AddFlowApp(ctx context.Context, flowID int64, appIDs []int64) ([]int64, error) {
+func (a *FlowService) AddFlowApp(ctx context.Context, flowID int64, appIDs []int64, script string, script2 string, script3 string) ([]int64, error) {
 	table := a.db.DBOpeniiotQuery.FlowApp
 	tx := table.WithContext(ctx)
 	var ids []int64
 	for _, appID := range appIDs {
 		id := common.GetUUID()
 		newRecord := &model_openiiot.FlowApp{
-			ID:     id,
-			FlowID: flowID,
-			AppID:  appID,
+			ID:      id,
+			FlowID:  flowID,
+			AppID:   appID,
+			Script:  &script,
+			Script2: &script2,
+			Script3: &script3,
 		}
 		err := tx.Create(newRecord)
 		ids = append(ids, id)
@@ -189,12 +201,12 @@ func (a *FlowService) GetFlowCoreIDs(ctx context.Context, flowID int64) ([]int64
 	}
 
 	// Extract EdgeID from each FlowEdge object in the data slice
-	var edgeIDs []int64
+	var coreIDs []int64
 	for _, edgeRecord := range data {
-		edgeIDs = append(edgeIDs, edgeRecord.CoreID)
+		coreIDs = append(coreIDs, edgeRecord.CoreID)
 	}
 
-	return edgeIDs, nil
+	return coreIDs, nil
 }
 
 func (a *FlowService) GetFlowAppIDs(ctx context.Context, flowID int64) ([]int64, error) {
@@ -446,4 +458,72 @@ func (a *FlowService) DeleteFlowAppRecords(ctx context.Context, flowid int64) er
 
 	_, err := tx.Where(table.FlowID.Eq(flowid)).Delete()
 	return err
+}
+
+func (a *FlowService) GetFlowCoreScripts(ctx context.Context, flowcoreID int64) (string, string, string, error) {
+	table := a.db.DBOpeniiotQuery.FlowCore // Replace with the actual reference to the flow_edge table
+	tx := table.WithContext(ctx)
+
+	if flowcoreID == 0 {
+		return "", "", "", errors.New("flowcoreID can not be empty")
+	}
+
+	tx.Limit(consts.TENANT_RETURN_LIMIT).Order(table.FlowID)
+
+	// Declare data as a slice of FlowEdge objects
+
+	data, err := tx.Where(table.CoreID.Eq(flowcoreID)).First()
+
+	if err != nil {
+		return "", "", "", err
+	}
+	scripts := *data.Script
+	// Extract EdgeID from each FlowEdge object in the data slice
+
+	return scripts, "", "", nil
+}
+
+func (a *FlowService) GetFlowAppScripts(ctx context.Context, flowappID int64) (string, string, string, error) {
+	table := a.db.DBOpeniiotQuery.FlowApp // Replace with the actual reference to the flow_edge table
+	tx := table.WithContext(ctx)
+
+	if flowappID == 0 {
+		return "", "", "", errors.New("flowappID can not be empty")
+	}
+
+	tx.Limit(consts.TENANT_RETURN_LIMIT).Order(table.FlowID)
+
+	// Declare data as a slice of FlowEdge objects
+
+	data, err := tx.Where(table.AppID.Eq(flowappID)).First()
+
+	if err != nil {
+		return "", "", "", err
+	}
+	scripts, scripts2, scripts3 := *data.Script, *data.Script2, *data.Script3
+	// Extract EdgeID from each FlowEdge object in the data slice
+	return scripts, scripts2, scripts3, nil
+}
+
+func (a *FlowService) GetFlowEdgeScripts(ctx context.Context, flowedgeID int64) (string, string, string, string, error) {
+	table := a.db.DBOpeniiotQuery.FlowEdge // Replace with the actual reference to the flow_edge table
+	tx := table.WithContext(ctx)
+
+	if flowedgeID == 0 {
+		return "", "", "", "", errors.New("flowcoreID can not be empty")
+	}
+
+	tx.Limit(consts.TENANT_RETURN_LIMIT).Order(table.FlowID)
+
+	// Declare data as a slice of FlowEdge objects
+
+	data, err := tx.Where(table.EdgeID.Eq(flowedgeID)).First()
+
+	if err != nil {
+		return "", "", "", "", err
+	}
+	scripts, scripts2, scripts3, scripts4 := *data.Script, *data.Script2, *data.Script3, *data.Script4
+	// Extract EdgeID from each FlowEdge object in the data slice
+
+	return scripts, scripts2, scripts3, scripts4, nil
 }

@@ -253,6 +253,12 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/flow/delete",
 				flowHandler.DeleteFlow,
 				&iiotpb.DeleteFlowRequest{}))
+		flowGroup.POST(
+			"/loaddemoflow",
+			middleware.Response(
+				"/flow/loaddemoflow",
+				flowHandler.LoadDemoFlow,
+				&iiotpb.LoadDemoFlowRequest{}))
 	}
 
 	emqxGroup := r.Group("/emqx", middleware.Access())
