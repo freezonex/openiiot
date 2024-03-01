@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS core (
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS application (
+CREATE TABLE IF NOT EXISTS app (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     description VARCHAR(200),
@@ -86,8 +86,7 @@ CREATE TABLE IF NOT EXISTS flow_edge (
     script MEDIUMTEXT,           -- save script here, for example, nodered flow script
     script2 MEDIUMTEXT,
     script3 MEDIUMTEXT,
-    script4 MEDIUMTEXT,
-
+    script4 MEDIUMTEXT
 );
 
 CREATE TABLE IF NOT EXISTS flow_core (
@@ -116,10 +115,88 @@ CREATE TABLE IF NOT EXISTS flow_app (
 --     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 -- );
 
-CREATE TABLE global_config (
+CREATE TABLE IF NOT EXISTS global_config (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     value VARCHAR(200),
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS wms_warehouse (
+                               id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                               name VARCHAR(100) NOT NULL UNIQUE,
+                               warehouse_id VARCHAR(100) NOT NULL UNIQUE,
+                               type VARCHAR(100) NOT NULL,
+                               manager VARCHAR(100),
+                               department VARCHAR(100),
+                               email VARCHAR(200),
+                               project_group VARCHAR(100),
+                               note VARCHAR(200),
+                               update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                               create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS wms_storage_location (
+                                         id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                                         warehouse_id BIGINT UNSIGNED NOT NULL,
+                                         name VARCHAR(100) NOT NULL,
+                                         occupied BOOLEAN default false,
+                                         material_name VARCHAR(100),
+                                         update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                         create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+   );
+
+CREATE TABLE IF NOT EXISTS wms_material (
+                              id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                              product_code VARCHAR(100) NOT NULL,
+                              name VARCHAR(100) NOT NULL,
+                              storage_location_id BIGINT UNSIGNED,
+                              product_type VARCHAR (100),
+                              unit VARCHAR(100),
+                              note VARCHAR(200),
+                              update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                              create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS wms_inbound (
+                             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                             ref_id VARCHAR(100) NOT NULL UNIQUE,
+                             type VARCHAR (100) NOT NULL,
+                             storage_location_id BIGINT UNSIGNED NOT NULL,
+                             material_name VARCHAR(100) NOT NULL,
+                             operator VARCHAR(100) NOT NULL,
+                             update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                             create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS wms_inbound_record (
+                                    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                                    inbound_id BIGINT NOT NULL,
+                                    rfid VARCHAR(100),
+                                    material_id BIGINT NOT NULL,
+                                    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS wms_outbound (
+                                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                                 ref_id VARCHAR(100) NOT NULL UNIQUE,
+                                 type VARCHAR (100) NOT NULL,
+                                 storage_location BIGINT UNSIGNED NOT NULL,
+                                 material_name VARCHAR(100) NOT NULL,
+                                 operator VARCHAR(100) NOT NULL,
+                                 update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                 create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+   );
+
+CREATE TABLE IF NOT EXISTS wms_stocktaking (
+                                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                                 ref_id VARCHAR(100) NOT NULL UNIQUE,
+                                 type VARCHAR (100) NOT NULL,
+                                 storage_location BIGINT UNSIGNED NOT NULL,
+                                 operator VARCHAR(100) NOT NULL,
+                                 result VARCHAR(2000) NOT NULL,
+                                 update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                 create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
