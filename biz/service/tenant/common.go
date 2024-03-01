@@ -26,3 +26,7 @@ func NewTenantService(db *mysql.MySQL, s *config.K8sConfig) *TenantService {
 	})
 	return service
 }
+
+func DefaultTenantService() *TenantService {
+	return service
+}

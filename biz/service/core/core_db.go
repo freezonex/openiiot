@@ -39,7 +39,7 @@ func (a *CoreService) AddCoreDB(ctx context.Context, name string, description st
 	id := common.GetUUID()
 
 	if description == "" {
-		description = "edge"
+		description = "core"
 	}
 	if type1 == "" {
 		type1 = "other"

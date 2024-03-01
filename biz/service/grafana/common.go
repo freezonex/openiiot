@@ -12,8 +12,8 @@ import (
 )
 
 type GrafanaService struct {
-	db *mysql.MySQL
-	c  *config.GrafanaConfig
+	db     *mysql.MySQL
+	c      *config.GrafanaConfig
 	client *GrafanaClient
 }
 
@@ -101,79 +101,79 @@ type DataSource struct {
 
 func convertPbDataSource(ds *freezonex_openiiot_api.DataSource) (*DataSource, error) {
 
-	var jsonDataJSON  map[string]interface{}
+	var jsonDataJSON map[string]interface{}
 	err := json.Unmarshal([]byte(ds.JsonData), &jsonDataJSON)
 	if err != nil {
 		logs.Error("failed to unmarshal JsonData in datasource: %v", err, ds.JsonData)
 		return nil, err
 	}
-	
+
 	var secureJsonDataJSON map[string]interface{}
 	err = json.Unmarshal([]byte(ds.SecureJsonData), &secureJsonDataJSON)
 	if err != nil {
 		logs.Error("failed to unmarshal SecureJsonData in datasource: %v", err, ds.SecureJsonData)
-        return nil, err
-    }
+		return nil, err
+	}
 	newDataSource := &DataSource{
-			ID:              ds.Id,
-            UID:             ds.Uid,
-            Name:            ds.Name,
-            Type:             ds.Type,
-            TypeLogoURL:      ds.TypeLogoUrl,
-            URL:              ds.Url,
-            Access:           ds.Access,
-            ReadOnly:         ds.ReadOnly,
-            Database:         ds.Database,
-            User:             ds.User,
-            OrgID:            ds.OrgId,
-            IsDefault:        ds.IsDefault,
-            BasicAuth:        ds.BasicAuth,
-            BasicAuthUser:    ds.BasicAuthUser,
-            WithCredentials:  ds.WithCredentials,
-            JSONData:        jsonDataJSON,
-            SecureJSONData:  secureJsonDataJSON,
-            Version:         int(ds.Version),
+		ID:              ds.Id,
+		UID:             ds.Uid,
+		Name:            ds.Name,
+		Type:            ds.Type,
+		TypeLogoURL:     ds.TypeLogoUrl,
+		URL:             ds.Url,
+		Access:          ds.Access,
+		ReadOnly:        ds.ReadOnly,
+		Database:        ds.Database,
+		User:            ds.User,
+		OrgID:           ds.OrgId,
+		IsDefault:       ds.IsDefault,
+		BasicAuth:       ds.BasicAuth,
+		BasicAuthUser:   ds.BasicAuthUser,
+		WithCredentials: ds.WithCredentials,
+		JSONData:        jsonDataJSON,
+		SecureJSONData:  secureJsonDataJSON,
+		Version:         int(ds.Version),
 	}
 	return newDataSource, nil
 }
 
 func convertDataSources(dataSources []*DataSource) ([]*freezonex_openiiot_api.DataSource, error) {
-    pbDataSources := make([]*freezonex_openiiot_api.DataSource, len(dataSources))
-    
-    for i, ds := range dataSources {
-        jsonDataBytes, err := json.Marshal(ds.JSONData)
-        if err != nil {
-            return nil, err
-        }
-        
-        secureJsonDataBytes, err := json.Marshal(ds.SecureJSONData)
-        if err != nil {
-            return nil, err
-        }
-        
-        pbDataSources[i] = &freezonex_openiiot_api.DataSource{
-            Id:              ds.ID,
-            Uid:             ds.UID,
-            Name:            ds.Name,
-            Type:             ds.Type,
-            TypeLogoUrl:      ds.TypeLogoURL,
-            Url:              ds.URL,
-            Access:           ds.Access,
-            ReadOnly:         ds.ReadOnly,
-            Database:         ds.Database,
-            User:             ds.User,
-            OrgId:            ds.OrgID,
-            IsDefault:        ds.IsDefault,
-            BasicAuth:        ds.BasicAuth,
-            BasicAuthUser:    ds.BasicAuthUser,
-            WithCredentials:  ds.WithCredentials,
-            JsonData:        string(jsonDataBytes),
-            SecureJsonData:  string(secureJsonDataBytes),
-            Version:         int32(ds.Version),
-        }
-    }
-    
-    return pbDataSources, nil
+	pbDataSources := make([]*freezonex_openiiot_api.DataSource, len(dataSources))
+
+	for i, ds := range dataSources {
+		jsonDataBytes, err := json.Marshal(ds.JSONData)
+		if err != nil {
+			return nil, err
+		}
+
+		secureJsonDataBytes, err := json.Marshal(ds.SecureJSONData)
+		if err != nil {
+			return nil, err
+		}
+
+		pbDataSources[i] = &freezonex_openiiot_api.DataSource{
+			Id:              ds.ID,
+			Uid:             ds.UID,
+			Name:            ds.Name,
+			Type:            ds.Type,
+			TypeLogoUrl:     ds.TypeLogoURL,
+			Url:             ds.URL,
+			Access:          ds.Access,
+			ReadOnly:        ds.ReadOnly,
+			Database:        ds.Database,
+			User:            ds.User,
+			OrgId:           ds.OrgID,
+			IsDefault:       ds.IsDefault,
+			BasicAuth:       ds.BasicAuth,
+			BasicAuthUser:   ds.BasicAuthUser,
+			WithCredentials: ds.WithCredentials,
+			JsonData:        string(jsonDataBytes),
+			SecureJsonData:  string(secureJsonDataBytes),
+			Version:         int32(ds.Version),
+		}
+	}
+
+	return pbDataSources, nil
 }
 
 func convertDashboardModel(dashboard *freezonex_openiiot_api.Dashboard) (*Dashboard, error) {
@@ -181,22 +181,26 @@ func convertDashboardModel(dashboard *freezonex_openiiot_api.Dashboard) (*Dashbo
 	err := json.Unmarshal([]byte(dashboard.Model), &modelJSON)
 	if err != nil {
 		logs.Error("failed to unmarshal dashboard model: %v", err, dashboard.Model)
-        return nil, err
-    }
+		return nil, err
+	}
 	newDashboard := &Dashboard{
-        Model:    modelJSON,
-        FolderID: dashboard.FolderId,
-        Meta: DashboardMeta{
-            IsStarred: dashboard.Meta.IsStarred,
-            Slug:      dashboard.Meta.Slug,
-            Folder:    dashboard.Meta.FolderId,
-            FolderUID: dashboard.Meta.FolderUid,
-            URL:       dashboard.Meta.Url,
-        },
-        Overwrite: dashboard.Overwrite,
-        Message:   dashboard.Message,
-        FolderUID: dashboard.FolderUid,
-    }
+		Model:    modelJSON,
+		FolderID: dashboard.FolderId,
+		Meta: DashboardMeta{
+			IsStarred: dashboard.Meta.IsStarred,
+			Slug:      dashboard.Meta.Slug,
+			Folder:    dashboard.Meta.FolderId,
+			FolderUID: dashboard.Meta.FolderUid,
+			URL:       dashboard.Meta.Url,
+		},
+		Overwrite: dashboard.Overwrite,
+		Message:   dashboard.Message,
+		FolderUID: dashboard.FolderUid,
+	}
 
-    return newDashboard, nil
+	return newDashboard, nil
+}
+
+func DefaultGrafanaService() *GrafanaService {
+	return service
 }

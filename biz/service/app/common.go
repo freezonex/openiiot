@@ -23,3 +23,7 @@ func NewAppService(db *mysql.MySQL) *AppService {
 	})
 	return service
 }
+
+func DefaultAppService() *AppService {
+	return service
+}
