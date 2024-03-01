@@ -17,50 +17,71 @@ import (
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:           db,
-		App:          newApp(db, opts...),
-		Core:         newCore(db, opts...),
-		Edge:         newEdge(db, opts...),
-		Flow:         newFlow(db, opts...),
-		FlowApp:      newFlowApp(db, opts...),
-		FlowCore:     newFlowCore(db, opts...),
-		FlowEdge:     newFlowEdge(db, opts...),
-		GlobalConfig: newGlobalConfig(db, opts...),
-		Tenant:       newTenant(db, opts...),
-		User:         newUser(db, opts...),
+		db:                 db,
+		App:                newApp(db, opts...),
+		Core:               newCore(db, opts...),
+		Edge:               newEdge(db, opts...),
+		Flow:               newFlow(db, opts...),
+		FlowApp:            newFlowApp(db, opts...),
+		FlowCore:           newFlowCore(db, opts...),
+		FlowEdge:           newFlowEdge(db, opts...),
+		GlobalConfig:       newGlobalConfig(db, opts...),
+		Tenant:             newTenant(db, opts...),
+		User:               newUser(db, opts...),
+		WmsInbound:         newWmsInbound(db, opts...),
+		WmsInboundRecord:   newWmsInboundRecord(db, opts...),
+		WmsMaterial:        newWmsMaterial(db, opts...),
+		WmsOutbound:        newWmsOutbound(db, opts...),
+		WmsStocktaking:     newWmsStocktaking(db, opts...),
+		WmsStorageLocation: newWmsStorageLocation(db, opts...),
+		WmsWarehouse:       newWmsWarehouse(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	App          app
-	Core         core
-	Edge         edge
-	Flow         flow
-	FlowApp      flowApp
-	FlowCore     flowCore
-	FlowEdge     flowEdge
-	GlobalConfig globalConfig
-	Tenant       tenant
-	User         user
+	App                app
+	Core               core
+	Edge               edge
+	Flow               flow
+	FlowApp            flowApp
+	FlowCore           flowCore
+	FlowEdge           flowEdge
+	GlobalConfig       globalConfig
+	Tenant             tenant
+	User               user
+	WmsInbound         wmsInbound
+	WmsInboundRecord   wmsInboundRecord
+	WmsMaterial        wmsMaterial
+	WmsOutbound        wmsOutbound
+	WmsStocktaking     wmsStocktaking
+	WmsStorageLocation wmsStorageLocation
+	WmsWarehouse       wmsWarehouse
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:           db,
-		App:          q.App.clone(db),
-		Core:         q.Core.clone(db),
-		Edge:         q.Edge.clone(db),
-		Flow:         q.Flow.clone(db),
-		FlowApp:      q.FlowApp.clone(db),
-		FlowCore:     q.FlowCore.clone(db),
-		FlowEdge:     q.FlowEdge.clone(db),
-		GlobalConfig: q.GlobalConfig.clone(db),
-		Tenant:       q.Tenant.clone(db),
-		User:         q.User.clone(db),
+		db:                 db,
+		App:                q.App.clone(db),
+		Core:               q.Core.clone(db),
+		Edge:               q.Edge.clone(db),
+		Flow:               q.Flow.clone(db),
+		FlowApp:            q.FlowApp.clone(db),
+		FlowCore:           q.FlowCore.clone(db),
+		FlowEdge:           q.FlowEdge.clone(db),
+		GlobalConfig:       q.GlobalConfig.clone(db),
+		Tenant:             q.Tenant.clone(db),
+		User:               q.User.clone(db),
+		WmsInbound:         q.WmsInbound.clone(db),
+		WmsInboundRecord:   q.WmsInboundRecord.clone(db),
+		WmsMaterial:        q.WmsMaterial.clone(db),
+		WmsOutbound:        q.WmsOutbound.clone(db),
+		WmsStocktaking:     q.WmsStocktaking.clone(db),
+		WmsStorageLocation: q.WmsStorageLocation.clone(db),
+		WmsWarehouse:       q.WmsWarehouse.clone(db),
 	}
 }
 
@@ -74,45 +95,66 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:           db,
-		App:          q.App.replaceDB(db),
-		Core:         q.Core.replaceDB(db),
-		Edge:         q.Edge.replaceDB(db),
-		Flow:         q.Flow.replaceDB(db),
-		FlowApp:      q.FlowApp.replaceDB(db),
-		FlowCore:     q.FlowCore.replaceDB(db),
-		FlowEdge:     q.FlowEdge.replaceDB(db),
-		GlobalConfig: q.GlobalConfig.replaceDB(db),
-		Tenant:       q.Tenant.replaceDB(db),
-		User:         q.User.replaceDB(db),
+		db:                 db,
+		App:                q.App.replaceDB(db),
+		Core:               q.Core.replaceDB(db),
+		Edge:               q.Edge.replaceDB(db),
+		Flow:               q.Flow.replaceDB(db),
+		FlowApp:            q.FlowApp.replaceDB(db),
+		FlowCore:           q.FlowCore.replaceDB(db),
+		FlowEdge:           q.FlowEdge.replaceDB(db),
+		GlobalConfig:       q.GlobalConfig.replaceDB(db),
+		Tenant:             q.Tenant.replaceDB(db),
+		User:               q.User.replaceDB(db),
+		WmsInbound:         q.WmsInbound.replaceDB(db),
+		WmsInboundRecord:   q.WmsInboundRecord.replaceDB(db),
+		WmsMaterial:        q.WmsMaterial.replaceDB(db),
+		WmsOutbound:        q.WmsOutbound.replaceDB(db),
+		WmsStocktaking:     q.WmsStocktaking.replaceDB(db),
+		WmsStorageLocation: q.WmsStorageLocation.replaceDB(db),
+		WmsWarehouse:       q.WmsWarehouse.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	App          *appDo
-	Core         *coreDo
-	Edge         *edgeDo
-	Flow         *flowDo
-	FlowApp      *flowAppDo
-	FlowCore     *flowCoreDo
-	FlowEdge     *flowEdgeDo
-	GlobalConfig *globalConfigDo
-	Tenant       *tenantDo
-	User         *userDo
+	App                *appDo
+	Core               *coreDo
+	Edge               *edgeDo
+	Flow               *flowDo
+	FlowApp            *flowAppDo
+	FlowCore           *flowCoreDo
+	FlowEdge           *flowEdgeDo
+	GlobalConfig       *globalConfigDo
+	Tenant             *tenantDo
+	User               *userDo
+	WmsInbound         *wmsInboundDo
+	WmsInboundRecord   *wmsInboundRecordDo
+	WmsMaterial        *wmsMaterialDo
+	WmsOutbound        *wmsOutboundDo
+	WmsStocktaking     *wmsStocktakingDo
+	WmsStorageLocation *wmsStorageLocationDo
+	WmsWarehouse       *wmsWarehouseDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		App:          q.App.WithContext(ctx),
-		Core:         q.Core.WithContext(ctx),
-		Edge:         q.Edge.WithContext(ctx),
-		Flow:         q.Flow.WithContext(ctx),
-		FlowApp:      q.FlowApp.WithContext(ctx),
-		FlowCore:     q.FlowCore.WithContext(ctx),
-		FlowEdge:     q.FlowEdge.WithContext(ctx),
-		GlobalConfig: q.GlobalConfig.WithContext(ctx),
-		Tenant:       q.Tenant.WithContext(ctx),
-		User:         q.User.WithContext(ctx),
+		App:                q.App.WithContext(ctx),
+		Core:               q.Core.WithContext(ctx),
+		Edge:               q.Edge.WithContext(ctx),
+		Flow:               q.Flow.WithContext(ctx),
+		FlowApp:            q.FlowApp.WithContext(ctx),
+		FlowCore:           q.FlowCore.WithContext(ctx),
+		FlowEdge:           q.FlowEdge.WithContext(ctx),
+		GlobalConfig:       q.GlobalConfig.WithContext(ctx),
+		Tenant:             q.Tenant.WithContext(ctx),
+		User:               q.User.WithContext(ctx),
+		WmsInbound:         q.WmsInbound.WithContext(ctx),
+		WmsInboundRecord:   q.WmsInboundRecord.WithContext(ctx),
+		WmsMaterial:        q.WmsMaterial.WithContext(ctx),
+		WmsOutbound:        q.WmsOutbound.WithContext(ctx),
+		WmsStocktaking:     q.WmsStocktaking.WithContext(ctx),
+		WmsStorageLocation: q.WmsStorageLocation.WithContext(ctx),
+		WmsWarehouse:       q.WmsWarehouse.WithContext(ctx),
 	}
 }
 
