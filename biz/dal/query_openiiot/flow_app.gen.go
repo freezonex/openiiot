@@ -31,6 +31,8 @@ func newFlowApp(db *gorm.DB, opts ...gen.DOOption) flowApp {
 	_flowApp.FlowID = field.NewInt64(tableName, "flow_id")
 	_flowApp.AppID = field.NewInt64(tableName, "app_id")
 	_flowApp.Script = field.NewString(tableName, "script")
+	_flowApp.Script2 = field.NewString(tableName, "script2")
+	_flowApp.Script3 = field.NewString(tableName, "script3")
 
 	_flowApp.fillFieldMap()
 
@@ -40,11 +42,13 @@ func newFlowApp(db *gorm.DB, opts ...gen.DOOption) flowApp {
 type flowApp struct {
 	flowAppDo flowAppDo
 
-	ALL    field.Asterisk
-	ID     field.Int64
-	FlowID field.Int64
-	AppID  field.Int64
-	Script field.String
+	ALL     field.Asterisk
+	ID      field.Int64
+	FlowID  field.Int64
+	AppID   field.Int64
+	Script  field.String
+	Script2 field.String
+	Script3 field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -65,6 +69,8 @@ func (f *flowApp) updateTableName(table string) *flowApp {
 	f.FlowID = field.NewInt64(table, "flow_id")
 	f.AppID = field.NewInt64(table, "app_id")
 	f.Script = field.NewString(table, "script")
+	f.Script2 = field.NewString(table, "script2")
+	f.Script3 = field.NewString(table, "script3")
 
 	f.fillFieldMap()
 
@@ -89,11 +95,13 @@ func (f *flowApp) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (f *flowApp) fillFieldMap() {
-	f.fieldMap = make(map[string]field.Expr, 4)
+	f.fieldMap = make(map[string]field.Expr, 6)
 	f.fieldMap["id"] = f.ID
 	f.fieldMap["flow_id"] = f.FlowID
 	f.fieldMap["app_id"] = f.AppID
 	f.fieldMap["script"] = f.Script
+	f.fieldMap["script2"] = f.Script2
+	f.fieldMap["script3"] = f.Script3
 }
 
 func (f flowApp) clone(db *gorm.DB) flowApp {

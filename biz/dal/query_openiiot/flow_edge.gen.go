@@ -31,6 +31,9 @@ func newFlowEdge(db *gorm.DB, opts ...gen.DOOption) flowEdge {
 	_flowEdge.FlowID = field.NewInt64(tableName, "flow_id")
 	_flowEdge.EdgeID = field.NewInt64(tableName, "edge_id")
 	_flowEdge.Script = field.NewString(tableName, "script")
+	_flowEdge.Script2 = field.NewString(tableName, "script2")
+	_flowEdge.Script3 = field.NewString(tableName, "script3")
+	_flowEdge.Script4 = field.NewString(tableName, "script4")
 
 	_flowEdge.fillFieldMap()
 
@@ -40,11 +43,14 @@ func newFlowEdge(db *gorm.DB, opts ...gen.DOOption) flowEdge {
 type flowEdge struct {
 	flowEdgeDo flowEdgeDo
 
-	ALL    field.Asterisk
-	ID     field.Int64
-	FlowID field.Int64
-	EdgeID field.Int64
-	Script field.String
+	ALL     field.Asterisk
+	ID      field.Int64
+	FlowID  field.Int64
+	EdgeID  field.Int64
+	Script  field.String
+	Script2 field.String
+	Script3 field.String
+	Script4 field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -65,6 +71,9 @@ func (f *flowEdge) updateTableName(table string) *flowEdge {
 	f.FlowID = field.NewInt64(table, "flow_id")
 	f.EdgeID = field.NewInt64(table, "edge_id")
 	f.Script = field.NewString(table, "script")
+	f.Script2 = field.NewString(table, "script2")
+	f.Script3 = field.NewString(table, "script3")
+	f.Script4 = field.NewString(table, "script4")
 
 	f.fillFieldMap()
 
@@ -89,11 +98,14 @@ func (f *flowEdge) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (f *flowEdge) fillFieldMap() {
-	f.fieldMap = make(map[string]field.Expr, 4)
+	f.fieldMap = make(map[string]field.Expr, 7)
 	f.fieldMap["id"] = f.ID
 	f.fieldMap["flow_id"] = f.FlowID
 	f.fieldMap["edge_id"] = f.EdgeID
 	f.fieldMap["script"] = f.Script
+	f.fieldMap["script2"] = f.Script2
+	f.fieldMap["script3"] = f.Script3
+	f.fieldMap["script4"] = f.Script4
 }
 
 func (f flowEdge) clone(db *gorm.DB) flowEdge {

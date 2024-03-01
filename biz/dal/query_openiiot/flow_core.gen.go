@@ -31,6 +31,8 @@ func newFlowCore(db *gorm.DB, opts ...gen.DOOption) flowCore {
 	_flowCore.FlowID = field.NewInt64(tableName, "flow_id")
 	_flowCore.CoreID = field.NewInt64(tableName, "core_id")
 	_flowCore.Script = field.NewString(tableName, "script")
+	_flowCore.Script2 = field.NewString(tableName, "script2")
+	_flowCore.Script3 = field.NewString(tableName, "script3")
 
 	_flowCore.fillFieldMap()
 
@@ -40,11 +42,13 @@ func newFlowCore(db *gorm.DB, opts ...gen.DOOption) flowCore {
 type flowCore struct {
 	flowCoreDo flowCoreDo
 
-	ALL    field.Asterisk
-	ID     field.Int64
-	FlowID field.Int64
-	CoreID field.Int64
-	Script field.String
+	ALL     field.Asterisk
+	ID      field.Int64
+	FlowID  field.Int64
+	CoreID  field.Int64
+	Script  field.String
+	Script2 field.String
+	Script3 field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -65,6 +69,8 @@ func (f *flowCore) updateTableName(table string) *flowCore {
 	f.FlowID = field.NewInt64(table, "flow_id")
 	f.CoreID = field.NewInt64(table, "core_id")
 	f.Script = field.NewString(table, "script")
+	f.Script2 = field.NewString(table, "script2")
+	f.Script3 = field.NewString(table, "script3")
 
 	f.fillFieldMap()
 
@@ -89,11 +95,13 @@ func (f *flowCore) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (f *flowCore) fillFieldMap() {
-	f.fieldMap = make(map[string]field.Expr, 4)
+	f.fieldMap = make(map[string]field.Expr, 6)
 	f.fieldMap["id"] = f.ID
 	f.fieldMap["flow_id"] = f.FlowID
 	f.fieldMap["core_id"] = f.CoreID
 	f.fieldMap["script"] = f.Script
+	f.fieldMap["script2"] = f.Script2
+	f.fieldMap["script3"] = f.Script3
 }
 
 func (f flowCore) clone(db *gorm.DB) flowCore {
