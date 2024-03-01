@@ -710,6 +710,140 @@ func (x *DeleteFlowResponse) GetBaseResp() *base_resp.BaseResponse {
 	return nil
 }
 
+type LoadDemoFlowRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	BaseRequest *base_req.BaseRequest `protobuf:"bytes,1,opt,name=base_request,json=baseRequest,proto3" json:"base_request" form:"base_request" query:"base_request"`
+	TenantId    string                `protobuf:"bytes,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id" form:"tenant_id" query:"tenant_id"`
+	TenantName  string                `protobuf:"bytes,3,opt,name=tenant_name,json=tenantName,proto3" json:"tenant_name" form:"tenant_name" query:"tenant_name"`
+	DemoName    string                `protobuf:"bytes,4,opt,name=demo_name,json=demoName,proto3" json:"demo_name" form:"demo_name" query:"demo_name"`
+	DemoFlowId  string                `protobuf:"bytes,5,opt,name=demo_flow_id,json=demoFlowId,proto3" json:"demo_flow_id" form:"demo_flow_id" query:"demo_flow_id"`
+}
+
+func (x *LoadDemoFlowRequest) Reset() {
+	*x = LoadDemoFlowRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_freezonex_openiiot_api_flow_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *LoadDemoFlowRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LoadDemoFlowRequest) ProtoMessage() {}
+
+func (x *LoadDemoFlowRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_freezonex_openiiot_api_flow_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LoadDemoFlowRequest.ProtoReflect.Descriptor instead.
+func (*LoadDemoFlowRequest) Descriptor() ([]byte, []int) {
+	return file_freezonex_openiiot_api_flow_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *LoadDemoFlowRequest) GetBaseRequest() *base_req.BaseRequest {
+	if x != nil {
+		return x.BaseRequest
+	}
+	return nil
+}
+
+func (x *LoadDemoFlowRequest) GetTenantId() string {
+	if x != nil {
+		return x.TenantId
+	}
+	return ""
+}
+
+func (x *LoadDemoFlowRequest) GetTenantName() string {
+	if x != nil {
+		return x.TenantName
+	}
+	return ""
+}
+
+func (x *LoadDemoFlowRequest) GetDemoName() string {
+	if x != nil {
+		return x.DemoName
+	}
+	return ""
+}
+
+func (x *LoadDemoFlowRequest) GetDemoFlowId() string {
+	if x != nil {
+		return x.DemoFlowId
+	}
+	return ""
+}
+
+type LoadDemoFlowResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	BaseResp *base_resp.BaseResponse `protobuf:"bytes,1,opt,name=base_resp,json=baseResp,proto3" json:"base_resp" form:"base_resp" query:"base_resp"`
+	Id       string                  `protobuf:"bytes,2,opt,name=id,proto3" json:"id" form:"id" query:"id"`
+}
+
+func (x *LoadDemoFlowResponse) Reset() {
+	*x = LoadDemoFlowResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_freezonex_openiiot_api_flow_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *LoadDemoFlowResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LoadDemoFlowResponse) ProtoMessage() {}
+
+func (x *LoadDemoFlowResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_freezonex_openiiot_api_flow_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LoadDemoFlowResponse.ProtoReflect.Descriptor instead.
+func (*LoadDemoFlowResponse) Descriptor() ([]byte, []int) {
+	return file_freezonex_openiiot_api_flow_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *LoadDemoFlowResponse) GetBaseResp() *base_resp.BaseResponse {
+	if x != nil {
+		return x.BaseResp
+	}
+	return nil
+}
+
+func (x *LoadDemoFlowResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 var File_freezonex_openiiot_api_flow_proto protoreflect.FileDescriptor
 
 var file_freezonex_openiiot_api_flow_proto_rawDesc = []byte{
@@ -819,11 +953,30 @@ var file_freezonex_openiiot_api_flow_proto_rawDesc = []byte{
 	0x6e, 0x73, 0x65, 0x12, 0x34, 0x0a, 0x09, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x72, 0x65, 0x73, 0x70,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x72, 0x65,
 	0x73, 0x70, 0x2e, 0x42, 0x61, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52,
-	0x08, 0x62, 0x61, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x42, 0x35, 0x5a, 0x33, 0x66, 0x72, 0x65,
-	0x65, 0x7a, 0x6f, 0x6e, 0x65, 0x78, 0x2f, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x69, 0x6f, 0x74, 0x2f,
-	0x62, 0x69, 0x7a, 0x2f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2f, 0x66, 0x72, 0x65, 0x65, 0x7a, 0x6f,
-	0x6e, 0x65, 0x78, 0x5f, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x69, 0x6f, 0x74, 0x5f, 0x61, 0x70, 0x69,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x08, 0x62, 0x61, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x22, 0xcc, 0x01, 0x0a, 0x13, 0x4c, 0x6f,
+	0x61, 0x64, 0x44, 0x65, 0x6d, 0x6f, 0x46, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x38, 0x0a, 0x0c, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x15, 0x2e, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x72,
+	0x65, 0x71, 0x2e, 0x42, 0x61, 0x73, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x0b,
+	0x62, 0x61, 0x73, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1b, 0x0a, 0x09, 0x74,
+	0x65, 0x6e, 0x61, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
+	0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x74, 0x65, 0x6e, 0x61,
+	0x6e, 0x74, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x74,
+	0x65, 0x6e, 0x61, 0x6e, 0x74, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x64, 0x65, 0x6d,
+	0x6f, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x64, 0x65,
+	0x6d, 0x6f, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x20, 0x0a, 0x0c, 0x64, 0x65, 0x6d, 0x6f, 0x5f, 0x66,
+	0x6c, 0x6f, 0x77, 0x5f, 0x69, 0x64, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x64, 0x65,
+	0x6d, 0x6f, 0x46, 0x6c, 0x6f, 0x77, 0x49, 0x64, 0x22, 0x5c, 0x0a, 0x14, 0x4c, 0x6f, 0x61, 0x64,
+	0x44, 0x65, 0x6d, 0x6f, 0x46, 0x6c, 0x6f, 0x77, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x34, 0x0a, 0x09, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x72, 0x65, 0x73, 0x70, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x62, 0x61, 0x73, 0x65, 0x5f, 0x72, 0x65, 0x73, 0x70, 0x2e,
+	0x42, 0x61, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x52, 0x08, 0x62, 0x61,
+	0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x42, 0x35, 0x5a, 0x33, 0x66, 0x72, 0x65, 0x65, 0x7a, 0x6f,
+	0x6e, 0x65, 0x78, 0x2f, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x69, 0x6f, 0x74, 0x2f, 0x62, 0x69, 0x7a,
+	0x2f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2f, 0x66, 0x72, 0x65, 0x65, 0x7a, 0x6f, 0x6e, 0x65, 0x78,
+	0x5f, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x69, 0x6f, 0x74, 0x5f, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -838,7 +991,7 @@ func file_freezonex_openiiot_api_flow_proto_rawDescGZIP() []byte {
 	return file_freezonex_openiiot_api_flow_proto_rawDescData
 }
 
-var file_freezonex_openiiot_api_flow_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_freezonex_openiiot_api_flow_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_freezonex_openiiot_api_flow_proto_goTypes = []interface{}{
 	(*Flow)(nil),                   // 0: freezonex.openiiot_api.Flow
 	(*AddFlowRequest)(nil),         // 1: freezonex.openiiot_api.AddFlowRequest
@@ -849,24 +1002,28 @@ var file_freezonex_openiiot_api_flow_proto_goTypes = []interface{}{
 	(*UpdateFlowResponse)(nil),     // 6: freezonex.openiiot_api.UpdateFlowResponse
 	(*DeleteFlowRequest)(nil),      // 7: freezonex.openiiot_api.DeleteFlowRequest
 	(*DeleteFlowResponse)(nil),     // 8: freezonex.openiiot_api.DeleteFlowResponse
-	(*base_req.BaseRequest)(nil),   // 9: base_req.BaseRequest
-	(*base_resp.BaseResponse)(nil), // 10: base_resp.BaseResponse
+	(*LoadDemoFlowRequest)(nil),    // 9: freezonex.openiiot_api.LoadDemoFlowRequest
+	(*LoadDemoFlowResponse)(nil),   // 10: freezonex.openiiot_api.LoadDemoFlowResponse
+	(*base_req.BaseRequest)(nil),   // 11: base_req.BaseRequest
+	(*base_resp.BaseResponse)(nil), // 12: base_resp.BaseResponse
 }
 var file_freezonex_openiiot_api_flow_proto_depIdxs = []int32{
-	9,  // 0: freezonex.openiiot_api.AddFlowRequest.base_request:type_name -> base_req.BaseRequest
-	10, // 1: freezonex.openiiot_api.AddFlowResponse.base_resp:type_name -> base_resp.BaseResponse
-	9,  // 2: freezonex.openiiot_api.GetFlowRequest.base_request:type_name -> base_req.BaseRequest
-	10, // 3: freezonex.openiiot_api.GetFlowResponse.base_resp:type_name -> base_resp.BaseResponse
+	11, // 0: freezonex.openiiot_api.AddFlowRequest.base_request:type_name -> base_req.BaseRequest
+	12, // 1: freezonex.openiiot_api.AddFlowResponse.base_resp:type_name -> base_resp.BaseResponse
+	11, // 2: freezonex.openiiot_api.GetFlowRequest.base_request:type_name -> base_req.BaseRequest
+	12, // 3: freezonex.openiiot_api.GetFlowResponse.base_resp:type_name -> base_resp.BaseResponse
 	0,  // 4: freezonex.openiiot_api.GetFlowResponse.data:type_name -> freezonex.openiiot_api.Flow
-	9,  // 5: freezonex.openiiot_api.UpdateFlowRequest.base_request:type_name -> base_req.BaseRequest
-	10, // 6: freezonex.openiiot_api.UpdateFlowResponse.base_resp:type_name -> base_resp.BaseResponse
-	9,  // 7: freezonex.openiiot_api.DeleteFlowRequest.base_request:type_name -> base_req.BaseRequest
-	10, // 8: freezonex.openiiot_api.DeleteFlowResponse.base_resp:type_name -> base_resp.BaseResponse
-	9,  // [9:9] is the sub-list for method output_type
-	9,  // [9:9] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	11, // 5: freezonex.openiiot_api.UpdateFlowRequest.base_request:type_name -> base_req.BaseRequest
+	12, // 6: freezonex.openiiot_api.UpdateFlowResponse.base_resp:type_name -> base_resp.BaseResponse
+	11, // 7: freezonex.openiiot_api.DeleteFlowRequest.base_request:type_name -> base_req.BaseRequest
+	12, // 8: freezonex.openiiot_api.DeleteFlowResponse.base_resp:type_name -> base_resp.BaseResponse
+	11, // 9: freezonex.openiiot_api.LoadDemoFlowRequest.base_request:type_name -> base_req.BaseRequest
+	12, // 10: freezonex.openiiot_api.LoadDemoFlowResponse.base_resp:type_name -> base_resp.BaseResponse
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_freezonex_openiiot_api_flow_proto_init() }
@@ -983,6 +1140,30 @@ func file_freezonex_openiiot_api_flow_proto_init() {
 				return nil
 			}
 		}
+		file_freezonex_openiiot_api_flow_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LoadDemoFlowRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_freezonex_openiiot_api_flow_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LoadDemoFlowResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -990,7 +1171,7 @@ func file_freezonex_openiiot_api_flow_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_freezonex_openiiot_api_flow_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
