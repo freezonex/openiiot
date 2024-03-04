@@ -19,6 +19,7 @@ import (
 	"freezonex/openiiot/biz/service/tdengine"
 	"freezonex/openiiot/biz/service/tenant"
 	"freezonex/openiiot/biz/service/user"
+	"freezonex/openiiot/biz/service/wms_warehouse"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
@@ -364,6 +365,35 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 			middleware.Response(
 				"/tdengine/query",
 				tdengineHandler.Query,
+				&iiotpb.TDEngineQueryRequest{}))
+	}
+
+	wmsGroup := r.Group("/wmswarehouse", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsWarehouseHandler(wms_warehouse.NewWmsWarehouseService(db))
+		wmsGroup.POST(
+			"/add",
+			middleware.Response(
+				"/tenant/add",
+				wmsHandler.AddWmsWarehouse,
+				&iiotpb.TDEngineTestConnectionRequest{}))
+		wmsGroup.POST(
+			"/update",
+			middleware.Response(
+				"/tenant/update",
+				wmsHandler.UpdateWmsWarehouse,
+				&iiotpb.TDEngineExecRequest{}))
+		wmsGroup.POST(
+			"/delete",
+			middleware.Response(
+				"/tenant/delete",
+				wmsHandler.DeleteWmsWarehouse,
+				&iiotpb.TDEngineBatchExecRequest{}))
+		wmsGroup.POST(
+			"/get",
+			middleware.Response(
+				"/tenant/get",
+				wmsHandler.GetWmsWarehouse,
 				&iiotpb.TDEngineQueryRequest{}))
 	}
 
