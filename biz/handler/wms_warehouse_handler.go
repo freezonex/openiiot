@@ -2,12 +2,11 @@ package handler
 
 import (
 	"context"
+	"freezonex/openiiot/biz/service/wms_warehouse"
 	"net/http"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-	"freezonex/openiiot/biz/service/wms_warehouse"
-
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
