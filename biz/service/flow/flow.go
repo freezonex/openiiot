@@ -3,6 +3,11 @@ package flow
 import (
 	"context"
 	"fmt"
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/hertz/pkg/common/json"
+	"strings"
+
 	"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
@@ -13,10 +18,6 @@ import (
 	"freezonex/openiiot/biz/service/grafana"
 	"freezonex/openiiot/biz/service/tdengine"
 	"freezonex/openiiot/biz/service/utils/common"
-	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/cloudwego/hertz/pkg/common/json"
-	"strings"
 )
 
 func (a *FlowService) AddFlow(ctx context.Context, req *freezonex_openiiot_api.AddFlowRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddFlowResponse, error) {

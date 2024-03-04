@@ -2,10 +2,10 @@ package emqx
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-
-	"github.com/cloudwego/hertz/pkg/app"
 )
 
 func (a *EmqxService) GetStatus(ctx context.Context, req *freezonex_openiiot_api.EmqxGetStatusRequest, c *app.RequestContext) (*freezonex_openiiot_api.EmqxGetStatusResponse, error) {

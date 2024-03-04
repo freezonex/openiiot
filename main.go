@@ -3,6 +3,11 @@
 package main
 
 import (
+	"github.com/cloudwego/hertz/pkg/app/server"
+	hertzConfig "github.com/cloudwego/hertz/pkg/common/config"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	hertzlogrus "github.com/hertz-contrib/logger/logrus"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"log"
 	"os"
@@ -11,12 +16,6 @@ import (
 
 	"freezonex/openiiot/biz/config"
 	"freezonex/openiiot/biz/middleware"
-
-	"github.com/cloudwego/hertz/pkg/app/server"
-	hertzConfig "github.com/cloudwego/hertz/pkg/common/config"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
-	hertzlogrus "github.com/hertz-contrib/logger/logrus"
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func initLogger() {

@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gen/field"
 	"strings"
-
 	"time"
 
 	"freezonex/openiiot/biz/config/consts"

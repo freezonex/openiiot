@@ -4,16 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"freezonex/openiiot/biz/service/user"
+	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/google/uuid"
 	"strconv"
 	"strings"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
+	"freezonex/openiiot/biz/service/user"
 	"freezonex/openiiot/biz/service/utils/cache"
-	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/google/uuid"
 )
 
 // Authorize composes the URL for OAuth2 authorization.

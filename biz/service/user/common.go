@@ -2,11 +2,11 @@ package user
 
 import (
 	"context"
-	"freezonex/openiiot/biz/service/callback_mgr"
 	"sync"
 	"time"
 
 	"freezonex/openiiot/biz/dal/mysql"
+	"freezonex/openiiot/biz/service/callback_mgr"
 )
 
 func init() {

@@ -2,11 +2,10 @@ package tdengine
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/app"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-
-	"github.com/cloudwego/hertz/pkg/app"
 )
 
 // Token function requests an access token from the TDEngine API.

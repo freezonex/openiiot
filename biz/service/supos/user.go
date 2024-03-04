@@ -5,14 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"strings"
-
 	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	"strings"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/cache"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 func (a *SuposService) GetSuposUser(ctx context.Context, req *freezonex_openiiot_api.GetSuposUserRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetSuposUserResponse, error) {
@@ -43,6 +42,7 @@ func (a *SuposService) GetSuposUser(ctx context.Context, req *freezonex_openiiot
 
 	resp := new(freezonex_openiiot_api.GetSuposUserResponse)
 	data := make([]*freezonex_openiiot_api.SuposUser, 0)
+
 	for _, v := range result.List {
 		data = append(data, &freezonex_openiiot_api.SuposUser{
 			Username:    v.Username,

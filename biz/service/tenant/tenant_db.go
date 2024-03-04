@@ -3,10 +3,11 @@ package tenant
 import (
 	"context"
 	"errors"
+	"gorm.io/gen/field"
+
 	"freezonex/openiiot/biz/config/consts"
 	"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/service/utils/common"
-	"gorm.io/gen/field"
 )
 
 // AddTenantDB will add tenant record to the DB.

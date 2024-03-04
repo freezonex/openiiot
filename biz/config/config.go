@@ -3,14 +3,13 @@ package config
 import (
 	"errors"
 	"fmt"
+	yaml "gopkg.in/yaml.v2"
 	"os"
 	"path"
 	"runtime"
 	"strings"
 
 	"freezonex/openiiot/biz/service/utils/cache"
-
-	yaml "gopkg.in/yaml.v2"
 )
 
 type DBConfig struct {

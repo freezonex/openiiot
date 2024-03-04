@@ -3,10 +3,10 @@
 package main
 
 import (
+	"github.com/cloudwego/hertz/pkg/app/server"
+
 	"freezonex/openiiot/biz/config"
 	"freezonex/openiiot/biz/handler"
-
-	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
 // register register routes based on the IDL 'api.${HTTP Method}' annotation.

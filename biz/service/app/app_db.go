@@ -40,7 +40,7 @@ func (a *AppService) AddAppDB(ctx context.Context, name string, description stri
 	id := common.GetUUID()
 
 	if description == "" {
-		description = "edge"
+		description = "app"
 	}
 	if type1 == "" {
 		type1 = "other"

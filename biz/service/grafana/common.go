@@ -2,13 +2,12 @@ package grafana
 
 import (
 	"encoding/json"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	"sync"
 
 	"freezonex/openiiot/biz/config"
 	"freezonex/openiiot/biz/dal/mysql"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 type GrafanaService struct {

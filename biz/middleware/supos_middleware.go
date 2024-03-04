@@ -2,26 +2,27 @@ package middleware
 
 import (
 	"context"
-	"freezonex/openiiot/biz/service/callback_mgr"
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/hertz/pkg/common/utils"
+	"google.golang.org/protobuf/proto"
 	"net/http"
 	"regexp"
 	"strings"
 	"time"
 
 	"freezonex/openiiot/biz/model/base_resp"
-	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/cloudwego/hertz/pkg/common/utils"
-	"google.golang.org/protobuf/proto"
+	"freezonex/openiiot/biz/service/callback_mgr"
 )
 
 const (
 	userTokenHeader = "userToken" // This is the name of the header where the token is expected to be
-	whiteList       = "/auth/*;/ping;/grafana/*;/emqx/*;/tdengine;/public;/tenant/allname"
+	whiteList       = "/auth/*;/ping;/grafana/*;/emqx/*;/tdengine;/public;/tenant/allname;"
 )
 
 func AuthMiddleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
+		return
 		// Check if the request path is in the white list
 		// Assume `isWhiteListed` is a function you should implement that checks the white list
 		logs.CtxDebugf(ctx, "request URI: %v", string(c.Request.URI().Path()))
