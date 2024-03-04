@@ -4,11 +4,8 @@ import (
 	"context"
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-	"freezonex/openiiot/biz/service/k8s"
 	"freezonex/openiiot/biz/service/utils/common"
 	"github.com/cloudwego/hertz/pkg/app"
-	"strconv"
-
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
@@ -61,13 +58,13 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 
 // UpdateWmsWarehouse will update wms record
 func (a *WmsWarehouseService) UpdateWmsWarehouse(ctx context.Context, req *freezonex_openiiot_api.UpdateWarehouseRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateWarehouseResponse, error) {
-	err := a.UpdateWmsWarehouseDB(ctx, common.StringToInt64(req.Id), req.Name, req.Description)
+	err := a.UpdateWmsWarehouseDB(ctx, common.StringToInt64(req.Id), req.Name, req.WarehouseId, req.Type, req.Manager, req.Department, req.Email, req.ProjectGroup, req.Note)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateWmsWarehouse error=%v", err.Error())
 		return nil, err
 	}
 
-	resp := new(freezonex_openiiot_api.UpdateWmsWarehouseResponse)
+	resp := new(freezonex_openiiot_api.UpdateWarehouseResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil
@@ -85,16 +82,14 @@ func (a *WmsWarehouseService) DeleteWmsWarehouse(ctx context.Context, req *freez
 	// Delete wms
 	//delete all the users and flows?
 	//_, err := a.DeleteWmsWarehouseDB(ctx, common.StringToInt64(req.Id))
-	name, err := a.DeleteWmsWarehouseDB(ctx, common.StringToInt64(req.Id))
 
-	idStr := strconv.FormatInt(common.StringToInt64(req.Id), 10) // 将 id 转换为 string
-	_ = k8s.K8sNamespacePvDelete("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL, idStr)
+	err := a.DeleteWmsWarehouseDB(ctx, common.StringToInt64(req.Id))
 
 	if err != nil {
 		logs.Error(ctx, "event=DeleteWmsWarehouse error=%v", err.Error())
 		return nil, err
 	}
-	resp := new(freezonex_openiiot_api.DeleteWmsWarehouseResponse)
+	resp := new(freezonex_openiiot_api.DeleteWarehouseResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil

@@ -72,7 +72,7 @@ func (a *WmsWarehouseService) GetWmsWarehouseDB(ctx context.Context, id int64, n
 }
 
 // UpdateWmsWarehouseDB will update wms record from the DB.
-func (a *WmsWarehouseService) UpdateWmsWarehouseDB(ctx context.Context, id int64, name string, description string) error {
+func (a *WmsWarehouseService) UpdateWmsWarehouseDB(ctx context.Context, id int64, name string, WarehouseId string, Type string, Manager string, Department string, Email string, ProjectGroup string, Note string) error {
 	table := a.db.DBOpeniiotQuery.WmsWarehouse
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
@@ -83,8 +83,26 @@ func (a *WmsWarehouseService) UpdateWmsWarehouseDB(ctx context.Context, id int64
 	if name != "" {
 		updates[table.Name.ColumnName().String()] = name
 	}
-	if description != "" {
-		updates[table.Description.ColumnName().String()] = description
+	if WarehouseId != "" {
+		updates[table.WarehouseID.ColumnName().String()] = WarehouseId
+	}
+	if Type != "" {
+		updates[table.Type.ColumnName().String()] = Type
+	}
+	if Manager != "" {
+		updates[table.Manager.ColumnName().String()] = Manager
+	}
+	if Department != "" {
+		updates[table.Department.ColumnName().String()] = Department
+	}
+	if Email != "" {
+		updates[table.Email.ColumnName().String()] = Email
+	}
+	if ProjectGroup != "" {
+		updates[table.ProjectGroup.ColumnName().String()] = ProjectGroup
+	}
+	if Note != "" {
+		updates[table.Note.ColumnName().String()] = Note
 	}
 
 	_, err := tx.Updates(updates)
@@ -92,24 +110,16 @@ func (a *WmsWarehouseService) UpdateWmsWarehouseDB(ctx context.Context, id int64
 }
 
 // DeleteWmsWarehouseDB will delete wms record from the DB.
-func (a *WmsWarehouseService) DeleteWmsWarehouseDB(ctx context.Context, id int64) (string, error) {
+func (a *WmsWarehouseService) DeleteWmsWarehouseDB(ctx context.Context, id int64) error {
 
 	table := a.db.DBOpeniiotQuery.WmsWarehouse
 	tx := table.WithContext(ctx)
 
-	ax := table.WithContext(ctx).Select(field.ALL)
-	ax = ax.Where(table.ID.Eq(id))
-	data, err := ax.Find()
-	if err != nil {
-		return "", err
-	}
-	name := data[0].Name
-
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
 	if existRecord == nil {
-		return "", errors.New("wms does not exist")
+		return errors.New("wms does not exist")
 	}
 
-	_, err = tx.Where(table.ID.Eq(id)).Delete()
-	return name, err
+	_, err := tx.Where(table.ID.Eq(id)).Delete()
+	return err
 }
