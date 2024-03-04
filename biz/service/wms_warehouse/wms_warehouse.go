@@ -5,6 +5,7 @@ import (
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
+	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
@@ -34,7 +35,29 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 
 	resp := new(freezonex_openiiot_api.GetWarehouseResponse)
 	data := make([]*freezonex_openiiot_api.Warehouse, 0)
+
 	for _, v := range wmss {
+
+		storagelocationService := storagelocation.DefaultStorageLocationService()
+		storages, err := storagelocationService.GetStorageLocationDB(ctx, common.StringToInt64(v.WarehouseID), "", nil, "")
+		var convertedStorages []*freezonex_openiiot_api.StorageLocation
+		for _, storage := range storages {
+			convertedStorage := &freezonex_openiiot_api.StorageLocation{
+				Id:           common.Int64ToString(storage.ID),
+				WarehouseId:  common.Int64ToString(storage.WarehouseID),
+				Name:         storage.Name,
+				Occupied:     *storage.Occupied,
+				MaterialName: *storage.MaterialName,
+				CreateTime:   common.GetTimeStringFromTime(&storage.CreateTime),
+				UpdateTime:   common.GetTimeStringFromTime(&storage.UpdateTime),
+			}
+			convertedStorages = append(convertedStorages, convertedStorage)
+		}
+
+		if err != nil {
+			return nil, err
+		}
+
 		data = append(data, &freezonex_openiiot_api.Warehouse{
 			Id:               common.Int64ToString(v.ID), // Converts int64 ID to string using a custom common package function
 			Name:             v.Name,
@@ -45,10 +68,11 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 			Email:            *v.Email,
 			ProjectGroup:     *v.ProjectGroup,
 			Note:             *v.Note,
-			StorageLocations: nil,
+			StorageLocations: convertedStorages,
 			CreateTime:       common.GetTimeStringFromTime(&v.CreateTime), // Converts time.Time to string using a custom common package function
 			UpdateTime:       common.GetTimeStringFromTime(&v.UpdateTime), // Converts time.Time to string using a custom common package function
 		})
+
 	}
 	resp.Data = data
 	resp.BaseResp = middleware.SuccessResponseOK
