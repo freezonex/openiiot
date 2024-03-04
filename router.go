@@ -19,6 +19,7 @@ import (
 	"freezonex/openiiot/biz/service/tdengine"
 	"freezonex/openiiot/biz/service/tenant"
 	"freezonex/openiiot/biz/service/user"
+	"freezonex/openiiot/biz/service/wms_material"
 	"freezonex/openiiot/biz/service/wms_warehouse"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -368,33 +369,62 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.TDEngineQueryRequest{}))
 	}
 
-	wmsGroup := r.Group("/wmswarehouse", middleware.Access())
+	wmsWarehouseGroup := r.Group("/wmswarehouse", middleware.Access())
 	{
 		wmsHandler := handler.NewWmsWarehouseHandler(wms_warehouse.NewWmsWarehouseService(db))
-		wmsGroup.POST(
+		wmsWarehouseGroup.POST(
 			"/add",
 			middleware.Response(
-				"/tenant/add",
+				"/wmswarehouse/add",
 				wmsHandler.AddWmsWarehouse,
-				&iiotpb.TDEngineTestConnectionRequest{}))
-		wmsGroup.POST(
+				&iiotpb.AddWarehouseRequest{}))
+		wmsWarehouseGroup.POST(
 			"/update",
 			middleware.Response(
-				"/tenant/update",
+				"/wmswarehouse/update",
 				wmsHandler.UpdateWmsWarehouse,
-				&iiotpb.TDEngineExecRequest{}))
-		wmsGroup.POST(
-			"/delete",
+				&iiotpb.UpdateWarehouseRequest{}))
+		wmsWarehouseGroup.POST(
+			"/wmswarehouse",
 			middleware.Response(
-				"/tenant/delete",
+				"/wmswarehouse/delete",
 				wmsHandler.DeleteWmsWarehouse,
-				&iiotpb.TDEngineBatchExecRequest{}))
-		wmsGroup.POST(
+				&iiotpb.DeleteWarehouseRequest{}))
+		wmsWarehouseGroup.POST(
 			"/get",
 			middleware.Response(
-				"/tenant/get",
+				"/wmswarehouse/get",
 				wmsHandler.GetWmsWarehouse,
-				&iiotpb.TDEngineQueryRequest{}))
+				&iiotpb.GetWarehouseRequest{}))
+	}
+
+	wmsMaterialGroup := r.Group("/wmsmaterial", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsMaterialHandler(wms_material.NewWmsMaterialService(db))
+		wmsMaterialGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wmsmaterial/add",
+				wmsHandler.AddWmsMaterial,
+				&iiotpb.AddMaterialRequest{}))
+		wmsMaterialGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wmsmaterial/update",
+				wmsHandler.UpdateWmsMaterial,
+				&iiotpb.UpdateMaterialRequest{}))
+		wmsMaterialGroup.POST(
+			"/wmsmaterial",
+			middleware.Response(
+				"/wmsmaterial/delete",
+				wmsHandler.DeleteWmsMaterial,
+				&iiotpb.DeleteMaterialRequest{}))
+		wmsMaterialGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsmaterial/get",
+				wmsHandler.GetWmsMaterial,
+				&iiotpb.GetMaterialRequest{}))
 	}
 
 }
