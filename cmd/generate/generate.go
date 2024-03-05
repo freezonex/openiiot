@@ -75,6 +75,7 @@ func generateDbOpeniiotModels() {
 		g.GenerateModel("wms_inbound"),
 		g.GenerateModel("wms_inbound_record"),
 		g.GenerateModel("wms_outbound"),
+		g.GenerateModel("wms_outbound_record"),
 		g.GenerateModel("wms_stocktaking"),
 	)
 	g.Execute()

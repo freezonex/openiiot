@@ -13,6 +13,7 @@ const TableNameWmsMaterial = "wms_material"
 // WmsMaterial mapped from table <wms_material>
 type WmsMaterial struct {
 	ID                int64     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	Rfid              string    `gorm:"column:rfid;not null" json:"rfid"`
 	ProductCode       string    `gorm:"column:product_code;not null" json:"product_code"`
 	Name              string    `gorm:"column:name;not null" json:"name"`
 	StorageLocationID *int64    `gorm:"column:storage_location_id" json:"storage_location_id"`

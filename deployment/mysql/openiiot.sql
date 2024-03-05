@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS global_config (
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- WMS related table
 CREATE TABLE IF NOT EXISTS wms_warehouse (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
@@ -149,9 +150,10 @@ CREATE TABLE IF NOT EXISTS wms_storage_location (
 
 CREATE TABLE IF NOT EXISTS wms_material (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    rfid VARCHAR(100) NOT NULL,
     product_code VARCHAR(100) NOT NULL,
     name VARCHAR(100) NOT NULL,
-    storage_location_id BIGINT UNSIGNED,
+    storage_location_id BIGINT UNSIGNED default 0,      -- 0: not in repo yet
     product_type VARCHAR (100),
     unit VARCHAR(100),
     note VARCHAR(200),
@@ -161,10 +163,11 @@ CREATE TABLE IF NOT EXISTS wms_material (
 
 CREATE TABLE IF NOT EXISTS wms_inbound (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    ref_id VARCHAR(100) NOT NULL UNIQUE,
-    type VARCHAR (100) NOT NULL,
+    ref_id VARCHAR(100) NOT NULL UNIQUE,                -- yyyymmdd0000
+    type VARCHAR (100) NOT NULL,                        -- inbound type
     storage_location_id BIGINT UNSIGNED NOT NULL,
     material_name VARCHAR(100) NOT NULL,
+    source VARCHAR(100) NOT NULL,                       -- PDA or Manual
     operator VARCHAR(100) NOT NULL,
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -173,7 +176,6 @@ CREATE TABLE IF NOT EXISTS wms_inbound (
 CREATE TABLE IF NOT EXISTS wms_inbound_record (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     inbound_id BIGINT NOT NULL,
-    rfid VARCHAR(100),
     material_id BIGINT NOT NULL,
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -181,11 +183,19 @@ CREATE TABLE IF NOT EXISTS wms_inbound_record (
 
 CREATE TABLE IF NOT EXISTS wms_outbound (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    ref_id VARCHAR(100) NOT NULL UNIQUE,
+    ref_id VARCHAR(100) NOT NULL UNIQUE,                    -- yyyymmdd0000
     type VARCHAR (100) NOT NULL,
-    storage_location BIGINT UNSIGNED NOT NULL,
+    storage_location_ids VARCHAR(3000) NOT NULL,     -- storage location id split by comma
     material_name VARCHAR(100) NOT NULL,
     operator VARCHAR(100) NOT NULL,
+    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS wms_outbound_record(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    outbound_id BIGINT NOT NULL,
+    material_id BIGINT NOT NULL, 
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -194,7 +204,7 @@ CREATE TABLE IF NOT EXISTS wms_stocktaking (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     ref_id VARCHAR(100) NOT NULL UNIQUE,
     type VARCHAR (100) NOT NULL,
-    storage_location BIGINT UNSIGNED NOT NULL,
+    storage_location_ids VARCHAR(3000) NOT NULL,    -- storage location id split by comma
     operator VARCHAR(100) NOT NULL,
     result VARCHAR(2000) NOT NULL,
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

@@ -32,6 +32,7 @@ func newWmsInbound(db *gorm.DB, opts ...gen.DOOption) wmsInbound {
 	_wmsInbound.Type = field.NewString(tableName, "type")
 	_wmsInbound.StorageLocationID = field.NewInt64(tableName, "storage_location_id")
 	_wmsInbound.MaterialName = field.NewString(tableName, "material_name")
+	_wmsInbound.Source = field.NewString(tableName, "source")
 	_wmsInbound.Operator = field.NewString(tableName, "operator")
 	_wmsInbound.UpdateTime = field.NewTime(tableName, "update_time")
 	_wmsInbound.CreateTime = field.NewTime(tableName, "create_time")
@@ -50,6 +51,7 @@ type wmsInbound struct {
 	Type              field.String
 	StorageLocationID field.Int64
 	MaterialName      field.String
+	Source            field.String
 	Operator          field.String
 	UpdateTime        field.Time
 	CreateTime        field.Time
@@ -74,6 +76,7 @@ func (w *wmsInbound) updateTableName(table string) *wmsInbound {
 	w.Type = field.NewString(table, "type")
 	w.StorageLocationID = field.NewInt64(table, "storage_location_id")
 	w.MaterialName = field.NewString(table, "material_name")
+	w.Source = field.NewString(table, "source")
 	w.Operator = field.NewString(table, "operator")
 	w.UpdateTime = field.NewTime(table, "update_time")
 	w.CreateTime = field.NewTime(table, "create_time")
@@ -103,12 +106,13 @@ func (w *wmsInbound) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (w *wmsInbound) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 8)
+	w.fieldMap = make(map[string]field.Expr, 9)
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["ref_id"] = w.RefID
 	w.fieldMap["type"] = w.Type
 	w.fieldMap["storage_location_id"] = w.StorageLocationID
 	w.fieldMap["material_name"] = w.MaterialName
+	w.fieldMap["source"] = w.Source
 	w.fieldMap["operator"] = w.Operator
 	w.fieldMap["update_time"] = w.UpdateTime
 	w.fieldMap["create_time"] = w.CreateTime
