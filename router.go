@@ -20,6 +20,7 @@ import (
 	"freezonex/openiiot/biz/service/tenant"
 	"freezonex/openiiot/biz/service/user"
 	"freezonex/openiiot/biz/service/wms_material"
+	"freezonex/openiiot/biz/service/wms_outbound"
 	"freezonex/openiiot/biz/service/wms_stocktaking"
 	"freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_warehouse"
@@ -455,6 +456,93 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/wmsstoragelocation/get",
 				wmsHandler.GetWmsStorageLocation,
 				&iiotpb.GetStorageLocationRequest{}))
+	}
+
+	wmsInboundGroup := r.Group("/wmsinbound", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsInboundHandler(wms_inbound.NewWmsInboundService(db))
+		wmsInboundGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wmsinbound/add",
+				wmsHandler.AddWmsInbound,
+				&iiotpb.AddInboundRequest{}))
+		wmsInboundGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wmsinbound/update",
+				wmsHandler.UpdateWmsInbound,
+				&iiotpb.UpdateInboundRequest{}))
+		wmsInboundGroup.POST(
+			"/wmsinbound",
+			middleware.Response(
+				"/wmsinbound/delete",
+				wmsHandler.DeleteWmsInbound,
+				&iiotpb.DeleteInboundRequest{}))
+		wmsInboundGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsinbound/get",
+				wmsHandler.GetWmsInbound,
+				&iiotpb.GetInboundRequest{}))
+	}
+
+	wmsOutboundGroup := r.Group("/wmsoutbound", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsOutboundHandler(wms_outbound.NewWmsOutboundService(db))
+		wmsOutboundGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wmsoutbound/add",
+				wmsHandler.AddWmsOutbound,
+				&iiotpb.AddOutboundRequest{}))
+		wmsOutboundGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wmsoutbound/update",
+				wmsHandler.UpdateWmsOutbound,
+				&iiotpb.UpdateOutboundRequest{}))
+		wmsOutboundGroup.POST(
+			"/wmsoutbound",
+			middleware.Response(
+				"/wmsoutbound/delete",
+				wmsHandler.DeleteWmsOutbound,
+				&iiotpb.DeleteOutboundRequest{}))
+		wmsOutboundGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsoutbound/get",
+				wmsHandler.GetWmsOutbound,
+				&iiotpb.GetOutboundRequest{}))
+	}
+
+	wmsInboundRecordGroup := r.Group("/wmsinboundrecord", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsInboundRecordHandler(wms_inbound_record.NewWmsInboundRecordService(db))
+		wmsInboundRecordGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wmsinboundrecord/add",
+				wmsHandler.AddWmsInboundRecord,
+				&iiotpb.AddInboundRecordRequest{}))
+		wmsInboundRecordGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wmsinboundrecord/update",
+				wmsHandler.UpdateWmsInboundRecord,
+				&iiotpb.UpdateInboundRecordRequest{}))
+		wmsInboundRecordGroup.POST(
+			"/wmsinboundrecord",
+			middleware.Response(
+				"/wmsinboundrecord/delete",
+				wmsHandler.DeleteWmsInboundRecord,
+				&iiotpb.DeleteInboundRecordRequest{}))
+		wmsInboundRecordGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsinboundrecord/get",
+				wmsHandler.GetWmsInboundRecord,
+				&iiotpb.GetInboundRecordRequest{}))
 	}
 
 	wms_StocktakingGroup := r.Group("/wmsstocktaking", middleware.Access())
