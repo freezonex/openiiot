@@ -1,4 +1,4 @@
-package storagelocation
+package wms_storage_location
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
-func (a *StorageLocationService) AddStorageLocation(ctx context.Context, req *freezonex_openiiot_api.AddStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddStorageLocationResponse, error) {
+func (a *WmsStorageLocationService) AddStorageLocation(ctx context.Context, req *freezonex_openiiot_api.AddStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddStorageLocationResponse, error) {
 	storagelocationID, err := a.AddStorageLocationDB(ctx, common.StringToInt64(req.WarehouseId), req.Name, req.Occupied, req.MaterialName)
 	if err != nil {
 		logs.Error(ctx, "event=AddStorageLocation error=%v", err.Error())
@@ -28,7 +28,7 @@ func (a *StorageLocationService) AddStorageLocation(ctx context.Context, req *fr
 }
 
 // GetStorageLocation will get storagelocation record in condition
-func (a *StorageLocationService) GetStorageLocation(ctx context.Context, req *freezonex_openiiot_api.GetStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetStorageLocationResponse, error) {
+func (a *WmsStorageLocationService) GetStorageLocation(ctx context.Context, req *freezonex_openiiot_api.GetStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetStorageLocationResponse, error) {
 	storagelocations, err := a.GetStorageLocationDB(ctx, common.StringToInt64(req.WarehouseId), req.Name, &req.Occupied, req.MaterialName)
 
 	if err != nil {
@@ -57,7 +57,7 @@ func (a *StorageLocationService) GetStorageLocation(ctx context.Context, req *fr
 }
 
 // UpdateStorageLocation will update storagelocation record
-func (a *StorageLocationService) UpdateStorageLocation(ctx context.Context, req *freezonex_openiiot_api.UpdateStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateStorageLocationResponse, error) {
+func (a *WmsStorageLocationService) UpdateStorageLocation(ctx context.Context, req *freezonex_openiiot_api.UpdateStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateStorageLocationResponse, error) {
 	err := a.UpdateStorageLocationDB(ctx, common.StringToInt64(req.Id), common.StringToInt64(req.WarehouseId), req.Name, &req.Occupied, req.MaterialName)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateStorageLocation error=%v", err.Error())
@@ -71,7 +71,7 @@ func (a *StorageLocationService) UpdateStorageLocation(ctx context.Context, req 
 }
 
 // DeleteStorageLocation will delete storagelocation record
-func (a *StorageLocationService) DeleteStorageLocation(ctx context.Context, req *freezonex_openiiot_api.DeleteStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteStorageLocationResponse, error) {
+func (a *WmsStorageLocationService) DeleteStorageLocation(ctx context.Context, req *freezonex_openiiot_api.DeleteStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteStorageLocationResponse, error) {
 	//Delete storagelocation also should delete storagelocation , edge pool, core pool, application pool, flow
 	/*err := a.DeleteStorageLocationStorageLocationDB(ctx, req.Id)
 	if err != nil {

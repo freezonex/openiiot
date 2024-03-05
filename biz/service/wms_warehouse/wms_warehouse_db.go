@@ -3,7 +3,6 @@ package wms_warehouse
 import (
 	"context"
 	"errors"
-	"freezonex/openiiot/biz/config/consts"
 	"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/service/utils/common"
 	"gorm.io/gen/field"
@@ -62,7 +61,7 @@ func (a *WmsWarehouseService) GetWmsWarehouseDB(ctx context.Context, id int64, n
 	if ProjectGroup != "" {
 		tx = tx.Where(table.ProjectGroup.Eq(ProjectGroup))
 	}
-	tx.Limit(consts.TENANT_RETURN_LIMIT).Order(table.Name)
+	//tx.Limit(consts.TENANT_RETURN_LIMIT).Order(table.Name)
 	data, err := tx.Find()
 	if err != nil {
 		return nil, err

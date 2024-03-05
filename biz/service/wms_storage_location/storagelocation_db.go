@@ -1,4 +1,4 @@
-package storagelocation
+package wms_storage_location
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 )
 
 // AddStorageLocationDB will add StorageLocation record to the DB.
-func (a *StorageLocationService) AddStorageLocationDB(ctx context.Context, warehouseid int64, name string, occupied bool, materialname string) (int64, error) {
+func (a *WmsStorageLocationService) AddStorageLocationDB(ctx context.Context, warehouseid int64, name string, occupied bool, materialname string) (int64, error) {
 
 	if name == "" {
 		return -1, errors.New("name can not be empty")
@@ -45,7 +45,8 @@ func (a *StorageLocationService) AddStorageLocationDB(ctx context.Context, wareh
 }
 
 // GetStorageLocationDB will get storagelocation record from the DB in condition
-func (a *StorageLocationService) GetStorageLocationDB(ctx context.Context, warehouseid int64, name string, occupied *bool, materialname string) ([]*model_openiiot.WmsStorageLocation, error) {
+func (a *WmsStorageLocationService) GetStorageLocationDB(ctx context.Context, warehouseid int64, name string, occupied *bool, materialname string) ([]*model_openiiot.WmsStorageLocation, error) {
+
 	table := a.db.DBOpeniiotQuery.WmsStorageLocation
 	tx := table.WithContext(ctx).Select(field.ALL)
 	if name != "" {
@@ -72,7 +73,7 @@ func (a *StorageLocationService) GetStorageLocationDB(ctx context.Context, wareh
 }
 
 // UpdateStorageLocationDB will update storagelocation record from the DB.
-func (a *StorageLocationService) UpdateStorageLocationDB(ctx context.Context, id int64, warehouseid int64, name string, occupied *bool, materialname string) error {
+func (a *WmsStorageLocationService) UpdateStorageLocationDB(ctx context.Context, id int64, warehouseid int64, name string, occupied *bool, materialname string) error {
 	table := a.db.DBOpeniiotQuery.WmsStorageLocation
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
@@ -101,7 +102,7 @@ func (a *StorageLocationService) UpdateStorageLocationDB(ctx context.Context, id
 }
 
 // DeleteStorageLocationDB will delete storagelocation record from the DB.
-func (a *StorageLocationService) DeleteStorageLocationDB(ctx context.Context, id int64) error {
+func (a *WmsStorageLocationService) DeleteStorageLocationDB(ctx context.Context, id int64) error {
 	table := a.db.DBOpeniiotQuery.WmsStorageLocation
 	tx := table.WithContext(ctx)
 
