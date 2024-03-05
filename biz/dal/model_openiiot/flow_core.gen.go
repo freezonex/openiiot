@@ -13,7 +13,6 @@ type FlowCore struct {
 	CoreID  int64   `gorm:"column:core_id;not null" json:"core_id"`
 	Script  *string `gorm:"column:script" json:"script"`
 	Script2 *string `gorm:"column:script2" json:"script2"`
-	Script3 *string `gorm:"column:script3" json:"script3"`
 }
 
 // TableName FlowCore's table name

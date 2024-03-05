@@ -21,7 +21,7 @@ type User struct {
 	AuthID          *string    `gorm:"column:auth_id" json:"auth_id"`
 	Source          *string    `gorm:"column:source" json:"source"`
 	Token           *string    `gorm:"column:token" json:"token"`
-	TokenUpdatetime *time.Time `gorm:"column:token_updatetime" json:"token_updatetime"`
+	TokenUpdatetime *time.Time `gorm:"column:token_updatetime;default:CURRENT_TIMESTAMP" json:"token_updatetime"`
 	UpdateTime      time.Time  `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`
 	CreateTime      time.Time  `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
 }
