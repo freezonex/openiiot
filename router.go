@@ -20,7 +20,10 @@ import (
 	"freezonex/openiiot/biz/service/tenant"
 	"freezonex/openiiot/biz/service/user"
 	"freezonex/openiiot/biz/service/wms_inbound"
+	"freezonex/openiiot/biz/service/wms_inbound_record"
 	"freezonex/openiiot/biz/service/wms_material"
+	"freezonex/openiiot/biz/service/wms_outbound"
+	"freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_warehouse"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -484,6 +487,35 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/wmsinbound/get",
 				wmsHandler.GetWmsInbound,
 				&iiotpb.GetInboundRequest{}))
+	}
+
+	wmsOutboundGroup := r.Group("/wmsoutbound", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsOutboundHandler(wms_outbound.NewWmsOutboundService(db))
+		wmsOutboundGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wmsoutbound/add",
+				wmsHandler.AddWmsOutbound,
+				&iiotpb.AddOutboundRequest{}))
+		wmsOutboundGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wmsoutbound/update",
+				wmsHandler.UpdateWmsOutbound,
+				&iiotpb.UpdateOutboundRequest{}))
+		wmsOutboundGroup.POST(
+			"/wmsoutbound",
+			middleware.Response(
+				"/wmsoutbound/delete",
+				wmsHandler.DeleteWmsOutbound,
+				&iiotpb.DeleteOutboundRequest{}))
+		wmsOutboundGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsoutbound/get",
+				wmsHandler.GetWmsOutbound,
+				&iiotpb.GetOutboundRequest{}))
 	}
 
 	wmsInboundRecordGroup := r.Group("/wmsinboundrecord", middleware.Access())
