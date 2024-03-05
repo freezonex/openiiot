@@ -20,6 +20,7 @@ import (
 	"freezonex/openiiot/biz/service/tenant"
 	"freezonex/openiiot/biz/service/user"
 	"freezonex/openiiot/biz/service/wms_material"
+	"freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_warehouse"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -427,4 +428,33 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.GetMaterialRequest{}))
 	}
 
+	wmsStorageLocationGroup := r.Group("/wmsstoragelocation", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsStorageLocationHandler(wms_storage_location.NewStorageLocationService(db))
+		wmsStorageLocationGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wmsstoragelocation/add",
+				wmsHandler.AddWmsStorageLocationhouse,
+				&iiotpb.AddStorageLocationRequest{}))
+		wmsStorageLocationGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wmsstoragelocation/update",
+				wmsHandler.UpdateWmsStorageLocation,
+				&iiotpb.UpdateStorageLocationRequest{}))
+		wmsStorageLocationGroup.POST(
+			"/wmsmaterial",
+			middleware.Response(
+				"/wmsstoragelocation/delete",
+				wmsHandler.DeleteWmsStorageLocation,
+				&iiotpb.DeleteStorageLocationRequest{}))
+		wmsStorageLocationGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsstoragelocation/get",
+				wmsHandler.GetWmsStorageLocationhouse,
+				&iiotpb.GetStorageLocationRequest{}))
+
+	}
 }

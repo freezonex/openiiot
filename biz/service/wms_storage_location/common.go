@@ -1,26 +1,26 @@
-package storagelocation
+package wms_storage_location
 
 import (
 	"freezonex/openiiot/biz/dal/mysql"
 	"sync"
 )
 
-type StorageLocationService struct {
+type WmsStorageLocationService struct {
 	db *mysql.MySQL
 }
 
 var (
-	service *StorageLocationService
+	service *WmsStorageLocationService
 	once    sync.Once
 )
 
-func DefaultStorageLocationService() *StorageLocationService {
+func DefaultStorageLocationService() *WmsStorageLocationService {
 	return service
 }
 
-func NewStorageLocationService(db *mysql.MySQL) *StorageLocationService {
+func NewStorageLocationService(db *mysql.MySQL) *WmsStorageLocationService {
 	once.Do(func() {
-		service = &StorageLocationService{
+		service = &WmsStorageLocationService{
 			db: db,
 		}
 	})
