@@ -19,6 +19,7 @@ import (
 	"freezonex/openiiot/biz/service/tdengine"
 	"freezonex/openiiot/biz/service/tenant"
 	"freezonex/openiiot/biz/service/user"
+	"freezonex/openiiot/biz/service/wms_inbound"
 	"freezonex/openiiot/biz/service/wms_material"
 	"freezonex/openiiot/biz/service/wms_warehouse"
 
@@ -425,6 +426,35 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/wmsmaterial/get",
 				wmsHandler.GetWmsMaterial,
 				&iiotpb.GetMaterialRequest{}))
+	}
+
+	wmsInboundGroup := r.Group("/wmsinbound", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsInboundHandler(wms_inbound.NewWmsInboundService(db))
+		wmsInboundGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wmsinbound/add",
+				wmsHandler.AddWmsInbound,
+				&iiotpb.AddInboundRequest{}))
+		wmsInboundGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wmsinbound/update",
+				wmsHandler.UpdateWmsInbound,
+				&iiotpb.UpdateInboundRequest{}))
+		wmsInboundGroup.POST(
+			"/wmsinbound",
+			middleware.Response(
+				"/wmsinbound/delete",
+				wmsHandler.DeleteWmsInbound,
+				&iiotpb.DeleteInboundRequest{}))
+		wmsInboundGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsinbound/get",
+				wmsHandler.GetWmsInbound,
+				&iiotpb.GetInboundRequest{}))
 	}
 
 }
