@@ -29,7 +29,6 @@ func newWmsInboundRecord(db *gorm.DB, opts ...gen.DOOption) wmsInboundRecord {
 	_wmsInboundRecord.ALL = field.NewAsterisk(tableName)
 	_wmsInboundRecord.ID = field.NewInt64(tableName, "id")
 	_wmsInboundRecord.InboundID = field.NewInt64(tableName, "inbound_id")
-	_wmsInboundRecord.Rfid = field.NewString(tableName, "rfid")
 	_wmsInboundRecord.MaterialID = field.NewInt64(tableName, "material_id")
 	_wmsInboundRecord.UpdateTime = field.NewTime(tableName, "update_time")
 	_wmsInboundRecord.CreateTime = field.NewTime(tableName, "create_time")
@@ -45,7 +44,6 @@ type wmsInboundRecord struct {
 	ALL        field.Asterisk
 	ID         field.Int64
 	InboundID  field.Int64
-	Rfid       field.String
 	MaterialID field.Int64
 	UpdateTime field.Time
 	CreateTime field.Time
@@ -67,7 +65,6 @@ func (w *wmsInboundRecord) updateTableName(table string) *wmsInboundRecord {
 	w.ALL = field.NewAsterisk(table)
 	w.ID = field.NewInt64(table, "id")
 	w.InboundID = field.NewInt64(table, "inbound_id")
-	w.Rfid = field.NewString(table, "rfid")
 	w.MaterialID = field.NewInt64(table, "material_id")
 	w.UpdateTime = field.NewTime(table, "update_time")
 	w.CreateTime = field.NewTime(table, "create_time")
@@ -99,10 +96,9 @@ func (w *wmsInboundRecord) GetFieldByName(fieldName string) (field.OrderExpr, bo
 }
 
 func (w *wmsInboundRecord) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 6)
+	w.fieldMap = make(map[string]field.Expr, 5)
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["inbound_id"] = w.InboundID
-	w.fieldMap["rfid"] = w.Rfid
 	w.fieldMap["material_id"] = w.MaterialID
 	w.fieldMap["update_time"] = w.UpdateTime
 	w.fieldMap["create_time"] = w.CreateTime

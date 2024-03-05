@@ -32,6 +32,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		WmsInboundRecord:   newWmsInboundRecord(db, opts...),
 		WmsMaterial:        newWmsMaterial(db, opts...),
 		WmsOutbound:        newWmsOutbound(db, opts...),
+		WmsOutboundRecord:  newWmsOutboundRecord(db, opts...),
 		WmsStocktaking:     newWmsStocktaking(db, opts...),
 		WmsStorageLocation: newWmsStorageLocation(db, opts...),
 		WmsWarehouse:       newWmsWarehouse(db, opts...),
@@ -55,6 +56,7 @@ type Query struct {
 	WmsInboundRecord   wmsInboundRecord
 	WmsMaterial        wmsMaterial
 	WmsOutbound        wmsOutbound
+	WmsOutboundRecord  wmsOutboundRecord
 	WmsStocktaking     wmsStocktaking
 	WmsStorageLocation wmsStorageLocation
 	WmsWarehouse       wmsWarehouse
@@ -79,6 +81,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		WmsInboundRecord:   q.WmsInboundRecord.clone(db),
 		WmsMaterial:        q.WmsMaterial.clone(db),
 		WmsOutbound:        q.WmsOutbound.clone(db),
+		WmsOutboundRecord:  q.WmsOutboundRecord.clone(db),
 		WmsStocktaking:     q.WmsStocktaking.clone(db),
 		WmsStorageLocation: q.WmsStorageLocation.clone(db),
 		WmsWarehouse:       q.WmsWarehouse.clone(db),
@@ -110,6 +113,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		WmsInboundRecord:   q.WmsInboundRecord.replaceDB(db),
 		WmsMaterial:        q.WmsMaterial.replaceDB(db),
 		WmsOutbound:        q.WmsOutbound.replaceDB(db),
+		WmsOutboundRecord:  q.WmsOutboundRecord.replaceDB(db),
 		WmsStocktaking:     q.WmsStocktaking.replaceDB(db),
 		WmsStorageLocation: q.WmsStorageLocation.replaceDB(db),
 		WmsWarehouse:       q.WmsWarehouse.replaceDB(db),
@@ -131,6 +135,7 @@ type queryCtx struct {
 	WmsInboundRecord   *wmsInboundRecordDo
 	WmsMaterial        *wmsMaterialDo
 	WmsOutbound        *wmsOutboundDo
+	WmsOutboundRecord  *wmsOutboundRecordDo
 	WmsStocktaking     *wmsStocktakingDo
 	WmsStorageLocation *wmsStorageLocationDo
 	WmsWarehouse       *wmsWarehouseDo
@@ -152,6 +157,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		WmsInboundRecord:   q.WmsInboundRecord.WithContext(ctx),
 		WmsMaterial:        q.WmsMaterial.WithContext(ctx),
 		WmsOutbound:        q.WmsOutbound.WithContext(ctx),
+		WmsOutboundRecord:  q.WmsOutboundRecord.WithContext(ctx),
 		WmsStocktaking:     q.WmsStocktaking.WithContext(ctx),
 		WmsStorageLocation: q.WmsStorageLocation.WithContext(ctx),
 		WmsWarehouse:       q.WmsWarehouse.WithContext(ctx),

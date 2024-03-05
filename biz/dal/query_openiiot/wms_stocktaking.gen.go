@@ -30,7 +30,7 @@ func newWmsStocktaking(db *gorm.DB, opts ...gen.DOOption) wmsStocktaking {
 	_wmsStocktaking.ID = field.NewInt64(tableName, "id")
 	_wmsStocktaking.RefID = field.NewString(tableName, "ref_id")
 	_wmsStocktaking.Type = field.NewString(tableName, "type")
-	_wmsStocktaking.StorageLocation = field.NewInt64(tableName, "storage_location")
+	_wmsStocktaking.StorageLocationIds = field.NewString(tableName, "storage_location_ids")
 	_wmsStocktaking.Operator = field.NewString(tableName, "operator")
 	_wmsStocktaking.Result = field.NewString(tableName, "result")
 	_wmsStocktaking.UpdateTime = field.NewTime(tableName, "update_time")
@@ -44,15 +44,15 @@ func newWmsStocktaking(db *gorm.DB, opts ...gen.DOOption) wmsStocktaking {
 type wmsStocktaking struct {
 	wmsStocktakingDo wmsStocktakingDo
 
-	ALL             field.Asterisk
-	ID              field.Int64
-	RefID           field.String
-	Type            field.String
-	StorageLocation field.Int64
-	Operator        field.String
-	Result          field.String
-	UpdateTime      field.Time
-	CreateTime      field.Time
+	ALL                field.Asterisk
+	ID                 field.Int64
+	RefID              field.String
+	Type               field.String
+	StorageLocationIds field.String
+	Operator           field.String
+	Result             field.String
+	UpdateTime         field.Time
+	CreateTime         field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -72,7 +72,7 @@ func (w *wmsStocktaking) updateTableName(table string) *wmsStocktaking {
 	w.ID = field.NewInt64(table, "id")
 	w.RefID = field.NewString(table, "ref_id")
 	w.Type = field.NewString(table, "type")
-	w.StorageLocation = field.NewInt64(table, "storage_location")
+	w.StorageLocationIds = field.NewString(table, "storage_location_ids")
 	w.Operator = field.NewString(table, "operator")
 	w.Result = field.NewString(table, "result")
 	w.UpdateTime = field.NewTime(table, "update_time")
@@ -109,7 +109,7 @@ func (w *wmsStocktaking) fillFieldMap() {
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["ref_id"] = w.RefID
 	w.fieldMap["type"] = w.Type
-	w.fieldMap["storage_location"] = w.StorageLocation
+	w.fieldMap["storage_location_ids"] = w.StorageLocationIds
 	w.fieldMap["operator"] = w.Operator
 	w.fieldMap["result"] = w.Result
 	w.fieldMap["update_time"] = w.UpdateTime
