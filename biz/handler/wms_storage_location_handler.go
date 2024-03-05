@@ -19,7 +19,7 @@ func NewWmsStorageLocationHandler(s *wms_storage_location.WmsStorageLocationServ
 	return &WmsStorageLocationHandler{wmsStorageLocationService: s}
 }
 
-func (a *WmsStorageLocationHandler) AddWmsStorageLocationhouse(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+func (a *WmsStorageLocationHandler) AddWmsStorageLocation(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
 	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.AddStorageLocationRequest)
 	resp, err := a.wmsStorageLocationService.AddStorageLocation(ctx, req, c)
 	if err != nil {
@@ -29,7 +29,7 @@ func (a *WmsStorageLocationHandler) AddWmsStorageLocationhouse(ctx context.Conte
 	return resp
 }
 
-func (a *WmsStorageLocationHandler) GetWmsStorageLocationhouse(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+func (a *WmsStorageLocationHandler) GetWmsStorageLocation(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
 	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GetStorageLocationRequest)
 	resp, err := a.wmsStorageLocationService.GetStorageLocation(ctx, req, c)
 	if err != nil {
