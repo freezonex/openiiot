@@ -20,6 +20,7 @@ import (
 	"freezonex/openiiot/biz/service/tenant"
 	"freezonex/openiiot/biz/service/user"
 	"freezonex/openiiot/biz/service/wms_material"
+	"freezonex/openiiot/biz/service/wms_stocktaking"
 	"freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_warehouse"
 
@@ -456,4 +457,32 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.GetStorageLocationRequest{}))
 	}
 
+	wms_StocktakingGroup := r.Group("/wmsstocktaking", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsStocktakingHandler(wms_stocktaking.NewStocktakingService(db))
+		wms_StocktakingGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wmsstocktaking/add",
+				wmsHandler.AddWmsStocktaking,
+				&iiotpb.AddStocktakingRequest{}))
+		wms_StocktakingGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wmsstocktaking/update",
+				wmsHandler.UpdateWmsStocktaking,
+				&iiotpb.UpdateStocktakingRequest{}))
+		wms_StocktakingGroup.POST(
+			"/wmsstocktaking",
+			middleware.Response(
+				"/wmsstocktaking/delete",
+				wmsHandler.DeleteWmsStocktaking,
+				&iiotpb.DeleteStocktakingRequest{}))
+		wms_StocktakingGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsstocktaking/get",
+				wmsHandler.GetWmsStocktaking,
+				&iiotpb.GetStocktakingRequest{}))
+	}
 }
