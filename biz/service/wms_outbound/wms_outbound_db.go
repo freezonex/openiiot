@@ -5,27 +5,30 @@ import (
 	"errors"
 	"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/service/utils/common"
-	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
+	"freezonex/openiiot/biz/service/wms_material"
 	"gorm.io/gen/field"
+	"strings"
 )
 
 // AddWmsOutboundDB will add wms record to the DB.
-func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, RefID string, Type string, StorageLocation string, MaterialName string, Operator string) (int64, error) {
+func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, StorageLocation []string, MaterialName string) (int64, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsOutbound
 	tx := table.WithContext(ctx)
 	id := common.GetUUID()
 
-	storageLocationService := storagelocation.DefaultStorageLocationService()
-	storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, StorageLocation, nil, "")
+	storageLocationService := wms_material.DefaultWmsMaterialService()
+	storageLocationData, _ := storageLocationService.GetWmsMaterialDB(ctx, 0, "", "", "", "", common.StringToInt64(StorageLocation[0]))
+
+	joinedStorageLocations := strings.Join(StorageLocation, ",") // 使用逗号或其他分隔符
 
 	var newRecord = &model_openiiot.WmsOutbound{
-		ID:              id,
-		RefID:           RefID,
-		Type:            Type,
-		StorageLocation: storageLocationData[0].ID,
-		MaterialName:    MaterialName,
-		Operator:        Operator,
+		ID:                 id,
+		RefID:              storageLocationData[0].Rfid,
+		Type:               Type,
+		StorageLocationIds: joinedStorageLocations,
+		MaterialName:       MaterialName,
+		Operator:           "",
 	}
 
 	err := tx.Create(newRecord)
@@ -55,13 +58,10 @@ func (a *WmsOutboundService) GetWmsOutboundDB(ctx context.Context, id int64, Ref
 }
 
 // UpdateWmsOutboundDB will update wms record from the DB.
-func (a *WmsOutboundService) UpdateWmsOutboundDB(ctx context.Context, id int64, RefID string, Type string, StorageLocation string, MaterialName string, Operator string) error {
+func (a *WmsOutboundService) UpdateWmsOutboundDB(ctx context.Context, id int64, RefID string, Type string, StorageLocationId string, MaterialName string) error {
 	table := a.db.DBOpeniiotQuery.WmsOutbound
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
-
-	storageLocationService := storagelocation.DefaultStorageLocationService()
-	storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, StorageLocation, nil, "")
 
 	if existRecord == nil {
 		return errors.New("wms does not exist")
@@ -73,14 +73,11 @@ func (a *WmsOutboundService) UpdateWmsOutboundDB(ctx context.Context, id int64, 
 	if Type != "" {
 		updates[table.Type.ColumnName().String()] = Type
 	}
-	if storageLocationData[0].ID != 0 {
-		updates[table.StorageLocation.ColumnName().String()] = storageLocationData[0]
+	if StorageLocationId != "" {
+		updates[table.StorageLocationIds.ColumnName().String()] = StorageLocationId
 	}
 	if MaterialName != "" {
 		updates[table.MaterialName.ColumnName().String()] = MaterialName
-	}
-	if Operator != "" {
-		updates[table.Operator.ColumnName().String()] = Operator
 	}
 
 	_, err := tx.Updates(updates)
