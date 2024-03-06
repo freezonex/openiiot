@@ -26,7 +26,7 @@ func (a *WmsMaterialService) AddWmsMaterial(ctx context.Context, req *freezonex_
 
 // GetWmsMaterial will get wms record in condition
 func (a *WmsMaterialService) GetWmsMaterial(ctx context.Context, req *freezonex_openiiot_api.GetMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetMaterialResponse, error) {
-	wmss, err := a.GetWmsMaterialDB(ctx, common.StringToInt64(req.Id), req.ProductCode)
+	wmss, err := a.GetWmsMaterialDB(ctx, common.StringToInt64(req.Id), req.ProductCode, req.Name, req.Rfid, req.WarehouseId, common.StringToInt64(req.StorageLocationId))
 
 	if err != nil {
 		logs.Error(ctx, "event=GetWmsMaterial error=%v", err.Error())

@@ -37,7 +37,7 @@ func (a *WmsMaterialService) AddWmsMaterialDB(ctx context.Context, ProductCode s
 }
 
 // GetWmsMaterialDB will get wms record from the DB in condition
-func (a *WmsMaterialService) GetWmsMaterialDB(ctx context.Context, id int64, ProductCode string) ([]*model_openiiot.WmsMaterial, error) {
+func (a *WmsMaterialService) GetWmsMaterialDB(ctx context.Context, id int64, ProductCode string, Name string, Rfid string, WarehouseId string, StorageLocationId int64) ([]*model_openiiot.WmsMaterial, error) {
 	table := a.db.DBOpeniiotQuery.WmsMaterial
 	tx := table.WithContext(ctx).Select(field.ALL)
 	if id != 0 {
@@ -46,7 +46,18 @@ func (a *WmsMaterialService) GetWmsMaterialDB(ctx context.Context, id int64, Pro
 	if ProductCode != "" {
 		tx = tx.Where(table.ProductCode.Eq(ProductCode))
 	}
-
+	if Name != "" {
+		tx = tx.Where(table.Name.Eq(Name))
+	}
+	if StorageLocationId != 0 {
+		tx = tx.Where(table.StorageLocationID.Eq(StorageLocationId))
+	}
+	if Rfid != "" {
+		tx = tx.Where(table.Name.Eq(Name))
+	}
+	if WarehouseId != "" {
+		tx = tx.Where(table.Name.Eq(Name))
+	}
 	tx.Limit(consts.TENANT_RETURN_LIMIT).Order(table.Name)
 	data, err := tx.Find()
 	if err != nil {
