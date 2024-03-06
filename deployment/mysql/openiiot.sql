@@ -163,7 +163,6 @@ CREATE TABLE IF NOT EXISTS wms_material (
     product_code VARCHAR(100) NOT NULL,
     name VARCHAR(100) NOT NULL,
     product_type VARCHAR (100),
-    quantity INT,
     unit VARCHAR(100),
     note VARCHAR(200),
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

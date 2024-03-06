@@ -31,7 +31,6 @@ func newWmsMaterial(db *gorm.DB, opts ...gen.DOOption) wmsMaterial {
 	_wmsMaterial.ProductCode = field.NewString(tableName, "product_code")
 	_wmsMaterial.Name = field.NewString(tableName, "name")
 	_wmsMaterial.ProductType = field.NewString(tableName, "product_type")
-	_wmsMaterial.Quantity = field.NewInt32(tableName, "quantity")
 	_wmsMaterial.Unit = field.NewString(tableName, "unit")
 	_wmsMaterial.Note = field.NewString(tableName, "note")
 	_wmsMaterial.UpdateTime = field.NewTime(tableName, "update_time")
@@ -50,7 +49,6 @@ type wmsMaterial struct {
 	ProductCode field.String
 	Name        field.String
 	ProductType field.String
-	Quantity    field.Int32
 	Unit        field.String
 	Note        field.String
 	UpdateTime  field.Time
@@ -75,7 +73,6 @@ func (w *wmsMaterial) updateTableName(table string) *wmsMaterial {
 	w.ProductCode = field.NewString(table, "product_code")
 	w.Name = field.NewString(table, "name")
 	w.ProductType = field.NewString(table, "product_type")
-	w.Quantity = field.NewInt32(table, "quantity")
 	w.Unit = field.NewString(table, "unit")
 	w.Note = field.NewString(table, "note")
 	w.UpdateTime = field.NewTime(table, "update_time")
@@ -106,12 +103,11 @@ func (w *wmsMaterial) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (w *wmsMaterial) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 9)
+	w.fieldMap = make(map[string]field.Expr, 8)
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["product_code"] = w.ProductCode
 	w.fieldMap["name"] = w.Name
 	w.fieldMap["product_type"] = w.ProductType
-	w.fieldMap["quantity"] = w.Quantity
 	w.fieldMap["unit"] = w.Unit
 	w.fieldMap["note"] = w.Note
 	w.fieldMap["update_time"] = w.UpdateTime

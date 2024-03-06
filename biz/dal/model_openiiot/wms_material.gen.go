@@ -16,7 +16,6 @@ type WmsMaterial struct {
 	ProductCode string    `gorm:"column:product_code;not null" json:"product_code"`
 	Name        string    `gorm:"column:name;not null" json:"name"`
 	ProductType *string   `gorm:"column:product_type" json:"product_type"`
-	Quantity    *int32    `gorm:"column:quantity" json:"quantity"`
 	Unit        *string   `gorm:"column:unit" json:"unit"`
 	Note        *string   `gorm:"column:note" json:"note"`
 	UpdateTime  time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`
