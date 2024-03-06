@@ -10,19 +10,16 @@ import (
 )
 
 // AddStocktakingDB will add Stocktaking record to the DB.
-func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid string, type1 string, storagelocationid int64, operator string, result string) (int64, error) {
+func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid string, Type string, StorageLocationIds string, operator string, result string) (int64, error) {
 
 	if refid == "" {
 		return -1, errors.New("refid can not be empty")
 	}
-	if type1 == "" {
+	if Type == "" {
 		return -1, errors.New("type1 can not be empty")
 	}
-	if storagelocationid == 0 {
-		return -1, errors.New("storagelocationid can not be empty")
-	}
-	if operator == "" {
-		return -1, errors.New("operator can not be empty")
+	if StorageLocationIds == "" {
+		return -1, errors.New("type1 can not be empty")
 	}
 	table := a.db.DBOpeniiotQuery.WmsStocktaking
 	tx := table.WithContext(ctx)
@@ -33,11 +30,12 @@ func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid stri
 	id := common.GetUUID()
 
 	newRecord := &model_openiiot.WmsStocktaking{
-		RefID:           refid,
-		Type:            type1,
-		StorageLocation: storagelocationid,
-		Operator:        operator,
-		Result:          result,
+		ID:                 id,
+		RefID:              refid,
+		Type:               Type,
+		StorageLocationIds: StorageLocationIds,
+		Operator:           "",
+		Result:             result,
 	}
 	err := tx.Create(newRecord)
 	if err != nil {
@@ -47,7 +45,7 @@ func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid stri
 }
 
 // GetStocktakingDB will get stocktaking record from the DB in condition
-func (a *WmsStocktakingService) GetStocktakingDB(ctx context.Context, id int64, refid string) ([]*model_openiiot.WmsStocktaking, error) {
+func (a *WmsStocktakingService) GetStocktakingDB(ctx context.Context, id int64, refid string, Type string) ([]*model_openiiot.WmsStocktaking, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsStocktaking
 	tx := table.WithContext(ctx).Select(field.ALL)
@@ -56,6 +54,9 @@ func (a *WmsStocktakingService) GetStocktakingDB(ctx context.Context, id int64, 
 	}
 	if refid != "" {
 		tx = tx.Where(table.RefID.Eq(refid))
+	}
+	if Type != "" {
+		tx = tx.Where(table.Type.Eq(Type))
 	}
 
 	data, err := tx.Find()
@@ -67,7 +68,7 @@ func (a *WmsStocktakingService) GetStocktakingDB(ctx context.Context, id int64, 
 }
 
 // UpdateStocktakingDB will update stocktaking record from the DB.
-func (a *WmsStocktakingService) UpdateStocktakingDB(ctx context.Context, id int64, refid string, type1 string, storagelocationid int64, operator string, result string) error {
+func (a *WmsStocktakingService) UpdateStocktakingDB(ctx context.Context, id int64, refid string, Type string, Result string) error {
 	table := a.db.DBOpeniiotQuery.WmsStocktaking
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
@@ -81,17 +82,11 @@ func (a *WmsStocktakingService) UpdateStocktakingDB(ctx context.Context, id int6
 	if refid != "" {
 		updates[table.RefID.ColumnName().String()] = refid
 	}
-	if storagelocationid != 0 {
-		updates[table.StorageLocation.ColumnName().String()] = storagelocationid
+	if Type != "" {
+		updates[table.Type.ColumnName().String()] = Type
 	}
-	if type1 != "" {
-		updates[table.Type.ColumnName().String()] = type1
-	}
-	if operator != "" {
-		updates[table.Operator.ColumnName().String()] = operator
-	}
-	if result != "" {
-		updates[table.Result.ColumnName().String()] = result
+	if Result != "" {
+		updates[table.Result.ColumnName().String()] = Result
 	}
 	_, err := tx.Updates(updates)
 	return err
