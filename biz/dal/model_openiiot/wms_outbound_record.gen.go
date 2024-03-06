@@ -8,18 +8,18 @@ import (
 	"time"
 )
 
-const TableNameWmsInboundRecord = "wms_inbound_record"
+const TableNameWmsOutboundRecord = "wms_outbound_record"
 
-// WmsInboundRecord mapped from table <wms_inbound_record>
-type WmsInboundRecord struct {
+// WmsOutboundRecord mapped from table <wms_outbound_record>
+type WmsOutboundRecord struct {
 	ID         int64     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	InboundID  int64     `gorm:"column:inbound_id;not null" json:"inbound_id"`
+	OutboundID int64     `gorm:"column:outbound_id;not null" json:"outbound_id"`
 	MaterialID int64     `gorm:"column:material_id;not null" json:"material_id"`
 	UpdateTime time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`
 	CreateTime time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
 }
 
-// TableName WmsInboundRecord's table name
-func (*WmsInboundRecord) TableName() string {
-	return TableNameWmsInboundRecord
+// TableName WmsOutboundRecord's table name
+func (*WmsOutboundRecord) TableName() string {
+	return TableNameWmsOutboundRecord
 }
