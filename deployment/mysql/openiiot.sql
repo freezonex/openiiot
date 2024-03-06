@@ -124,6 +124,7 @@ CREATE TABLE IF NOT EXISTS global_config (
 );
 
 -- WMS related table
+-- warehouse
 CREATE TABLE IF NOT EXISTS wms_warehouse (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
@@ -138,75 +139,115 @@ CREATE TABLE IF NOT EXISTS wms_warehouse (
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- warehouse storage location
 CREATE TABLE IF NOT EXISTS wms_storage_location (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     warehouse_id BIGINT UNSIGNED NOT NULL,
     name VARCHAR(100) NOT NULL,
     occupied BOOLEAN default false,
-    material_name VARCHAR(100),
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- location material detail
+CREATE TABLE IF NOT EXISTS wms_storage_location_material (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    store_location_id BIGINT UNSIGNED NOT NULL,
+    material_id BIGINT UNSIGNED NOT NULL,
+    quantity INT NOT NULL
+);
+
+-- define material basic
 CREATE TABLE IF NOT EXISTS wms_material (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    rfid VARCHAR(100) NOT NULL,
     product_code VARCHAR(100) NOT NULL,
     name VARCHAR(100) NOT NULL,
     storage_location_id BIGINT UNSIGNED default 0,      -- 0: not in repo yet
     product_type VARCHAR (100),
+    quantity INT,
     unit VARCHAR(100),
     note VARCHAR(200),
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- add RFID to material
+CREATE TABLE IF NOT EXISTS wms_rfid_material (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    rfid VARCHAR(100) NOT NULL,
+    material_id BIGINT UNSIGNED NOT NULL,
+    quantity INT NOT NULL,
+    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- inbound order
 CREATE TABLE IF NOT EXISTS wms_inbound (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     ref_id VARCHAR(100) NOT NULL UNIQUE,                -- yyyymmdd0000
     type VARCHAR (100) NOT NULL,                        -- inbound type
-    storage_location_id BIGINT UNSIGNED NOT NULL,
-    material_name VARCHAR(100) NOT NULL,
     source VARCHAR(100) NOT NULL,                       -- PDA or Manual
+    note VARCHAR(200),
     operator VARCHAR(100) NOT NULL,
+    status VARCHAR(100),
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- inbound order detail
 CREATE TABLE IF NOT EXISTS wms_inbound_record (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     inbound_id BIGINT NOT NULL,
+    stock_location_id BIGINT NOT NULL,
     material_id BIGINT NOT NULL,
-    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    quantity INT NOT NULL
 );
 
+-- outbound order
 CREATE TABLE IF NOT EXISTS wms_outbound (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    ref_id VARCHAR(100) NOT NULL UNIQUE,                    -- yyyymmdd0000
+    ref_id VARCHAR(100) NOT NULL UNIQUE,                -- yyyymmdd0000
     type VARCHAR (100) NOT NULL,
-    storage_location_ids VARCHAR(3000) NOT NULL,     -- storage location id split by comma
-    material_name VARCHAR(100) NOT NULL,
+    source VARCHAR(100) NOT NULL,                       -- PDA or Manual
+    note VARCHAR(200),
     operator VARCHAR(100) NOT NULL,
+    status VARCHAR(100),
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- outbound order detail
 CREATE TABLE IF NOT EXISTS wms_outbound_record(
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     outbound_id BIGINT NOT NULL,
-    material_id BIGINT NOT NULL, 
-    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    stock_location_id BIGINT NOT NULL,
+    material_id BIGINT NOT NULL,
+    quantity INT NOT NULL
 );
 
+-- stocktaking order
 CREATE TABLE IF NOT EXISTS wms_stocktaking (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     ref_id VARCHAR(100) NOT NULL UNIQUE,
     type VARCHAR (100) NOT NULL,
-    storage_location_ids VARCHAR(3000) NOT NULL,    -- storage location id split by comma
+    source VARCHAR(100) NOT NULL,                       -- PDA or Manual
+    note VARCHAR(200),
     operator VARCHAR(100) NOT NULL,
-    result VARCHAR(2000) NOT NULL,
+    status VARCHAR(100),
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- stocktaking order detail include result: 
+-- discrepancy = 0 : Inventory Balance 
+-- discrepancy < 0 : Inventory Shrinkage, Actual inventory quantity is less than recorded inventory
+-- discrepancy > 0 : Inventory Surplus, Actual inventory quantity is greater than recorded inventory
+CREATE TABLE IF NOT EXISTS wms_stocktaking_record(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    stocktaking_id BIGINT NOT NULL,
+    stock_location_id BIGINT NOT NULL,
+    material_id BIGINT NOT NULL,
+    quantity INT,
+    stock_quantity INT,
+    discrepancy INT
 );

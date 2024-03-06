@@ -28,11 +28,11 @@ func newWmsMaterial(db *gorm.DB, opts ...gen.DOOption) wmsMaterial {
 	tableName := _wmsMaterial.wmsMaterialDo.TableName()
 	_wmsMaterial.ALL = field.NewAsterisk(tableName)
 	_wmsMaterial.ID = field.NewInt64(tableName, "id")
-	_wmsMaterial.Rfid = field.NewString(tableName, "rfid")
 	_wmsMaterial.ProductCode = field.NewString(tableName, "product_code")
 	_wmsMaterial.Name = field.NewString(tableName, "name")
 	_wmsMaterial.StorageLocationID = field.NewInt64(tableName, "storage_location_id")
 	_wmsMaterial.ProductType = field.NewString(tableName, "product_type")
+	_wmsMaterial.Quantity = field.NewInt32(tableName, "quantity")
 	_wmsMaterial.Unit = field.NewString(tableName, "unit")
 	_wmsMaterial.Note = field.NewString(tableName, "note")
 	_wmsMaterial.UpdateTime = field.NewTime(tableName, "update_time")
@@ -48,11 +48,11 @@ type wmsMaterial struct {
 
 	ALL               field.Asterisk
 	ID                field.Int64
-	Rfid              field.String
 	ProductCode       field.String
 	Name              field.String
 	StorageLocationID field.Int64
 	ProductType       field.String
+	Quantity          field.Int32
 	Unit              field.String
 	Note              field.String
 	UpdateTime        field.Time
@@ -74,11 +74,11 @@ func (w wmsMaterial) As(alias string) *wmsMaterial {
 func (w *wmsMaterial) updateTableName(table string) *wmsMaterial {
 	w.ALL = field.NewAsterisk(table)
 	w.ID = field.NewInt64(table, "id")
-	w.Rfid = field.NewString(table, "rfid")
 	w.ProductCode = field.NewString(table, "product_code")
 	w.Name = field.NewString(table, "name")
 	w.StorageLocationID = field.NewInt64(table, "storage_location_id")
 	w.ProductType = field.NewString(table, "product_type")
+	w.Quantity = field.NewInt32(table, "quantity")
 	w.Unit = field.NewString(table, "unit")
 	w.Note = field.NewString(table, "note")
 	w.UpdateTime = field.NewTime(table, "update_time")
@@ -111,11 +111,11 @@ func (w *wmsMaterial) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 func (w *wmsMaterial) fillFieldMap() {
 	w.fieldMap = make(map[string]field.Expr, 10)
 	w.fieldMap["id"] = w.ID
-	w.fieldMap["rfid"] = w.Rfid
 	w.fieldMap["product_code"] = w.ProductCode
 	w.fieldMap["name"] = w.Name
 	w.fieldMap["storage_location_id"] = w.StorageLocationID
 	w.fieldMap["product_type"] = w.ProductType
+	w.fieldMap["quantity"] = w.Quantity
 	w.fieldMap["unit"] = w.Unit
 	w.fieldMap["note"] = w.Note
 	w.fieldMap["update_time"] = w.UpdateTime

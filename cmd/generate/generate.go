@@ -71,12 +71,15 @@ func generateDbOpeniiotModels() {
 		g.GenerateModel("global_config"),
 		g.GenerateModel("wms_warehouse"),
 		g.GenerateModel("wms_storage_location"),
+		g.GenerateModel("wms_storage_location_material"),
 		g.GenerateModel("wms_material"),
+		g.GenerateModel("wms_rfid_material"),
 		g.GenerateModel("wms_inbound"),
 		g.GenerateModel("wms_inbound_record"),
 		g.GenerateModel("wms_outbound"),
 		g.GenerateModel("wms_outbound_record"),
 		g.GenerateModel("wms_stocktaking"),
+		g.GenerateModel("wms_stocktaking_record"),
 	)
 	g.Execute()
 }
