@@ -30,7 +30,6 @@ func newWmsMaterial(db *gorm.DB, opts ...gen.DOOption) wmsMaterial {
 	_wmsMaterial.ID = field.NewInt64(tableName, "id")
 	_wmsMaterial.ProductCode = field.NewString(tableName, "product_code")
 	_wmsMaterial.Name = field.NewString(tableName, "name")
-	_wmsMaterial.StorageLocationID = field.NewInt64(tableName, "storage_location_id")
 	_wmsMaterial.ProductType = field.NewString(tableName, "product_type")
 	_wmsMaterial.Quantity = field.NewInt32(tableName, "quantity")
 	_wmsMaterial.Unit = field.NewString(tableName, "unit")
@@ -46,17 +45,16 @@ func newWmsMaterial(db *gorm.DB, opts ...gen.DOOption) wmsMaterial {
 type wmsMaterial struct {
 	wmsMaterialDo wmsMaterialDo
 
-	ALL               field.Asterisk
-	ID                field.Int64
-	ProductCode       field.String
-	Name              field.String
-	StorageLocationID field.Int64
-	ProductType       field.String
-	Quantity          field.Int32
-	Unit              field.String
-	Note              field.String
-	UpdateTime        field.Time
-	CreateTime        field.Time
+	ALL         field.Asterisk
+	ID          field.Int64
+	ProductCode field.String
+	Name        field.String
+	ProductType field.String
+	Quantity    field.Int32
+	Unit        field.String
+	Note        field.String
+	UpdateTime  field.Time
+	CreateTime  field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -76,7 +74,6 @@ func (w *wmsMaterial) updateTableName(table string) *wmsMaterial {
 	w.ID = field.NewInt64(table, "id")
 	w.ProductCode = field.NewString(table, "product_code")
 	w.Name = field.NewString(table, "name")
-	w.StorageLocationID = field.NewInt64(table, "storage_location_id")
 	w.ProductType = field.NewString(table, "product_type")
 	w.Quantity = field.NewInt32(table, "quantity")
 	w.Unit = field.NewString(table, "unit")
@@ -109,11 +106,10 @@ func (w *wmsMaterial) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (w *wmsMaterial) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 10)
+	w.fieldMap = make(map[string]field.Expr, 9)
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["product_code"] = w.ProductCode
 	w.fieldMap["name"] = w.Name
-	w.fieldMap["storage_location_id"] = w.StorageLocationID
 	w.fieldMap["product_type"] = w.ProductType
 	w.fieldMap["quantity"] = w.Quantity
 	w.fieldMap["unit"] = w.Unit

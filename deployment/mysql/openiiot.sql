@@ -162,7 +162,6 @@ CREATE TABLE IF NOT EXISTS wms_material (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     product_code VARCHAR(100) NOT NULL,
     name VARCHAR(100) NOT NULL,
-    storage_location_id BIGINT UNSIGNED default 0,      -- 0: not in repo yet
     product_type VARCHAR (100),
     quantity INT,
     unit VARCHAR(100),
