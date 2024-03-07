@@ -46,7 +46,7 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 		for _, storage := range storages {
 			var convertedMaterials []*freezonex_openiiot_api.StorageLocationMaterial
 			storagelocationmaterialService := wms_storagelocationmaterial.DefaultStorageLocationMaterialService()
-			slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID)
+			slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID, 0, 0)
 			if err != nil {
 				logs.Error(ctx, "event=storagelocationmaterialService error=%v", err.Error())
 				return nil, err
