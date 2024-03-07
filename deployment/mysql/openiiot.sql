@@ -145,6 +145,8 @@ CREATE TABLE IF NOT EXISTS wms_storage_location (
     warehouse_id BIGINT UNSIGNED NOT NULL,
     name VARCHAR(100) NOT NULL,
     occupied BOOLEAN default false,
+    material_name VARCHAR(200),
+    material_quantity INT default 0,
     update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
