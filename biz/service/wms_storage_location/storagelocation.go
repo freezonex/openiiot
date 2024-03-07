@@ -3,6 +3,8 @@ package wms_storage_location
 import (
 	"context"
 	"freezonex/openiiot/biz/service/utils/common"
+	"freezonex/openiiot/biz/service/wms_material"
+	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
@@ -14,7 +16,7 @@ import (
 )
 
 func (a *WmsStorageLocationService) AddStorageLocation(ctx context.Context, req *freezonex_openiiot_api.AddStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddStorageLocationResponse, error) {
-	storagelocationID, err := a.AddStorageLocationDB(ctx, common.StringToInt64(req.WarehouseId), req.Name, req.Occupied, req.MaterialName)
+	storagelocationID, err := a.AddStorageLocationDB(ctx, common.StringToInt64(req.WarehouseId), req.Name, &req.Occupied, "", nil)
 	if err != nil {
 		logs.Error(ctx, "event=AddStorageLocation error=%v", err.Error())
 		return nil, err
@@ -29,7 +31,7 @@ func (a *WmsStorageLocationService) AddStorageLocation(ctx context.Context, req 
 
 // GetStorageLocation will get storagelocation record in condition
 func (a *WmsStorageLocationService) GetStorageLocation(ctx context.Context, req *freezonex_openiiot_api.GetStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetStorageLocationResponse, error) {
-	storagelocations, err := a.GetStorageLocationDB(ctx, common.StringToInt64(req.WarehouseId), req.Name, &req.Occupied, req.MaterialName)
+	storagelocations, err := a.GetStorageLocationDB(ctx, common.StringToInt64(req.WarehouseId), req.Name)
 
 	if err != nil {
 		logs.Error(ctx, "event=GetStorageLocation error=%v", err.Error())
@@ -40,14 +42,38 @@ func (a *WmsStorageLocationService) GetStorageLocation(ctx context.Context, req 
 	data := make([]*freezonex_openiiot_api.StorageLocation, 0)
 
 	for _, v := range storagelocations {
+		storagelocationmaterialService := wms_storagelocationmaterial.DefaultStorageLocationMaterialService()
+		slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID)
+
+		if err != nil {
+			logs.Error(ctx, "event=GetStorageLocationMaterialMaterialDB error=%v", err.Error())
+			return nil, err
+		}
+		var convertedMaterials []*freezonex_openiiot_api.StorageLocationMaterial
+
+		for _, slmaterial := range slmaterials {
+			materialService := wms_material.DefaultWmsMaterialService()
+			materials, err := materialService.GetWmsMaterialDB(ctx, slmaterial.MaterialID, "", "", "", "", 0)
+			if err != nil {
+				logs.Error(ctx, "event=GetWmsMaterialDB error=%v", err.Error())
+				return nil, err
+			}
+			convertedmaterial := &freezonex_openiiot_api.StorageLocationMaterial{
+				MaterialId:   common.Int64ToString(slmaterial.MaterialID),
+				MaterialName: materials[0].Name,
+				Quantity:     slmaterial.Quantity,
+			}
+			convertedMaterials = append(convertedMaterials, convertedmaterial)
+		}
+
 		data = append(data, &freezonex_openiiot_api.StorageLocation{
-			Id:           common.Int64ToString(v.ID),
-			Name:         v.Name,
-			WarehouseId:  common.Int64ToString(v.WarehouseID),
-			Occupied:     *v.Occupied,
-			MaterialName: *v.MaterialName,
-			CreateTime:   common.GetTimeStringFromTime(&v.CreateTime), // Format time as needed
-			UpdateTime:   common.GetTimeStringFromTime(&v.UpdateTime),
+			Id:          common.Int64ToString(v.ID),
+			Name:        v.Name,
+			WarehouseId: common.Int64ToString(v.WarehouseID),
+			Occupied:    *v.Occupied,
+			Materials:   convertedMaterials,
+			CreateTime:  common.GetTimeStringFromTime(&v.CreateTime), // Format time as needed
+			UpdateTime:  common.GetTimeStringFromTime(&v.UpdateTime),
 		})
 	}
 	resp.Data = data
@@ -58,7 +84,7 @@ func (a *WmsStorageLocationService) GetStorageLocation(ctx context.Context, req 
 
 // UpdateStorageLocation will update storagelocation record
 func (a *WmsStorageLocationService) UpdateStorageLocation(ctx context.Context, req *freezonex_openiiot_api.UpdateStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateStorageLocationResponse, error) {
-	err := a.UpdateStorageLocationDB(ctx, common.StringToInt64(req.Id), common.StringToInt64(req.WarehouseId), req.Name, &req.Occupied, req.MaterialName)
+	err := a.UpdateStorageLocationDB(ctx, common.StringToInt64(req.Id), common.StringToInt64(req.WarehouseId), req.Name, &req.Occupied, "", 0)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateStorageLocation error=%v", err.Error())
 		return nil, err

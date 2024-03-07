@@ -5,7 +5,9 @@ import (
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
+	"freezonex/openiiot/biz/service/wms_material"
 	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
+	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
@@ -37,19 +39,41 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 	data := make([]*freezonex_openiiot_api.Warehouse, 0)
 
 	for _, v := range wmss {
-
 		storagelocationService := storagelocation.DefaultStorageLocationService()
-		storages, err := storagelocationService.GetStorageLocationDB(ctx, common.StringToInt64(v.WarehouseID), "", nil, "")
+		storages, err := storagelocationService.GetStorageLocationDB(ctx, common.StringToInt64(v.WarehouseID), "")
 		var convertedStorages []*freezonex_openiiot_api.StorageLocation
+
 		for _, storage := range storages {
+			var convertedMaterials []*freezonex_openiiot_api.StorageLocationMaterial
+			storagelocationmaterialService := wms_storagelocationmaterial.DefaultStorageLocationMaterialService()
+			slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID)
+			if err != nil {
+				logs.Error(ctx, "event=storagelocationmaterialService error=%v", err.Error())
+				return nil, err
+			}
+			for _, slmaterial := range slmaterials {
+				materialService := wms_material.DefaultWmsMaterialService()
+				materials, err := materialService.GetWmsMaterialDB(ctx, slmaterial.MaterialID, "", "", "", "", 0)
+				if err != nil {
+					logs.Error(ctx, "event=GetWmsMaterialDB error=%v", err.Error())
+					return nil, err
+				}
+				convertedmaterial := &freezonex_openiiot_api.StorageLocationMaterial{
+					MaterialId:   common.Int64ToString(slmaterial.MaterialID),
+					MaterialName: materials[0].Name,
+					Quantity:     slmaterial.Quantity,
+				}
+				convertedMaterials = append(convertedMaterials, convertedmaterial)
+			}
+
 			convertedStorage := &freezonex_openiiot_api.StorageLocation{
-				Id:           common.Int64ToString(storage.ID),
-				WarehouseId:  common.Int64ToString(storage.WarehouseID),
-				Name:         storage.Name,
-				Occupied:     *storage.Occupied,
-				MaterialName: *storage.MaterialName,
-				CreateTime:   common.GetTimeStringFromTime(&storage.CreateTime),
-				UpdateTime:   common.GetTimeStringFromTime(&storage.UpdateTime),
+				Id:          common.Int64ToString(storage.ID),
+				WarehouseId: common.Int64ToString(storage.WarehouseID),
+				Name:        storage.Name,
+				Occupied:    *storage.Occupied,
+				Materials:   convertedMaterials,
+				CreateTime:  common.GetTimeStringFromTime(&storage.CreateTime),
+				UpdateTime:  common.GetTimeStringFromTime(&storage.UpdateTime),
 			}
 			convertedStorages = append(convertedStorages, convertedStorage)
 		}

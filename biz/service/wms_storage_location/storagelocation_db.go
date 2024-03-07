@@ -11,7 +11,7 @@ import (
 )
 
 // AddStorageLocationDB will add StorageLocation record to the DB.
-func (a *WmsStorageLocationService) AddStorageLocationDB(ctx context.Context, warehouseid int64, name string, occupied bool, materialname string) (int64, error) {
+func (a *WmsStorageLocationService) AddStorageLocationDB(ctx context.Context, warehouseid int64, name string, occupied *bool, materialname string, materialquantity *string) (int64, error) {
 
 	if name == "" {
 		return -1, errors.New("name can not be empty")
@@ -27,15 +27,16 @@ func (a *WmsStorageLocationService) AddStorageLocationDB(ctx context.Context, wa
 	}
 	id := common.GetUUID()
 
-	if occupied {
-		occupied = false
+	if occupied == nil {
+		*occupied = false
 	}
 
 	newRecord := &model_openiiot.WmsStorageLocation{
-		Name:         name,
-		MaterialName: &materialname,
-		WarehouseID:  warehouseid,
-		Occupied:     &occupied,
+		Name:             name,
+		MaterialName:     &materialname,
+		WarehouseID:      warehouseid,
+		Occupied:         occupied,
+		MaterialQuantity: materialquantity,
 	}
 	err := tx.Create(newRecord)
 	if err != nil {
@@ -45,7 +46,7 @@ func (a *WmsStorageLocationService) AddStorageLocationDB(ctx context.Context, wa
 }
 
 // GetStorageLocationDB will get storagelocation record from the DB in condition
-func (a *WmsStorageLocationService) GetStorageLocationDB(ctx context.Context, warehouseid int64, name string, occupied *bool, materialname string) ([]*model_openiiot.WmsStorageLocation, error) {
+func (a *WmsStorageLocationService) GetStorageLocationDB(ctx context.Context, warehouseid int64, name string) ([]*model_openiiot.WmsStorageLocation, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsStorageLocation
 	tx := table.WithContext(ctx).Select(field.ALL)
@@ -54,13 +55,6 @@ func (a *WmsStorageLocationService) GetStorageLocationDB(ctx context.Context, wa
 	}
 	if warehouseid != 0 {
 		tx = tx.Where(table.WarehouseID.Eq(warehouseid))
-	}
-	if materialname != "" {
-		tx = tx.Where(table.MaterialName.Eq(materialname))
-	}
-
-	if occupied != nil {
-		tx = tx.Where(table.Occupied.Is(*occupied))
 	}
 
 	tx.Limit(consts.TENANT_RETURN_LIMIT).Order(table.Name)
@@ -73,7 +67,7 @@ func (a *WmsStorageLocationService) GetStorageLocationDB(ctx context.Context, wa
 }
 
 // UpdateStorageLocationDB will update storagelocation record from the DB.
-func (a *WmsStorageLocationService) UpdateStorageLocationDB(ctx context.Context, id int64, warehouseid int64, name string, occupied *bool, materialname string) error {
+func (a *WmsStorageLocationService) UpdateStorageLocationDB(ctx context.Context, id int64, warehouseid int64, name string, occupied *bool, materialname string, materialquantity int32) error {
 	table := a.db.DBOpeniiotQuery.WmsStorageLocation
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
@@ -96,7 +90,9 @@ func (a *WmsStorageLocationService) UpdateStorageLocationDB(ctx context.Context,
 	if occupied != nil {
 		updates[table.Occupied.ColumnName().String()] = occupied
 	}
-
+	if materialquantity != 0 {
+		updates[table.MaterialQuantity.ColumnName().String()] = materialquantity
+	}
 	_, err := tx.Updates(updates)
 	return err
 }
