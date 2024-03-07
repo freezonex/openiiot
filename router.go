@@ -24,6 +24,7 @@ import (
 	"freezonex/openiiot/biz/service/wms_outbound"
 	"freezonex/openiiot/biz/service/wms_stocktaking"
 	"freezonex/openiiot/biz/service/wms_storage_location"
+	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 	"freezonex/openiiot/biz/service/wms_warehouse"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -404,6 +405,7 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	wmsMaterialGroup := r.Group("/wmsmaterial", middleware.Access())
 	{
+		wms_storagelocationmaterial.NewStorageLocationMaterial(db)
 		wmsHandler := handler.NewWmsMaterialHandler(wms_material.NewWmsMaterialService(db))
 		wmsMaterialGroup.POST(
 			"/add",
