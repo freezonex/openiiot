@@ -42,13 +42,16 @@ func (a *WmsStorageLocationMaterialService) AddStorageLocationMaterialDB(ctx con
 }
 
 // GetStorageLocationMaterialDB will get storagelocationmaterial record from the DB in condition
-func (a *WmsStorageLocationMaterialService) GetStorageLocationMaterialMaterialDB(ctx context.Context, id int64) ([]*model_openiiot.WmsStorageLocationMaterial, error) {
+func (a *WmsStorageLocationMaterialService) GetStorageLocationMaterialMaterialDB(ctx context.Context, id int64, storelocationid int64) ([]*model_openiiot.WmsStorageLocationMaterial, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
 	tx := table.WithContext(ctx).Select(field.ALL)
 
 	if id != 0 {
 		tx = tx.Where(table.ID.Eq(id))
+	}
+	if storelocationid != 0 {
+		tx = tx.Where(table.StoreLocationID.Eq(storelocationid))
 	}
 
 	data, err := tx.Find()
