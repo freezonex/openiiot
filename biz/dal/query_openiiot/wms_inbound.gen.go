@@ -29,10 +29,10 @@ func newWmsInbound(db *gorm.DB, opts ...gen.DOOption) wmsInbound {
 	_wmsInbound.ID = field.NewInt64(tableName, "id")
 	_wmsInbound.RefID = field.NewString(tableName, "ref_id")
 	_wmsInbound.Type = field.NewString(tableName, "type")
-	_wmsInbound.StorageLocationID = field.NewInt64(tableName, "storage_location_id")
-	_wmsInbound.MaterialName = field.NewString(tableName, "material_name")
 	_wmsInbound.Source = field.NewString(tableName, "source")
+	_wmsInbound.Note = field.NewString(tableName, "note")
 	_wmsInbound.Operator = field.NewString(tableName, "operator")
+	_wmsInbound.Status = field.NewString(tableName, "status")
 	_wmsInbound.UpdateTime = field.NewTime(tableName, "update_time")
 	_wmsInbound.CreateTime = field.NewTime(tableName, "create_time")
 
@@ -44,16 +44,16 @@ func newWmsInbound(db *gorm.DB, opts ...gen.DOOption) wmsInbound {
 type wmsInbound struct {
 	wmsInboundDo wmsInboundDo
 
-	ALL               field.Asterisk
-	ID                field.Int64
-	RefID             field.String
-	Type              field.String
-	StorageLocationID field.Int64
-	MaterialName      field.String
-	Source            field.String
-	Operator          field.String
-	UpdateTime        field.Time
-	CreateTime        field.Time
+	ALL        field.Asterisk
+	ID         field.Int64
+	RefID      field.String
+	Type       field.String
+	Source     field.String
+	Note       field.String
+	Operator   field.String
+	Status     field.String
+	UpdateTime field.Time
+	CreateTime field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -73,10 +73,10 @@ func (w *wmsInbound) updateTableName(table string) *wmsInbound {
 	w.ID = field.NewInt64(table, "id")
 	w.RefID = field.NewString(table, "ref_id")
 	w.Type = field.NewString(table, "type")
-	w.StorageLocationID = field.NewInt64(table, "storage_location_id")
-	w.MaterialName = field.NewString(table, "material_name")
 	w.Source = field.NewString(table, "source")
+	w.Note = field.NewString(table, "note")
 	w.Operator = field.NewString(table, "operator")
+	w.Status = field.NewString(table, "status")
 	w.UpdateTime = field.NewTime(table, "update_time")
 	w.CreateTime = field.NewTime(table, "create_time")
 
@@ -109,10 +109,10 @@ func (w *wmsInbound) fillFieldMap() {
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["ref_id"] = w.RefID
 	w.fieldMap["type"] = w.Type
-	w.fieldMap["storage_location_id"] = w.StorageLocationID
-	w.fieldMap["material_name"] = w.MaterialName
 	w.fieldMap["source"] = w.Source
+	w.fieldMap["note"] = w.Note
 	w.fieldMap["operator"] = w.Operator
+	w.fieldMap["status"] = w.Status
 	w.fieldMap["update_time"] = w.UpdateTime
 	w.fieldMap["create_time"] = w.CreateTime
 }

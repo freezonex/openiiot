@@ -29,9 +29,10 @@ func newWmsStocktaking(db *gorm.DB, opts ...gen.DOOption) wmsStocktaking {
 	_wmsStocktaking.ID = field.NewInt64(tableName, "id")
 	_wmsStocktaking.RefID = field.NewString(tableName, "ref_id")
 	_wmsStocktaking.Type = field.NewString(tableName, "type")
-	_wmsStocktaking.StorageLocationIds = field.NewString(tableName, "storage_location_ids")
+	_wmsStocktaking.Source = field.NewString(tableName, "source")
+	_wmsStocktaking.Note = field.NewString(tableName, "note")
 	_wmsStocktaking.Operator = field.NewString(tableName, "operator")
-	_wmsStocktaking.Result = field.NewString(tableName, "result")
+	_wmsStocktaking.Status = field.NewString(tableName, "status")
 	_wmsStocktaking.UpdateTime = field.NewTime(tableName, "update_time")
 	_wmsStocktaking.CreateTime = field.NewTime(tableName, "create_time")
 
@@ -43,15 +44,16 @@ func newWmsStocktaking(db *gorm.DB, opts ...gen.DOOption) wmsStocktaking {
 type wmsStocktaking struct {
 	wmsStocktakingDo wmsStocktakingDo
 
-	ALL                field.Asterisk
-	ID                 field.Int64
-	RefID              field.String
-	Type               field.String
-	StorageLocationIds field.String
-	Operator           field.String
-	Result             field.String
-	UpdateTime         field.Time
-	CreateTime         field.Time
+	ALL        field.Asterisk
+	ID         field.Int64
+	RefID      field.String
+	Type       field.String
+	Source     field.String
+	Note       field.String
+	Operator   field.String
+	Status     field.String
+	UpdateTime field.Time
+	CreateTime field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -71,9 +73,10 @@ func (w *wmsStocktaking) updateTableName(table string) *wmsStocktaking {
 	w.ID = field.NewInt64(table, "id")
 	w.RefID = field.NewString(table, "ref_id")
 	w.Type = field.NewString(table, "type")
-	w.StorageLocationIds = field.NewString(table, "storage_location_ids")
+	w.Source = field.NewString(table, "source")
+	w.Note = field.NewString(table, "note")
 	w.Operator = field.NewString(table, "operator")
-	w.Result = field.NewString(table, "result")
+	w.Status = field.NewString(table, "status")
 	w.UpdateTime = field.NewTime(table, "update_time")
 	w.CreateTime = field.NewTime(table, "create_time")
 
@@ -104,13 +107,14 @@ func (w *wmsStocktaking) GetFieldByName(fieldName string) (field.OrderExpr, bool
 }
 
 func (w *wmsStocktaking) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 8)
+	w.fieldMap = make(map[string]field.Expr, 9)
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["ref_id"] = w.RefID
 	w.fieldMap["type"] = w.Type
-	w.fieldMap["storage_location_ids"] = w.StorageLocationIds
+	w.fieldMap["source"] = w.Source
+	w.fieldMap["note"] = w.Note
 	w.fieldMap["operator"] = w.Operator
-	w.fieldMap["result"] = w.Result
+	w.fieldMap["status"] = w.Status
 	w.fieldMap["update_time"] = w.UpdateTime
 	w.fieldMap["create_time"] = w.CreateTime
 }

@@ -6,6 +6,7 @@ package query_openiiot
 
 import (
 	"context"
+	"freezonex/openiiot/biz/dal/model_openiiot"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -15,8 +16,6 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"freezonex/openiiot/biz/dal/model_openiiot"
 )
 
 func newWmsOutboundRecord(db *gorm.DB, opts ...gen.DOOption) wmsOutboundRecord {
@@ -29,9 +28,9 @@ func newWmsOutboundRecord(db *gorm.DB, opts ...gen.DOOption) wmsOutboundRecord {
 	_wmsOutboundRecord.ALL = field.NewAsterisk(tableName)
 	_wmsOutboundRecord.ID = field.NewInt64(tableName, "id")
 	_wmsOutboundRecord.OutboundID = field.NewInt64(tableName, "outbound_id")
+	_wmsOutboundRecord.StockLocationID = field.NewInt64(tableName, "stock_location_id")
 	_wmsOutboundRecord.MaterialID = field.NewInt64(tableName, "material_id")
-	_wmsOutboundRecord.UpdateTime = field.NewTime(tableName, "update_time")
-	_wmsOutboundRecord.CreateTime = field.NewTime(tableName, "create_time")
+	_wmsOutboundRecord.Quantity = field.NewInt32(tableName, "quantity")
 
 	_wmsOutboundRecord.fillFieldMap()
 
@@ -41,12 +40,12 @@ func newWmsOutboundRecord(db *gorm.DB, opts ...gen.DOOption) wmsOutboundRecord {
 type wmsOutboundRecord struct {
 	wmsOutboundRecordDo wmsOutboundRecordDo
 
-	ALL        field.Asterisk
-	ID         field.Int64
-	OutboundID field.Int64
-	MaterialID field.Int64
-	UpdateTime field.Time
-	CreateTime field.Time
+	ALL             field.Asterisk
+	ID              field.Int64
+	OutboundID      field.Int64
+	StockLocationID field.Int64
+	MaterialID      field.Int64
+	Quantity        field.Int32
 
 	fieldMap map[string]field.Expr
 }
@@ -65,9 +64,9 @@ func (w *wmsOutboundRecord) updateTableName(table string) *wmsOutboundRecord {
 	w.ALL = field.NewAsterisk(table)
 	w.ID = field.NewInt64(table, "id")
 	w.OutboundID = field.NewInt64(table, "outbound_id")
+	w.StockLocationID = field.NewInt64(table, "stock_location_id")
 	w.MaterialID = field.NewInt64(table, "material_id")
-	w.UpdateTime = field.NewTime(table, "update_time")
-	w.CreateTime = field.NewTime(table, "create_time")
+	w.Quantity = field.NewInt32(table, "quantity")
 
 	w.fillFieldMap()
 
@@ -99,9 +98,9 @@ func (w *wmsOutboundRecord) fillFieldMap() {
 	w.fieldMap = make(map[string]field.Expr, 5)
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["outbound_id"] = w.OutboundID
+	w.fieldMap["stock_location_id"] = w.StockLocationID
 	w.fieldMap["material_id"] = w.MaterialID
-	w.fieldMap["update_time"] = w.UpdateTime
-	w.fieldMap["create_time"] = w.CreateTime
+	w.fieldMap["quantity"] = w.Quantity
 }
 
 func (w wmsOutboundRecord) clone(db *gorm.DB) wmsOutboundRecord {

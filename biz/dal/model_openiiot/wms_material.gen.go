@@ -12,16 +12,14 @@ const TableNameWmsMaterial = "wms_material"
 
 // WmsMaterial mapped from table <wms_material>
 type WmsMaterial struct {
-	ID                int64     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	Rfid              string    `gorm:"column:rfid;not null" json:"rfid"`
-	ProductCode       string    `gorm:"column:product_code;not null" json:"product_code"`
-	Name              string    `gorm:"column:name;not null" json:"name"`
-	StorageLocationID *int64    `gorm:"column:storage_location_id" json:"storage_location_id"`
-	ProductType       *string   `gorm:"column:product_type" json:"product_type"`
-	Unit              *string   `gorm:"column:unit" json:"unit"`
-	Note              *string   `gorm:"column:note" json:"note"`
-	UpdateTime        time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`
-	CreateTime        time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
+	ID          int64     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	ProductCode string    `gorm:"column:product_code;not null" json:"product_code"`
+	Name        string    `gorm:"column:name;not null" json:"name"`
+	ProductType *string   `gorm:"column:product_type" json:"product_type"`
+	Unit        *string   `gorm:"column:unit" json:"unit"`
+	Note        *string   `gorm:"column:note" json:"note"`
+	UpdateTime  time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`
+	CreateTime  time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
 }
 
 // TableName WmsMaterial's table name

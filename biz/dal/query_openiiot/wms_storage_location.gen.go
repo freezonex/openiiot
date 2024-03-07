@@ -33,6 +33,7 @@ func newWmsStorageLocation(db *gorm.DB, opts ...gen.DOOption) wmsStorageLocation
 	_wmsStorageLocation.MaterialName = field.NewString(tableName, "material_name")
 	_wmsStorageLocation.UpdateTime = field.NewTime(tableName, "update_time")
 	_wmsStorageLocation.CreateTime = field.NewTime(tableName, "create_time")
+	_wmsStorageLocation.MaterialQuantity = field.NewString(tableName, "material_quantity")
 
 	_wmsStorageLocation.fillFieldMap()
 
@@ -42,14 +43,15 @@ func newWmsStorageLocation(db *gorm.DB, opts ...gen.DOOption) wmsStorageLocation
 type wmsStorageLocation struct {
 	wmsStorageLocationDo wmsStorageLocationDo
 
-	ALL          field.Asterisk
-	ID           field.Int64
-	WarehouseID  field.Int64
-	Name         field.String
-	Occupied     field.Bool
-	MaterialName field.String
-	UpdateTime   field.Time
-	CreateTime   field.Time
+	ALL              field.Asterisk
+	ID               field.Int64
+	WarehouseID      field.Int64
+	Name             field.String
+	Occupied         field.Bool
+	MaterialName     field.String
+	UpdateTime       field.Time
+	CreateTime       field.Time
+	MaterialQuantity field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -73,6 +75,7 @@ func (w *wmsStorageLocation) updateTableName(table string) *wmsStorageLocation {
 	w.MaterialName = field.NewString(table, "material_name")
 	w.UpdateTime = field.NewTime(table, "update_time")
 	w.CreateTime = field.NewTime(table, "create_time")
+	w.MaterialQuantity = field.NewString(table, "material_quantity")
 
 	w.fillFieldMap()
 
@@ -101,7 +104,7 @@ func (w *wmsStorageLocation) GetFieldByName(fieldName string) (field.OrderExpr, 
 }
 
 func (w *wmsStorageLocation) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 7)
+	w.fieldMap = make(map[string]field.Expr, 8)
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["warehouse_id"] = w.WarehouseID
 	w.fieldMap["name"] = w.Name
@@ -109,6 +112,7 @@ func (w *wmsStorageLocation) fillFieldMap() {
 	w.fieldMap["material_name"] = w.MaterialName
 	w.fieldMap["update_time"] = w.UpdateTime
 	w.fieldMap["create_time"] = w.CreateTime
+	w.fieldMap["material_quantity"] = w.MaterialQuantity
 }
 
 func (w wmsStorageLocation) clone(db *gorm.DB) wmsStorageLocation {

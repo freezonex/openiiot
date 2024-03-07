@@ -28,9 +28,9 @@ func newWmsInboundRecord(db *gorm.DB, opts ...gen.DOOption) wmsInboundRecord {
 	_wmsInboundRecord.ALL = field.NewAsterisk(tableName)
 	_wmsInboundRecord.ID = field.NewInt64(tableName, "id")
 	_wmsInboundRecord.InboundID = field.NewInt64(tableName, "inbound_id")
+	_wmsInboundRecord.StockLocationID = field.NewInt64(tableName, "stock_location_id")
 	_wmsInboundRecord.MaterialID = field.NewInt64(tableName, "material_id")
-	_wmsInboundRecord.UpdateTime = field.NewTime(tableName, "update_time")
-	_wmsInboundRecord.CreateTime = field.NewTime(tableName, "create_time")
+	_wmsInboundRecord.Quantity = field.NewInt32(tableName, "quantity")
 
 	_wmsInboundRecord.fillFieldMap()
 
@@ -40,12 +40,12 @@ func newWmsInboundRecord(db *gorm.DB, opts ...gen.DOOption) wmsInboundRecord {
 type wmsInboundRecord struct {
 	wmsInboundRecordDo wmsInboundRecordDo
 
-	ALL        field.Asterisk
-	ID         field.Int64
-	InboundID  field.Int64
-	MaterialID field.Int64
-	UpdateTime field.Time
-	CreateTime field.Time
+	ALL             field.Asterisk
+	ID              field.Int64
+	InboundID       field.Int64
+	StockLocationID field.Int64
+	MaterialID      field.Int64
+	Quantity        field.Int32
 
 	fieldMap map[string]field.Expr
 }
@@ -64,9 +64,9 @@ func (w *wmsInboundRecord) updateTableName(table string) *wmsInboundRecord {
 	w.ALL = field.NewAsterisk(table)
 	w.ID = field.NewInt64(table, "id")
 	w.InboundID = field.NewInt64(table, "inbound_id")
+	w.StockLocationID = field.NewInt64(table, "stock_location_id")
 	w.MaterialID = field.NewInt64(table, "material_id")
-	w.UpdateTime = field.NewTime(table, "update_time")
-	w.CreateTime = field.NewTime(table, "create_time")
+	w.Quantity = field.NewInt32(table, "quantity")
 
 	w.fillFieldMap()
 
@@ -98,9 +98,9 @@ func (w *wmsInboundRecord) fillFieldMap() {
 	w.fieldMap = make(map[string]field.Expr, 5)
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["inbound_id"] = w.InboundID
+	w.fieldMap["stock_location_id"] = w.StockLocationID
 	w.fieldMap["material_id"] = w.MaterialID
-	w.fieldMap["update_time"] = w.UpdateTime
-	w.fieldMap["create_time"] = w.CreateTime
+	w.fieldMap["quantity"] = w.Quantity
 }
 
 func (w wmsInboundRecord) clone(db *gorm.DB) wmsInboundRecord {
