@@ -43,7 +43,7 @@ func (a *WmsStorageLocationService) GetStorageLocation(ctx context.Context, req 
 
 	for _, v := range storagelocations {
 		storagelocationmaterialService := wms_storagelocationmaterial.DefaultStorageLocationMaterialService()
-		slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID)
+		slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID, 0, 0)
 
 		if err != nil {
 			logs.Error(ctx, "event=GetStorageLocationMaterialMaterialDB error=%v", err.Error())
