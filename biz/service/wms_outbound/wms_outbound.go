@@ -12,7 +12,7 @@ import (
 )
 
 func (a *WmsOutboundService) AddWmsOutbound(ctx context.Context, req *freezonex_openiiot_api.AddOutboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddOutboundResponse, error) {
-	wmsID, err := a.AddWmsOutboundDB(ctx, req.Type, req.StorageLocationIds, req.MaterialName)
+	wmsID, err := a.AddWmsOutboundDB(ctx, req.Type)
 	if err != nil {
 		logs.Error(ctx, "event=AddWmsOutbound error=%v", err.Error())
 		return nil, err
@@ -39,7 +39,7 @@ func (a *WmsOutboundService) GetWmsOutbound(ctx context.Context, req *freezonex_
 	data := make([]*freezonex_openiiot_api.Outbound, 0)
 	for _, v := range wmss {
 
-		for _, b := range strings.Split(v.StorageLocationIds, ",") {
+		for _, b := range strings.Split("", ",") {
 
 			storageLocationService := wms_storage_location.DefaultStorageLocationService()
 			storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, common.StringToInt64(b), "", nil, "")
@@ -47,15 +47,12 @@ func (a *WmsOutboundService) GetWmsOutbound(ctx context.Context, req *freezonex_
 		}
 
 		data = append(data, &freezonex_openiiot_api.Outbound{
-			Id:                 common.Int64ToString(v.ID), // Converts int64 ID to string using a custom common package function
-			RefId:              v.RefID,
-			Type:               v.Type,
-			StorageLocationIds: strings.Split(v.StorageLocationIds, ","),
-			StorageLocations:   Names,
-			MaterialName:       v.MaterialName,
-			Operator:           v.Operator,
-			CreateTime:         common.GetTimeStringFromTime(&v.CreateTime), // Converts time.Time to string using a custom common package function
-			UpdateTime:         common.GetTimeStringFromTime(&v.UpdateTime), // Converts time.Time to string using a custom common package function
+			Id:         common.Int64ToString(v.ID), // Converts int64 ID to string using a custom common package function
+			RefId:      v.RefID,
+			Type:       v.Type,
+			Operator:   v.Operator,
+			CreateTime: common.GetTimeStringFromTime(&v.CreateTime), // Converts time.Time to string using a custom common package function
+			UpdateTime: common.GetTimeStringFromTime(&v.UpdateTime), // Converts time.Time to string using a custom common package function
 		})
 	}
 	resp.Data = data
@@ -66,7 +63,7 @@ func (a *WmsOutboundService) GetWmsOutbound(ctx context.Context, req *freezonex_
 
 // UpdateWmsOutbound will update wms record
 func (a *WmsOutboundService) UpdateWmsOutbound(ctx context.Context, req *freezonex_openiiot_api.UpdateOutboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateOutboundResponse, error) {
-	err := a.UpdateWmsOutboundDB(ctx, common.StringToInt64(req.Id), req.RefId, req.Type, req.StorageLocationId, req.MaterialName)
+	err := a.UpdateWmsOutboundDB(ctx, common.StringToInt64(req.Id), req.RefId, req.Type)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateWmsOutbound error=%v", err.Error())
 		return nil, err

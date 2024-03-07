@@ -40,20 +40,20 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 
 	for _, v := range wmss {
 		storagelocationService := storagelocation.DefaultStorageLocationService()
-		storages, err := storagelocationService.GetStorageLocationDB(ctx, common.StringToInt64(v.WarehouseID), "")
+		storages, err := storagelocationService.GetStorageLocationDB(ctx, common.StringToInt64(v.WarehouseID), "", nil, "")
 		var convertedStorages []*freezonex_openiiot_api.StorageLocation
 
 		for _, storage := range storages {
 			var convertedMaterials []*freezonex_openiiot_api.StorageLocationMaterial
 			storagelocationmaterialService := wms_storagelocationmaterial.DefaultStorageLocationMaterialService()
-			slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID, 0, 0)
+			slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID)
 			if err != nil {
 				logs.Error(ctx, "event=storagelocationmaterialService error=%v", err.Error())
 				return nil, err
 			}
 			for _, slmaterial := range slmaterials {
 				materialService := wms_material.DefaultWmsMaterialService()
-				materials, err := materialService.GetWmsMaterialDB(ctx, slmaterial.MaterialID, "", "", "", "", 0)
+				materials, err := materialService.GetWmsMaterialDB(ctx, slmaterial.MaterialID, "", "", "", "", "")
 				if err != nil {
 					logs.Error(ctx, "event=GetWmsMaterialDB error=%v", err.Error())
 					return nil, err
