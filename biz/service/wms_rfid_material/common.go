@@ -7,25 +7,25 @@ import (
 	"freezonex/openiiot/biz/dal/mysql"
 )
 
-type WmsRfidRfidMaterialService struct {
+type WmsRfidMaterialService struct {
 	db *mysql.MySQL
 	S  *config.K8sConfig
 }
 
 var (
-	service *WmsRfidRfidMaterialService
+	service *WmsRfidMaterialService
 	once    sync.Once
 )
 
-func NewWmsRfidRfidMaterialService(db *mysql.MySQL) *WmsRfidRfidMaterialService {
+func NewWmsRfidMaterialService(db *mysql.MySQL) *WmsRfidMaterialService {
 	once.Do(func() {
-		service = &WmsRfidRfidMaterialService{
+		service = &WmsRfidMaterialService{
 			db: db,
 		}
 	})
 	return service
 }
 
-func DefaultWmsRfidRfidMaterialService() *WmsRfidRfidMaterialService {
+func DefaultWmsRfidMaterialService() *WmsRfidMaterialService {
 	return service
 }

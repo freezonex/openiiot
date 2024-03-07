@@ -9,7 +9,7 @@ import (
 )
 
 // AddWmsRfidMaterialDB will add wms record to the DB.
-func (a *WmsRfidRfidMaterialService) AddWmsRfidMaterialDB(ctx context.Context, Rfid string, MaterialID int64, Quantity int32) (int64, error) {
+func (a *WmsRfidMaterialService) AddWmsRfidMaterialDB(ctx context.Context, Rfid string, MaterialID int64, Quantity int32) (int64, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsRfidMaterial
 	tx := table.WithContext(ctx)
@@ -30,7 +30,7 @@ func (a *WmsRfidRfidMaterialService) AddWmsRfidMaterialDB(ctx context.Context, R
 }
 
 // GetWmsRfidMaterialDB will get wms record from the DB in condition
-func (a *WmsRfidRfidMaterialService) GetWmsRfidMaterialDB(ctx context.Context, id int64, Rfid string, MaterialID int64, Quantity int32) ([]*model_openiiot.WmsRfidMaterial, error) {
+func (a *WmsRfidMaterialService) GetWmsRfidMaterialDB(ctx context.Context, id int64, Rfid string, MaterialID int64, Quantity int32) ([]*model_openiiot.WmsRfidMaterial, error) {
 	table := a.db.DBOpeniiotQuery.WmsRfidMaterial
 	tx := table.WithContext(ctx).Select(field.ALL)
 	if id != 0 {
@@ -55,7 +55,7 @@ func (a *WmsRfidRfidMaterialService) GetWmsRfidMaterialDB(ctx context.Context, i
 }
 
 // UpdateWmsRfidMaterialDB will update wms record from the DB.
-func (a *WmsRfidRfidMaterialService) UpdateWmsRfidMaterialDB(ctx context.Context, id int64, Rfid string, MaterialID int64, Quantity int32) error {
+func (a *WmsRfidMaterialService) UpdateWmsRfidMaterialDB(ctx context.Context, id int64, Rfid string, MaterialID int64, Quantity int32) error {
 	table := a.db.DBOpeniiotQuery.WmsRfidMaterial
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
@@ -80,7 +80,7 @@ func (a *WmsRfidRfidMaterialService) UpdateWmsRfidMaterialDB(ctx context.Context
 }
 
 // DeleteWmsRfidMaterialDB will delete wms record from the DB.
-func (a *WmsRfidRfidMaterialService) DeleteWmsRfidMaterialDB(ctx context.Context, id int64) error {
+func (a *WmsRfidMaterialService) DeleteWmsRfidMaterialDB(ctx context.Context, id int64) error {
 
 	table := a.db.DBOpeniiotQuery.WmsRfidMaterial
 	tx := table.WithContext(ctx)

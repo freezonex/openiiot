@@ -9,7 +9,7 @@ import (
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
-func (a *WmsRfidRfidMaterialService) AddWmsRfidMaterial(ctx context.Context, req *freezonex_openiiot_api.AddRfidMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddRfidMaterialResponse, error) {
+func (a *WmsRfidMaterialService) AddWmsRfidMaterial(ctx context.Context, req *freezonex_openiiot_api.AddRfidMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddRfidMaterialResponse, error) {
 	wmsID, err := a.AddWmsRfidMaterialDB(ctx, req.Rfid, common.StringToInt64(req.MaterialId), req.Quantity)
 	if err != nil {
 		logs.Error(ctx, "event=AddWmsRfidMaterial error=%v", err.Error())
@@ -24,7 +24,7 @@ func (a *WmsRfidRfidMaterialService) AddWmsRfidMaterial(ctx context.Context, req
 }
 
 // GetWmsRfidMaterial will get wms record in condition
-func (a *WmsRfidRfidMaterialService) GetWmsRfidMaterial(ctx context.Context, req *freezonex_openiiot_api.GetRfidMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetRfidMaterialResponse, error) {
+func (a *WmsRfidMaterialService) GetWmsRfidMaterial(ctx context.Context, req *freezonex_openiiot_api.GetRfidMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetRfidMaterialResponse, error) {
 	wmss, err := a.GetWmsRfidMaterialDB(ctx, 0, req.Rfid, common.StringToInt64(req.MaterialId), req.Quantity)
 
 	if err != nil {
@@ -55,7 +55,7 @@ func (a *WmsRfidRfidMaterialService) GetWmsRfidMaterial(ctx context.Context, req
 }
 
 // UpdateWmsRfidMaterial will update wms record
-func (a *WmsRfidRfidMaterialService) UpdateWmsRfidMaterial(ctx context.Context, req *freezonex_openiiot_api.UpdateRfidMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateRfidMaterialResponse, error) {
+func (a *WmsRfidMaterialService) UpdateWmsRfidMaterial(ctx context.Context, req *freezonex_openiiot_api.UpdateRfidMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateRfidMaterialResponse, error) {
 	err := a.UpdateWmsRfidMaterialDB(ctx, common.StringToInt64(req.Id), req.Rfid, common.StringToInt64(req.MaterialId), req.Quantity)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateWmsRfidMaterial error=%v", err.Error())
@@ -69,7 +69,7 @@ func (a *WmsRfidRfidMaterialService) UpdateWmsRfidMaterial(ctx context.Context, 
 }
 
 // DeleteWmsRfidMaterial will delete wms record
-func (a *WmsRfidRfidMaterialService) DeleteWmsRfidMaterial(ctx context.Context, req *freezonex_openiiot_api.DeleteRfidMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteRfidMaterialResponse, error) {
+func (a *WmsRfidMaterialService) DeleteWmsRfidMaterial(ctx context.Context, req *freezonex_openiiot_api.DeleteRfidMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteRfidMaterialResponse, error) {
 	//Delete wms also should delete wms user, edge pool, core pool, application pool, flow
 	/*err := a.DeleteWmsRfidMaterialUserDB(ctx, req.Id)
 	if err != nil {
