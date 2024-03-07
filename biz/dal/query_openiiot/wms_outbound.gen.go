@@ -30,9 +30,10 @@ func newWmsOutbound(db *gorm.DB, opts ...gen.DOOption) wmsOutbound {
 	_wmsOutbound.ID = field.NewInt64(tableName, "id")
 	_wmsOutbound.RefID = field.NewString(tableName, "ref_id")
 	_wmsOutbound.Type = field.NewString(tableName, "type")
-	_wmsOutbound.StorageLocationIds = field.NewString(tableName, "storage_location_ids")
-	_wmsOutbound.MaterialName = field.NewString(tableName, "material_name")
+	_wmsOutbound.Source = field.NewString(tableName, "source")
+	_wmsOutbound.Note = field.NewString(tableName, "note")
 	_wmsOutbound.Operator = field.NewString(tableName, "operator")
+	_wmsOutbound.Status = field.NewString(tableName, "status")
 	_wmsOutbound.UpdateTime = field.NewTime(tableName, "update_time")
 	_wmsOutbound.CreateTime = field.NewTime(tableName, "create_time")
 
@@ -44,15 +45,16 @@ func newWmsOutbound(db *gorm.DB, opts ...gen.DOOption) wmsOutbound {
 type wmsOutbound struct {
 	wmsOutboundDo wmsOutboundDo
 
-	ALL                field.Asterisk
-	ID                 field.Int64
-	RefID              field.String
-	Type               field.String
-	StorageLocationIds field.String
-	MaterialName       field.String
-	Operator           field.String
-	UpdateTime         field.Time
-	CreateTime         field.Time
+	ALL        field.Asterisk
+	ID         field.Int64
+	RefID      field.String
+	Type       field.String
+	Source     field.String
+	Note       field.String
+	Operator   field.String
+	Status     field.String
+	UpdateTime field.Time
+	CreateTime field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -72,9 +74,10 @@ func (w *wmsOutbound) updateTableName(table string) *wmsOutbound {
 	w.ID = field.NewInt64(table, "id")
 	w.RefID = field.NewString(table, "ref_id")
 	w.Type = field.NewString(table, "type")
-	w.StorageLocationIds = field.NewString(table, "storage_location_ids")
-	w.MaterialName = field.NewString(table, "material_name")
+	w.Source = field.NewString(table, "source")
+	w.Note = field.NewString(table, "note")
 	w.Operator = field.NewString(table, "operator")
+	w.Status = field.NewString(table, "status")
 	w.UpdateTime = field.NewTime(table, "update_time")
 	w.CreateTime = field.NewTime(table, "create_time")
 
@@ -103,13 +106,14 @@ func (w *wmsOutbound) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (w *wmsOutbound) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 8)
+	w.fieldMap = make(map[string]field.Expr, 9)
 	w.fieldMap["id"] = w.ID
 	w.fieldMap["ref_id"] = w.RefID
 	w.fieldMap["type"] = w.Type
-	w.fieldMap["storage_location_ids"] = w.StorageLocationIds
-	w.fieldMap["material_name"] = w.MaterialName
+	w.fieldMap["source"] = w.Source
+	w.fieldMap["note"] = w.Note
 	w.fieldMap["operator"] = w.Operator
+	w.fieldMap["status"] = w.Status
 	w.fieldMap["update_time"] = w.UpdateTime
 	w.fieldMap["create_time"] = w.CreateTime
 }

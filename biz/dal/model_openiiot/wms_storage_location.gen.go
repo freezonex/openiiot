@@ -12,13 +12,14 @@ const TableNameWmsStorageLocation = "wms_storage_location"
 
 // WmsStorageLocation mapped from table <wms_storage_location>
 type WmsStorageLocation struct {
-	ID           int64     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	WarehouseID  int64     `gorm:"column:warehouse_id;not null" json:"warehouse_id"`
-	Name         string    `gorm:"column:name;not null" json:"name"`
-	Occupied     *bool     `gorm:"column:occupied" json:"occupied"`
-	MaterialName *string   `gorm:"column:material_name" json:"material_name"`
-	UpdateTime   time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`
-	CreateTime   time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
+	ID               int64     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	WarehouseID      int64     `gorm:"column:warehouse_id;not null" json:"warehouse_id"`
+	Name             string    `gorm:"column:name;not null" json:"name"`
+	Occupied         *bool     `gorm:"column:occupied" json:"occupied"`
+	MaterialName     *string   `gorm:"column:material_name" json:"material_name"`
+	MaterialQuantity *int32    `gorm:"column:material_quantity" json:"material_quantity"`
+	UpdateTime       time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`
+	CreateTime       time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
 }
 
 // TableName WmsStorageLocation's table name

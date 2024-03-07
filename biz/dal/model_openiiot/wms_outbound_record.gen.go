@@ -4,19 +4,15 @@
 
 package model_openiiot
 
-import (
-	"time"
-)
-
 const TableNameWmsOutboundRecord = "wms_outbound_record"
 
 // WmsOutboundRecord mapped from table <wms_outbound_record>
 type WmsOutboundRecord struct {
-	ID         int64     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	OutboundID int64     `gorm:"column:outbound_id;not null" json:"outbound_id"`
-	MaterialID int64     `gorm:"column:material_id;not null" json:"material_id"`
-	UpdateTime time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`
-	CreateTime time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
+	ID              int64 `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	OutboundID      int64 `gorm:"column:outbound_id;not null" json:"outbound_id"`
+	StockLocationID int64 `gorm:"column:stock_location_id;not null" json:"stock_location_id"`
+	MaterialID      int64 `gorm:"column:material_id;not null" json:"material_id"`
+	Quantity        int32 `gorm:"column:quantity;not null" json:"quantity"`
 }
 
 // TableName WmsOutboundRecord's table name

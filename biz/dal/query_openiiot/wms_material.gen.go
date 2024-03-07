@@ -28,10 +28,8 @@ func newWmsMaterial(db *gorm.DB, opts ...gen.DOOption) wmsMaterial {
 	tableName := _wmsMaterial.wmsMaterialDo.TableName()
 	_wmsMaterial.ALL = field.NewAsterisk(tableName)
 	_wmsMaterial.ID = field.NewInt64(tableName, "id")
-	_wmsMaterial.Rfid = field.NewString(tableName, "rfid")
 	_wmsMaterial.ProductCode = field.NewString(tableName, "product_code")
 	_wmsMaterial.Name = field.NewString(tableName, "name")
-	_wmsMaterial.StorageLocationID = field.NewInt64(tableName, "storage_location_id")
 	_wmsMaterial.ProductType = field.NewString(tableName, "product_type")
 	_wmsMaterial.Unit = field.NewString(tableName, "unit")
 	_wmsMaterial.Note = field.NewString(tableName, "note")
@@ -46,17 +44,15 @@ func newWmsMaterial(db *gorm.DB, opts ...gen.DOOption) wmsMaterial {
 type wmsMaterial struct {
 	wmsMaterialDo wmsMaterialDo
 
-	ALL               field.Asterisk
-	ID                field.Int64
-	Rfid              field.String
-	ProductCode       field.String
-	Name              field.String
-	StorageLocationID field.Int64
-	ProductType       field.String
-	Unit              field.String
-	Note              field.String
-	UpdateTime        field.Time
-	CreateTime        field.Time
+	ALL         field.Asterisk
+	ID          field.Int64
+	ProductCode field.String
+	Name        field.String
+	ProductType field.String
+	Unit        field.String
+	Note        field.String
+	UpdateTime  field.Time
+	CreateTime  field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -74,10 +70,8 @@ func (w wmsMaterial) As(alias string) *wmsMaterial {
 func (w *wmsMaterial) updateTableName(table string) *wmsMaterial {
 	w.ALL = field.NewAsterisk(table)
 	w.ID = field.NewInt64(table, "id")
-	w.Rfid = field.NewString(table, "rfid")
 	w.ProductCode = field.NewString(table, "product_code")
 	w.Name = field.NewString(table, "name")
-	w.StorageLocationID = field.NewInt64(table, "storage_location_id")
 	w.ProductType = field.NewString(table, "product_type")
 	w.Unit = field.NewString(table, "unit")
 	w.Note = field.NewString(table, "note")
@@ -109,12 +103,10 @@ func (w *wmsMaterial) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (w *wmsMaterial) fillFieldMap() {
-	w.fieldMap = make(map[string]field.Expr, 10)
+	w.fieldMap = make(map[string]field.Expr, 8)
 	w.fieldMap["id"] = w.ID
-	w.fieldMap["rfid"] = w.Rfid
 	w.fieldMap["product_code"] = w.ProductCode
 	w.fieldMap["name"] = w.Name
-	w.fieldMap["storage_location_id"] = w.StorageLocationID
 	w.fieldMap["product_type"] = w.ProductType
 	w.fieldMap["unit"] = w.Unit
 	w.fieldMap["note"] = w.Note
