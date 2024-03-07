@@ -10,7 +10,7 @@ import (
 )
 
 // AddStocktakingDB will add Stocktaking record to the DB.
-func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid string, Type string, StorageLocationIds string, operator string, result string) (int64, error) {
+func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid string, Type string, Source string, Note string, Status string) (int64, error) {
 
 	if refid == "" {
 		return -1, errors.New("refid can not be empty")
@@ -18,7 +18,13 @@ func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid stri
 	if Type == "" {
 		return -1, errors.New("type1 can not be empty")
 	}
-	if StorageLocationIds == "" {
+	if Source == "" {
+		return -1, errors.New("type1 can not be empty")
+	}
+	if Note == "" {
+		return -1, errors.New("type1 can not be empty")
+	}
+	if Status == "" {
 		return -1, errors.New("type1 can not be empty")
 	}
 	table := a.db.DBOpeniiotQuery.WmsStocktaking
@@ -30,12 +36,13 @@ func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid stri
 	id := common.GetUUID()
 
 	newRecord := &model_openiiot.WmsStocktaking{
-		ID:                 id,
-		RefID:              refid,
-		Type:               Type,
-		StorageLocationIds: StorageLocationIds,
-		Operator:           "",
-		Result:             result,
+		ID:       id,
+		RefID:    refid,
+		Type:     Type,
+		Source:   Source,
+		Note:     &Note,
+		Operator: "",
+		Status:   &Status,
 	}
 	err := tx.Create(newRecord)
 	if err != nil {
@@ -68,7 +75,7 @@ func (a *WmsStocktakingService) GetStocktakingDB(ctx context.Context, id int64, 
 }
 
 // UpdateStocktakingDB will update stocktaking record from the DB.
-func (a *WmsStocktakingService) UpdateStocktakingDB(ctx context.Context, id int64, refid string, Type string, Result string) error {
+func (a *WmsStocktakingService) UpdateStocktakingDB(ctx context.Context, id int64, refid string, Type string) error {
 	table := a.db.DBOpeniiotQuery.WmsStocktaking
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
@@ -84,9 +91,6 @@ func (a *WmsStocktakingService) UpdateStocktakingDB(ctx context.Context, id int6
 	}
 	if Type != "" {
 		updates[table.Type.ColumnName().String()] = Type
-	}
-	if Result != "" {
-		updates[table.Result.ColumnName().String()] = Result
 	}
 	_, err := tx.Updates(updates)
 	return err
