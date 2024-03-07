@@ -7,31 +7,66 @@ import (
 	"freezonex/openiiot/biz/service/utils/common"
 	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
 	"gorm.io/gen/field"
+	"strings"
 )
 
 // AddWmsInboundDB will add wms record to the DB.
-func (a *WmsInboundService) AddWmsInboundDB(ctx context.Context, RefID string, Type string, StorageLocation string, MaterialName string, Operator string) (int64, error) {
+func (a *WmsInboundService) AddWmsInboundDB(ctx context.Context, storagelocationId int64, type1 string, materialname string, source string, rfids []string, materialids []int64) (int64, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsInbound
 	tx := table.WithContext(ctx)
 	id := common.GetUUID()
+	if type1 == "PDA" {
+		if len(rfids) == 0 {
+			return -1, errors.New("rfids cannot be empty")
+		}
+		operator := "default"
+		rfidsStr := strings.Join(rfids, ",")
+		storageLocationService := storagelocation.DefaultStorageLocationService()
+		storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, storagelocationId, "")
 
-	storageLocationService := storagelocation.DefaultStorageLocationService()
-	storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, StorageLocation, nil, "")
+		var newRecord = &model_openiiot.WmsInbound{
+			ID:                id,
+			RefID:             rfidsStr,
+			Type:              type1,
+			StorageLocationID: storageLocationData[0].ID,
+			MaterialName:      materialname,
+			Source:            source,
+			Operator:          operator,
+		}
 
-	var newRecord = &model_openiiot.WmsInbound{
-		ID:                id,
-		RefID:             RefID,
-		Type:              Type,
-		StorageLocationID: storageLocationData[0].ID,
-		MaterialName:      MaterialName,
-		Operator:          Operator,
+		err := tx.Create(newRecord)
+		if err != nil {
+			return -1, err
+		}
+
 	}
 
-	err := tx.Create(newRecord)
-	if err != nil {
-		return -1, err
+	if type1 == "manual" {
+		if len(materialids) == 0 {
+			return -1, errors.New("materialids cannot be empty")
+		}
+		operator := "default"
+		rfidsStr := strings.Join(rfids, ",")
+		storageLocationService := storagelocation.DefaultStorageLocationService()
+		storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, storagelocationId, "")
+
+		var newRecord = &model_openiiot.WmsInbound{
+			ID:                id,
+			RefID:             rfidsStr,
+			Type:              type1,
+			StorageLocationID: storageLocationData[0].ID,
+			MaterialName:      materialname,
+			Source:            source,
+			Operator:          operator,
+		}
+
+		err := tx.Create(newRecord)
+		if err != nil {
+			return -1, err
+		}
 	}
+
 	return id, nil
 }
 
@@ -55,13 +90,13 @@ func (a *WmsInboundService) GetWmsInboundDB(ctx context.Context, id int64, RefId
 }
 
 // UpdateWmsInboundDB will update wms record from the DB.
-func (a *WmsInboundService) UpdateWmsInboundDB(ctx context.Context, id int64, RefID string, Type string, StorageLocation string, MaterialName string, Operator string) error {
+func (a *WmsInboundService) UpdateWmsInboundDB(ctx context.Context, id int64, RefID string, Type string, StorageLocation string, MaterialName string) error {
 	table := a.db.DBOpeniiotQuery.WmsInbound
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
 
 	storageLocationService := storagelocation.DefaultStorageLocationService()
-	storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, StorageLocation, nil, "")
+	storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, common.StringToInt64(StorageLocation), "")
 
 	if existRecord == nil {
 		return errors.New("wms does not exist")
@@ -78,9 +113,6 @@ func (a *WmsInboundService) UpdateWmsInboundDB(ctx context.Context, id int64, Re
 	}
 	if MaterialName != "" {
 		updates[table.MaterialName.ColumnName().String()] = MaterialName
-	}
-	if Operator != "" {
-		updates[table.Operator.ColumnName().String()] = Operator
 	}
 
 	_, err := tx.Updates(updates)
