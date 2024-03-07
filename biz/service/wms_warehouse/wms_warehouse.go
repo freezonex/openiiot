@@ -5,7 +5,7 @@ import (
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
-	"freezonex/openiiot/biz/service/wms_material"
+
 	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -52,15 +52,19 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 				return nil, err
 			}
 			for _, slmaterial := range slmaterials {
-				materialService := wms_material.DefaultWmsMaterialService()
-				materials, err := materialService.GetWmsMaterialDB(ctx, slmaterial.MaterialID, "", "", "", "", "")
+				u := a.db.DBOpeniiotQuery.WmsMaterial
+				e := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
+
+				err1 := u.WithContext(ctx).Select(u.Name, e.MaterialID).LeftJoin(e, e.MaterialID.EqCol(u.ID))
+				existRecord, _ := err1.Where(e.MaterialID.Eq(slmaterial.MaterialID)).First()
+
 				if err != nil {
 					logs.Error(ctx, "event=GetWmsMaterialDB error=%v", err.Error())
 					return nil, err
 				}
 				convertedmaterial := &freezonex_openiiot_api.StorageLocationMaterial{
 					MaterialId:   common.Int64ToString(slmaterial.MaterialID),
-					MaterialName: materials[0].Name,
+					MaterialName: existRecord.Name,
 					Quantity:     slmaterial.Quantity,
 				}
 				convertedMaterials = append(convertedMaterials, convertedmaterial)
