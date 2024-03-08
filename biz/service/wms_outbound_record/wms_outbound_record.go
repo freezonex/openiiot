@@ -7,7 +7,6 @@ import (
 	"freezonex/openiiot/biz/service/utils/common"
 	"freezonex/openiiot/biz/service/wms_material"
 	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
-	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 	"freezonex/openiiot/biz/service/wms_warehouse"
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
@@ -54,8 +53,7 @@ func (a *WmsOutboundRecordService) GetWmsOutboundRecord(ctx context.Context, req
 		warehouseService := wms_warehouse.DefaultWmsWarehouseService()
 		WarehouseID := storageLocationData[0].WarehouseID
 		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, 0, "", common.Int64ToString(WarehouseID), "", "", "", "", "")
-		storageLocationMaterialService := wms_storagelocationmaterial.DefaultStorageLocationMaterialService()
-		storageLocationMaterialData, _ := storageLocationMaterialService.GetStorageLocationMaterialDB(ctx, 0, v.StockLocationID, v.MaterialID, 0)
+
 		locationame := warehouseData[0].Name + "-" + storageLocationData[0].Name
 
 		//u := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
@@ -75,7 +73,7 @@ func (a *WmsOutboundRecordService) GetWmsOutboundRecord(ctx context.Context, req
 		convertedimaterial := &freezonex_openiiot_api.Inventory{
 			MaterialName: materials[0].Name,
 			MaterialId:   common.Int64ToString(v.MaterialID),
-			Quantity:     storageLocationMaterialData[0].Quantity,
+			Quantity:     v.Quantity,
 		}
 		convertedimaterials = append(convertedimaterials, convertedimaterial)
 
