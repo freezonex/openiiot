@@ -66,7 +66,7 @@ func (a *WmsOutboundService) GetWmsOutbound(ctx context.Context, req *freezonex_
 
 // UpdateWmsOutbound will update wms record
 func (a *WmsOutboundService) UpdateWmsOutbound(ctx context.Context, req *freezonex_openiiot_api.UpdateOutboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateOutboundResponse, error) {
-	err := a.UpdateWmsOutboundDB(ctx, common.StringToInt64(req.Id), req.RefId, req.Type)
+	err := a.UpdateWmsOutboundDB(ctx, common.StringToInt64(req.Id), req.RefId, req.Type, req.Source, req.Note, req.Status)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateWmsOutbound error=%v", err.Error())
 		return nil, err
