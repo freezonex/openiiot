@@ -24,6 +24,7 @@ import (
 	"freezonex/openiiot/biz/service/wms_material"
 	"freezonex/openiiot/biz/service/wms_outbound"
 	"freezonex/openiiot/biz/service/wms_stocktaking"
+	"freezonex/openiiot/biz/service/wms_stocktaking_record"
 	"freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 	"freezonex/openiiot/biz/service/wms_warehouse"
@@ -559,5 +560,16 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/wmsstocktaking/get",
 				wmsHandler.GetWmsStocktaking,
 				&iiotpb.GetStocktakingRequest{}))
+	}
+
+	wms_Stocktaking_recordGroup := r.Group("/wmsstocktakingrecord", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsStocktakingRecordHandler(wms_stocktaking_record.NewStocktakingRecordService(db))
+		wms_Stocktaking_recordGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsstocktakingrecord/get",
+				wmsHandler.GetWmsStocktakingRecord,
+				&iiotpb.GetStocktakingRecordRequest{}))
 	}
 }
