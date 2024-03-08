@@ -40,7 +40,7 @@ func (a *WmsMaterialService) GetWmsMaterial(ctx context.Context, req *freezonex_
 	data := make([]*freezonex_openiiot_api.Material, 0)
 	for _, v := range wmss {
 		storageLocationMaterialService := wms_storagelocationmaterial.DefaultStorageLocationMaterialService()
-		storageLocationData, _ := storageLocationMaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID)
+		storageLocationData, _ := storageLocationMaterialService.GetStorageLocationMaterialDB(ctx, 0, v.ID, 0, 0)
 		var StorageLocationId []string
 		var StorageLocation []string
 

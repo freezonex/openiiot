@@ -19,6 +19,7 @@ import (
 	"freezonex/openiiot/biz/service/tdengine"
 	"freezonex/openiiot/biz/service/tenant"
 	"freezonex/openiiot/biz/service/user"
+	"freezonex/openiiot/biz/service/wms_inbound"
 	"freezonex/openiiot/biz/service/wms_inbound_record"
 	"freezonex/openiiot/biz/service/wms_material"
 	"freezonex/openiiot/biz/service/wms_outbound"
@@ -460,35 +461,35 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				wmsHandler.GetWmsStorageLocation,
 				&iiotpb.GetStorageLocationRequest{}))
 	}
-	//
-	//wmsInboundGroup := r.Group("/wmsinbound", middleware.Access())
-	//{
-	//	wmsHandler := handler.NewWmsInboundHandler(wms_inbound.NewWmsInboundService(db))
-	//	wmsInboundGroup.POST(
-	//		"/add",
-	//		middleware.Response(
-	//			"/wmsinbound/add",
-	//			wmsHandler.AddWmsInbound,
-	//			&iiotpb.AddInboundRequest{}))
-	//	wmsInboundGroup.POST(
-	//		"/update",
-	//		middleware.Response(
-	//			"/wmsinbound/update",
-	//			wmsHandler.UpdateWmsInbound,
-	//			&iiotpb.UpdateInboundRequest{}))
-	//	wmsInboundGroup.POST(
-	//		"/wmsinbound",
-	//		middleware.Response(
-	//			"/wmsinbound/delete",
-	//			wmsHandler.DeleteWmsInbound,
-	//			&iiotpb.DeleteInboundRequest{}))
-	//	wmsInboundGroup.POST(
-	//		"/get",
-	//		middleware.Response(
-	//			"/wmsinbound/get",
-	//			wmsHandler.GetWmsInbound,
-	//			&iiotpb.GetInboundRequest{}))
-	//}
+
+	wmsInboundGroup := r.Group("/wmsinbound", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsInboundHandler(wms_inbound.NewWmsInboundService(db))
+		wmsInboundGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wmsinbound/add",
+				wmsHandler.AddWmsInbound,
+				&iiotpb.AddInboundRequest{}))
+		wmsInboundGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wmsinbound/update",
+				wmsHandler.UpdateWmsInbound,
+				&iiotpb.UpdateInboundRequest{}))
+		wmsInboundGroup.POST(
+			"/wmsinbound",
+			middleware.Response(
+				"/wmsinbound/delete",
+				wmsHandler.DeleteWmsInbound,
+				&iiotpb.DeleteInboundRequest{}))
+		wmsInboundGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsinbound/get",
+				wmsHandler.GetWmsInbound,
+				&iiotpb.GetInboundRequest{}))
+	}
 
 	wmsOutboundGroup := r.Group("/wmsoutbound", middleware.Access())
 	{
@@ -521,13 +522,13 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	wmsInboundRecordGroup := r.Group("/wmsinboundrecord", middleware.Access())
 	{
-		wmsHandler := handler.NewWmsInboundRecordHandler(wms_inbound_record.NewWmsInboundRecordService(db))
+		wmsHandler1 := handler.NewWmsInboundRecordHandler(wms_inbound_record.NewWmsInboundRecordService(db))
 
 		wmsInboundRecordGroup.POST(
 			"/get",
 			middleware.Response(
 				"/wmsinboundrecord/get",
-				wmsHandler.GetWmsInboundRecord,
+				wmsHandler1.GetWmsInboundRecord,
 				&iiotpb.GetInboundRecordRequest{}))
 	}
 

@@ -2,9 +2,11 @@ package wms_warehouse
 
 import (
 	"context"
+	"errors"
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
+	"gorm.io/gorm"
 
 	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
@@ -46,7 +48,7 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 		for _, storage := range storages {
 			var convertedMaterials []*freezonex_openiiot_api.StorageLocationMaterial
 			storagelocationmaterialService := wms_storagelocationmaterial.DefaultStorageLocationMaterialService()
-			slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialMaterialDB(ctx, 0, v.ID)
+			slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialDB(ctx, 0, v.ID, 0, 0)
 			if err != nil {
 				logs.Error(ctx, "event=storagelocationmaterialService error=%v", err.Error())
 				return nil, err
@@ -54,13 +56,19 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 			for _, slmaterial := range slmaterials {
 				u := a.db.DBOpeniiotQuery.WmsMaterial
 				e := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
-
+				getid := storage.ID
 				err1 := u.WithContext(ctx).Select(u.Name, e.MaterialID).LeftJoin(e, e.MaterialID.EqCol(u.ID))
-				existRecord, _ := err1.Where(e.MaterialID.Eq(slmaterial.MaterialID)).First()
+				existRecord, err := err1.Where(e.MaterialID.Eq(slmaterial.MaterialID), e.StoreLocationID.Eq(getid)).First()
 
 				if err != nil {
-					logs.Error(ctx, "event=GetWmsMaterialDB error=%v", err.Error())
-					return nil, err
+					if errors.Is(err, gorm.ErrRecordNotFound) {
+						// If record not found, continue to the next item in the loop
+						continue
+					}
+					if err != nil {
+						logs.Error(ctx, "event=GetWmsMaterialDB error=%v", err.Error())
+						return nil, err
+					}
 				}
 				convertedmaterial := &freezonex_openiiot_api.StorageLocationMaterial{
 					MaterialId:   common.Int64ToString(slmaterial.MaterialID),

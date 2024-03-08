@@ -3,32 +3,31 @@ package wms_inbound_record
 import (
 	"context"
 	"freezonex/openiiot/biz/dal/model_openiiot"
+	"freezonex/openiiot/biz/service/utils/common"
 	"gorm.io/gen/field"
 )
 
-//// AddWmsInboundRecordDB will add wms record to the DB.
-//func (a *WmsInboundRecordService) AddWmsInboundRecordDB(ctx context.Context, InboundId string, Rfid string, MaterialId string) (int64, error) {
-//
-//	table := a.db.DBOpeniiotQuery.WmsInboundRecord
-//	tx := table.WithContext(ctx)
-//	id := common.GetUUID()
-//
-//	InboundIdInt, _ := strconv.ParseInt(InboundId, 10, 64)
-//	MaterialIdInt, _ := strconv.ParseInt(MaterialId, 10, 64)
-//
-//	var newRecord = &model_openiiot.WmsInboundRecord{
-//		ID:         id,
-//		InboundID:  InboundIdInt,
-//		Rfid:       &Rfid,
-//		MaterialID: MaterialIdInt,
-//	}
-//
-//	err := tx.Create(newRecord)
-//	if err != nil {
-//		return -1, err
-//	}
-//	return id, nil
-//}
+// AddWmsInboundRecordDB will add wms record to the DB.
+func (a *WmsInboundRecordService) AddWmsInboundRecordDB(ctx context.Context, InboundId int64, storagelocation int64, MaterialId int64, quantity int32) (int64, error) {
+
+	table := a.db.DBOpeniiotQuery.WmsInboundRecord
+	tx := table.WithContext(ctx)
+	id := common.GetUUID()
+
+	var newRecord = &model_openiiot.WmsInboundRecord{
+		ID:              id,
+		InboundID:       InboundId,
+		MaterialID:      MaterialId,
+		StockLocationID: storagelocation,
+		Quantity:        quantity,
+	}
+
+	err := tx.Create(newRecord)
+	if err != nil {
+		return -1, err
+	}
+	return id, nil
+}
 
 // GetWmsInboundRecordDB will get wms record from the DB in condition
 func (a *WmsInboundRecordService) GetWmsInboundRecordDB(ctx context.Context, id int64, inboundid int64) ([]*model_openiiot.WmsInboundRecord, error) {
