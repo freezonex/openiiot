@@ -524,25 +524,13 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	wmsInboundRecordGroup := r.Group("/wmsinboundrecord", middleware.Access())
 	{
-		wmsHandler := handler.NewWmsInboundRecordHandler(wms_inbound_record.NewWmsInboundRecordService(db))
+		wmsHandler1 := handler.NewWmsInboundRecordHandler(wms_inbound_record.NewWmsInboundRecordService(db))
 
 		wmsInboundRecordGroup.POST(
 			"/get",
 			middleware.Response(
 				"/wmsinboundrecord/get",
-				wmsHandler.GetWmsInboundRecord,
-				&iiotpb.GetInboundRecordRequest{}))
-	}
-
-	wmsOutboundRecordGroup := r.Group("/wmsOutboundrecord", middleware.Access())
-	{
-		wmsHandler := handler.NewWmsOutboundRecordHandler(wms_outbound_record.NewWmsOutboundRecordService(db))
-
-		wmsOutboundRecordGroup.POST(
-			"/get",
-			middleware.Response(
-				"/wmsoutboundrecord/get",
-				wmsHandler.GetWmsOutboundRecord,
+				wmsHandler1.GetWmsInboundRecord,
 				&iiotpb.GetInboundRecordRequest{}))
 	}
 
