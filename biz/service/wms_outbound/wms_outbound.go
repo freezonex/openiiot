@@ -12,7 +12,7 @@ import (
 )
 
 func (a *WmsOutboundService) AddWmsOutbound(ctx context.Context, req *freezonex_openiiot_api.AddOutboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddOutboundResponse, error) {
-	wmsID, err := a.AddWmsOutboundDB(ctx, req.Type)
+	wmsID, err := a.AddWmsOutboundDB(ctx, req.Type, req.Source, req.ShelfRecords, req.Note, req.Status)
 	if err != nil {
 		logs.Error(ctx, "event=AddWmsOutbound error=%v", err.Error())
 		return nil, err
@@ -51,6 +51,9 @@ func (a *WmsOutboundService) GetWmsOutbound(ctx context.Context, req *freezonex_
 			RefId:      v.RefID,
 			Type:       v.Type,
 			Operator:   v.Operator,
+			Source:     v.Source,
+			Status:     *v.Status,
+			Note:       *v.Note,
 			CreateTime: common.GetTimeStringFromTime(&v.CreateTime), // Converts time.Time to string using a custom common package function
 			UpdateTime: common.GetTimeStringFromTime(&v.UpdateTime), // Converts time.Time to string using a custom common package function
 		})
