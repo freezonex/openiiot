@@ -23,6 +23,7 @@ import (
 	"freezonex/openiiot/biz/service/wms_inbound_record"
 	"freezonex/openiiot/biz/service/wms_material"
 	"freezonex/openiiot/biz/service/wms_outbound"
+	"freezonex/openiiot/biz/service/wms_outbound_record"
 	"freezonex/openiiot/biz/service/wms_stocktaking"
 	"freezonex/openiiot/biz/service/wms_stocktaking_record"
 	"freezonex/openiiot/biz/service/wms_storage_location"
@@ -523,13 +524,25 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	wmsInboundRecordGroup := r.Group("/wmsinboundrecord", middleware.Access())
 	{
-		wmsHandler1 := handler.NewWmsInboundRecordHandler(wms_inbound_record.NewWmsInboundRecordService(db))
+		wmsHandler := handler.NewWmsInboundRecordHandler(wms_inbound_record.NewWmsInboundRecordService(db))
 
 		wmsInboundRecordGroup.POST(
 			"/get",
 			middleware.Response(
 				"/wmsinboundrecord/get",
-				wmsHandler1.GetWmsInboundRecord,
+				wmsHandler.GetWmsInboundRecord,
+				&iiotpb.GetInboundRecordRequest{}))
+	}
+
+	wmsOutboundRecordGroup := r.Group("/wmsOutboundrecord", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsOutboundRecordHandler(wms_outbound_record.NewWmsOutboundRecordService(db))
+
+		wmsOutboundRecordGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsoutboundrecord/get",
+				wmsHandler.GetWmsOutboundRecord,
 				&iiotpb.GetInboundRecordRequest{}))
 	}
 

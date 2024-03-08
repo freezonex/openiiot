@@ -20,7 +20,6 @@ func (a *WmsInboundService) AddWmsInboundDB(ctx context.Context, type1 string, s
 	id := common.GetUUID()
 	if source == "PDA" {
 		for _, record := range shelfrecords {
-
 			for _, invotry := range record.Inventory {
 				inboundrecordservie := wms_inbound_record.DefaultWmsInboundRecordService()
 				_, err := inboundrecordservie.AddWmsInboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
@@ -48,6 +47,7 @@ func (a *WmsInboundService) AddWmsInboundDB(ctx context.Context, type1 string, s
 				return -1, err
 			}
 		}
+
 	}
 	if source == "manual" {
 		for _, record := range shelfrecords {
@@ -80,6 +80,12 @@ func (a *WmsInboundService) AddWmsInboundDB(ctx context.Context, type1 string, s
 			}
 		}
 	}
+
+	//SELECT s.id
+	//FROM wms_storage_location s
+	//LEFT JOIN wms_storage_location_material m ON s.id = m.store_location_id
+	//WHERE m.id IS NULL;
+
 	return id, nil
 }
 

@@ -6,7 +6,7 @@ import (
 	"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
-	"freezonex/openiiot/biz/service/wms_inbound_record"
+	wms_outbound_record "freezonex/openiiot/biz/service/wms_outbound_record"
 	"gorm.io/gen/field"
 	"strings"
 	"time"
@@ -26,8 +26,8 @@ func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, 
 		for _, record := range shelfrecords {
 
 			for _, invotry := range record.Inventory {
-				inboundrecordservie := wms_inbound_record.DefaultWmsInboundRecordService()
-				_, err := inboundrecordservie.AddWmsInboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
+				outboundrecordservie := wms_outbound_record.DefaultWmsOutboundRecordService()
+				_, err := outboundrecordservie.AddWmsOutboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
 				if err != nil {
 					return -1, err
 				}
@@ -56,8 +56,8 @@ func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, 
 		for _, record := range shelfrecords {
 
 			for _, invotry := range record.Inventory {
-				inboundrecordservie := wms_inbound_record.DefaultWmsInboundRecordService()
-				_, err := inboundrecordservie.AddWmsInboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
+				outboundrecordservie := wms_outbound_record.DefaultWmsOutboundRecordService()
+				_, err := outboundrecordservie.AddWmsOutboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
 				if err != nil {
 					return -1, err
 				}
