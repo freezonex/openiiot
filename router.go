@@ -534,6 +534,17 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.GetInboundRecordRequest{}))
 	}
 
+	wmsOutboundRecordGroup := r.Group("/wmsoutboundrecord", middleware.Access())
+	{
+		wmsHandler1 := handler.NewWmsOutboundRecordHandler(wms_outbound_record.NewWmsOutboundRecordService(db))
+
+		wmsOutboundRecordGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wmsoutboundrecord/get",
+				wmsHandler1.GetWmsOutboundRecord,
+				&iiotpb.GetOutboundRecordRequest{}))
+	}
 	wms_StocktakingGroup := r.Group("/wmsstocktaking", middleware.Access())
 	{
 		wmsHandler := handler.NewWmsStocktakingHandler(wms_stocktaking.NewStocktakingService(db))
