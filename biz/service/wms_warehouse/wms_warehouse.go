@@ -3,9 +3,10 @@ package wms_warehouse
 import (
 	"context"
 	"errors"
+	"gorm.io/gorm"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
-	"gorm.io/gorm"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
