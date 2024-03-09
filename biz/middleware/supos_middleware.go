@@ -22,7 +22,6 @@ const (
 
 func AuthMiddleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
-		return
 		// Check if the request path is in the white list
 		// Assume `isWhiteListed` is a function you should implement that checks the white list
 		logs.CtxDebugf(ctx, "request URI: %v", string(c.Request.URI().Path()))
