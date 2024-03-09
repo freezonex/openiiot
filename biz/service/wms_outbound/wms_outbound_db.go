@@ -3,13 +3,14 @@ package wms_outbound
 import (
 	"context"
 	"errors"
+	"gorm.io/gen/field"
+	"strings"
+	"time"
+
 	"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
 	wms_outbound_record "freezonex/openiiot/biz/service/wms_outbound_record"
-	"gorm.io/gen/field"
-	"strings"
-	"time"
 )
 
 // AddWmsOutboundDB will add wms record to the DB.

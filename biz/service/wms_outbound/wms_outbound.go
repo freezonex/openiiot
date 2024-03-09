@@ -2,13 +2,14 @@ package wms_outbound
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	"strings"
+
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
 	"freezonex/openiiot/biz/service/wms_storage_location"
-	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
-	"strings"
 )
 
 func (a *WmsOutboundService) AddWmsOutbound(ctx context.Context, req *freezonex_openiiot_api.AddOutboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddOutboundResponse, error) {

@@ -2,14 +2,15 @@ package wms_outbound_record
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
 	"freezonex/openiiot/biz/service/wms_material"
 	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_warehouse"
-	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 //func (a *WmsOutboundRecordService) AddWmsOutboundRecord(ctx context.Context, req *freezonex_openiiot_api.AddInboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddOutboundRecordResponse, error) {
