@@ -1,9 +1,9 @@
 package wms_material
 
 import (
-	"freezonex/openiiot/biz/config"
 	"sync"
 
+	"freezonex/openiiot/biz/config"
 	"freezonex/openiiot/biz/dal/mysql"
 )
 

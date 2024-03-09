@@ -3,34 +3,86 @@ package wms_outbound
 import (
 	"context"
 	"errors"
-	"freezonex/openiiot/biz/dal/model_openiiot"
-	"freezonex/openiiot/biz/service/utils/common"
-	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
 	"gorm.io/gen/field"
+	"strings"
+	"time"
+
+	"freezonex/openiiot/biz/dal/model_openiiot"
+	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
+	"freezonex/openiiot/biz/service/utils/common"
+	wms_outbound_record "freezonex/openiiot/biz/service/wms_outbound_record"
 )
 
 // AddWmsOutboundDB will add wms record to the DB.
-func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, RefID string, Type string, StorageLocation string, MaterialName string, Operator string) (int64, error) {
+func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, source string, shelfrecords []*freezonex_openiiot_api.ShelfInventory, note string, status string) (int64, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsOutbound
 	tx := table.WithContext(ctx)
 	id := common.GetUUID()
 
-	storageLocationService := storagelocation.DefaultStorageLocationService()
-	storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, StorageLocation, nil, "")
+	//storageLocationService := wms_material.DefaultWmsMaterialService()
+	//storageLocationData, _ := storageLocationService.GetWmsMaterialDB(ctx, 0, "", "", "", "", "")
 
-	var newRecord = &model_openiiot.WmsOutbound{
-		ID:              id,
-		RefID:           RefID,
-		Type:            Type,
-		StorageLocation: storageLocationData[0].ID,
-		MaterialName:    MaterialName,
-		Operator:        Operator,
+	if source == "PDA" {
+		for _, record := range shelfrecords {
+
+			for _, invotry := range record.Inventory {
+				outboundrecordservie := wms_outbound_record.DefaultWmsOutboundRecordService()
+				_, err := outboundrecordservie.AddWmsOutboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
+				if err != nil {
+					return -1, err
+				}
+
+			}
+			operator := "default"
+			currentDate := a.generateRefID()
+
+			var newRecord = &model_openiiot.WmsOutbound{
+				ID:       id,
+				RefID:    currentDate,
+				Type:     Type,
+				Note:     &note,
+				Status:   &status,
+				Source:   source,
+				Operator: operator,
+			}
+
+			err := tx.Create(newRecord)
+			if err != nil {
+				return -1, err
+			}
+		}
 	}
+	if source == "manual" {
+		for _, record := range shelfrecords {
 
-	err := tx.Create(newRecord)
-	if err != nil {
-		return -1, err
+			for _, invotry := range record.Inventory {
+				outboundrecordservie := wms_outbound_record.DefaultWmsOutboundRecordService()
+				_, err := outboundrecordservie.AddWmsOutboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
+				if err != nil {
+					return -1, err
+				}
+
+			}
+			operator := "default"
+			status1 := "done"
+			currentDate := a.generateRefID()
+
+			var newRecord = &model_openiiot.WmsOutbound{
+				ID:       id,
+				RefID:    currentDate,
+				Type:     Type,
+				Note:     &note,
+				Status:   &status1,
+				Source:   source,
+				Operator: operator,
+			}
+
+			err := tx.Create(newRecord)
+			if err != nil {
+				return -1, err
+			}
+		}
 	}
 	return id, nil
 }
@@ -55,13 +107,10 @@ func (a *WmsOutboundService) GetWmsOutboundDB(ctx context.Context, id int64, Ref
 }
 
 // UpdateWmsOutboundDB will update wms record from the DB.
-func (a *WmsOutboundService) UpdateWmsOutboundDB(ctx context.Context, id int64, RefID string, Type string, StorageLocation string, MaterialName string, Operator string) error {
+func (a *WmsOutboundService) UpdateWmsOutboundDB(ctx context.Context, id int64, RefID string, Type string, source string, note string, status string) error {
 	table := a.db.DBOpeniiotQuery.WmsOutbound
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
-
-	storageLocationService := storagelocation.DefaultStorageLocationService()
-	storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, StorageLocation, nil, "")
 
 	if existRecord == nil {
 		return errors.New("wms does not exist")
@@ -73,16 +122,15 @@ func (a *WmsOutboundService) UpdateWmsOutboundDB(ctx context.Context, id int64, 
 	if Type != "" {
 		updates[table.Type.ColumnName().String()] = Type
 	}
-	if storageLocationData[0].ID != 0 {
-		updates[table.StorageLocation.ColumnName().String()] = storageLocationData[0]
+	if source != "" {
+		updates[table.Source.ColumnName().String()] = source
 	}
-	if MaterialName != "" {
-		updates[table.MaterialName.ColumnName().String()] = MaterialName
+	if note != "" {
+		updates[table.Note.ColumnName().String()] = note
 	}
-	if Operator != "" {
-		updates[table.Operator.ColumnName().String()] = Operator
+	if status != "" {
+		updates[table.Status.ColumnName().String()] = status
 	}
-
 	_, err := tx.Updates(updates)
 	return err
 }
@@ -100,4 +148,18 @@ func (a *WmsOutboundService) DeleteWmsOutboundDB(ctx context.Context, id int64) 
 
 	_, err := tx.Where(table.ID.Eq(id)).Delete()
 	return err
+}
+
+func (a *WmsOutboundService) generateRefID() string {
+	// Use the current time to generate the ref_id
+	currentTime := time.Now()
+
+	// Format the current time into a string with your desired layout
+	// This example includes year, month, day, hour, minute, second, and millisecond
+	refID := currentTime.Format("R20060102150405.000")
+
+	// Remove the dot from the milliseconds for a consistent ID format
+	refID = strings.Replace(refID, ".", "", -1)
+
+	return refID
 }

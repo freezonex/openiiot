@@ -1,8 +1,9 @@
 package wms_storage_location
 
 import (
-	"freezonex/openiiot/biz/dal/mysql"
 	"sync"
+
+	"freezonex/openiiot/biz/dal/mysql"
 )
 
 type WmsStorageLocationService struct {

@@ -2,13 +2,14 @@ package handler
 
 import (
 	"context"
-	"freezonex/openiiot/biz/middleware"
-	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-	"freezonex/openiiot/biz/service/emqx"
 	"net/http"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+
+	"freezonex/openiiot/biz/middleware"
+	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
+	"freezonex/openiiot/biz/service/emqx"
 )
 
 type EmqxHandler struct {

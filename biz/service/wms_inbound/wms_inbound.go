@@ -2,16 +2,17 @@ package wms_inbound
 
 import (
 	"context"
+
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
-	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
-	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 func (a *WmsInboundService) AddWmsInbound(ctx context.Context, req *freezonex_openiiot_api.AddInboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddInboundResponse, error) {
-	wmsID, err := a.AddWmsInboundDB(ctx, req.RefId, req.Type, req.StorageLocation, req.MaterialName, req.Operator)
+	wmsID, err := a.AddWmsInboundDB(ctx, req.Type, req.Source, req.ShelfRecords, req.Note, req.Status)
 	if err != nil {
 		logs.Error(ctx, "event=AddWmsInbound error=%v", err.Error())
 		return nil, err
@@ -36,18 +37,16 @@ func (a *WmsInboundService) GetWmsInbound(ctx context.Context, req *freezonex_op
 	resp := new(freezonex_openiiot_api.GetInboundResponse)
 	data := make([]*freezonex_openiiot_api.Inbound, 0)
 	for _, v := range wmss {
-		storageLocationService := storagelocation.DefaultStorageLocationService()
-		storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, v.StorageLocationID, "", nil, "")
-
 		data = append(data, &freezonex_openiiot_api.Inbound{
-			Id:              common.Int64ToString(v.ID), // Converts int64 ID to string using a custom common package function
-			RefId:           v.RefID,
-			Type:            v.Type,
-			StorageLocation: storageLocationData[0].Name,
-			MaterialName:    v.MaterialName,
-			Operator:        v.Operator,
-			CreateTime:      common.GetTimeStringFromTime(&v.CreateTime), // Converts time.Time to string using a custom common package function
-			UpdateTime:      common.GetTimeStringFromTime(&v.UpdateTime), // Converts time.Time to string using a custom common package function
+			Id:         common.Int64ToString(v.ID), // Converts int64 ID to string using a custom common package function
+			RefId:      v.RefID,
+			Type:       v.Type,
+			Source:     v.Source,
+			Note:       *v.Note,
+			Status:     *v.Status,
+			Operator:   v.Operator,
+			CreateTime: common.GetTimeStringFromTime(&v.CreateTime), // Converts time.Time to string using a custom common package function
+			UpdateTime: common.GetTimeStringFromTime(&v.UpdateTime), // Converts time.Time to string using a custom common package function
 		})
 	}
 	resp.Data = data
@@ -58,7 +57,7 @@ func (a *WmsInboundService) GetWmsInbound(ctx context.Context, req *freezonex_op
 
 // UpdateWmsInbound will update wms record
 func (a *WmsInboundService) UpdateWmsInbound(ctx context.Context, req *freezonex_openiiot_api.UpdateInboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateInboundResponse, error) {
-	err := a.UpdateWmsInboundDB(ctx, common.StringToInt64(req.Id), req.RefId, req.Type, req.StorageLocation, req.MaterialName, req.Operator)
+	err := a.UpdateWmsInboundDB(ctx, common.StringToInt64(req.Id), req.RefId, req.Type, req.Source, req.Status)
 	if err != nil {
 		logs.Error(ctx, "event=UpdateWmsInbound error=%v", err.Error())
 		return nil, err

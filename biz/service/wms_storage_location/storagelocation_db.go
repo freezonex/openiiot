@@ -58,7 +58,6 @@ func (a *WmsStorageLocationService) GetStorageLocationDB(ctx context.Context, wa
 	if materialname != "" {
 		tx = tx.Where(table.MaterialName.Eq(materialname))
 	}
-
 	if occupied != nil {
 		tx = tx.Where(table.Occupied.Is(*occupied))
 	}

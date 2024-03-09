@@ -2,15 +2,12 @@ package app
 
 import (
 	"context"
-	"freezonex/openiiot/biz/service/utils/common"
-
+	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"freezonex/openiiot/biz/middleware"
-
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-
-	"github.com/cloudwego/hertz/pkg/app"
+	"freezonex/openiiot/biz/service/utils/common"
 )
 
 func (a *AppService) AddApp(ctx context.Context, req *freezonex_openiiot_api.AddAppRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddAppResponse, error) {

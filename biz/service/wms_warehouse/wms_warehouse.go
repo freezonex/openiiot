@@ -2,12 +2,17 @@ package wms_warehouse
 
 import (
 	"context"
+	"errors"
+	"gorm.io/gorm"
+
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
 	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
-	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 )
 
 func (a *WmsWarehouseService) AddWmsWarehouse(ctx context.Context, req *freezonex_openiiot_api.AddWarehouseRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddWarehouseResponse, error) {
@@ -37,19 +42,51 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 	data := make([]*freezonex_openiiot_api.Warehouse, 0)
 
 	for _, v := range wmss {
-
 		storagelocationService := storagelocation.DefaultStorageLocationService()
 		storages, err := storagelocationService.GetStorageLocationDB(ctx, common.StringToInt64(v.WarehouseID), "", nil, "")
 		var convertedStorages []*freezonex_openiiot_api.StorageLocation
+
 		for _, storage := range storages {
+			var convertedMaterials []*freezonex_openiiot_api.StorageLocationMaterial
+			storagelocationmaterialService := wms_storagelocationmaterial.DefaultStorageLocationMaterialService()
+			slmaterials, err := storagelocationmaterialService.GetStorageLocationMaterialDB(ctx, 0, v.ID, 0, 0)
+			if err != nil {
+				logs.Error(ctx, "event=storagelocationmaterialService error=%v", err.Error())
+				return nil, err
+			}
+			for _, slmaterial := range slmaterials {
+				u := a.db.DBOpeniiotQuery.WmsMaterial
+				e := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
+				getid := storage.ID
+				err1 := u.WithContext(ctx).Select(u.Name, e.MaterialID).LeftJoin(e, e.MaterialID.EqCol(u.ID))
+				existRecord, err := err1.Where(e.MaterialID.Eq(slmaterial.MaterialID), e.StoreLocationID.Eq(getid)).First()
+
+				if err != nil {
+					if errors.Is(err, gorm.ErrRecordNotFound) {
+						// If record not found, continue to the next item in the loop
+						continue
+					}
+					if err != nil {
+						logs.Error(ctx, "event=GetWmsMaterialDB error=%v", err.Error())
+						return nil, err
+					}
+				}
+				convertedmaterial := &freezonex_openiiot_api.StorageLocationMaterial{
+					MaterialId:   common.Int64ToString(slmaterial.MaterialID),
+					MaterialName: existRecord.Name,
+					Quantity:     slmaterial.Quantity,
+				}
+				convertedMaterials = append(convertedMaterials, convertedmaterial)
+			}
+
 			convertedStorage := &freezonex_openiiot_api.StorageLocation{
-				Id:           common.Int64ToString(storage.ID),
-				WarehouseId:  common.Int64ToString(storage.WarehouseID),
-				Name:         storage.Name,
-				Occupied:     *storage.Occupied,
-				MaterialName: *storage.MaterialName,
-				CreateTime:   common.GetTimeStringFromTime(&storage.CreateTime),
-				UpdateTime:   common.GetTimeStringFromTime(&storage.UpdateTime),
+				Id:          common.Int64ToString(storage.ID),
+				WarehouseId: common.Int64ToString(storage.WarehouseID),
+				Name:        storage.Name,
+				Occupied:    *storage.Occupied,
+				Materials:   convertedMaterials,
+				CreateTime:  common.GetTimeStringFromTime(&storage.CreateTime),
+				UpdateTime:  common.GetTimeStringFromTime(&storage.UpdateTime),
 			}
 			convertedStorages = append(convertedStorages, convertedStorage)
 		}

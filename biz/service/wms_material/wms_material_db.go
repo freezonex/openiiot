@@ -3,30 +3,27 @@ package wms_material
 import (
 	"context"
 	"errors"
+	"gorm.io/gen/field"
+
 	"freezonex/openiiot/biz/config/consts"
 	"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/service/utils/common"
-	"gorm.io/gen/field"
-	"strconv"
 )
 
 // AddWmsMaterialDB will add wms record to the DB.
-func (a *WmsMaterialService) AddWmsMaterialDB(ctx context.Context, ProductCode string, Name string, StorageLocation string, ProductType string, Unit string, Note string) (int64, error) {
+func (a *WmsMaterialService) AddWmsMaterialDB(ctx context.Context, ProductCode string, Name string, ProductType string, Unit string, Note string) (int64, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsMaterial
 	tx := table.WithContext(ctx)
 	id := common.GetUUID()
 
-	StorageLocationInt, _ := strconv.ParseInt(StorageLocation, 10, 64)
-
 	var newRecord = &model_openiiot.WmsMaterial{
-		ID:                id,
-		ProductCode:       ProductCode,
-		Name:              Name,
-		StorageLocationID: &StorageLocationInt,
-		ProductType:       &ProductType,
-		Unit:              &Unit,
-		Note:              &Note,
+		ID:          id,
+		ProductCode: ProductCode,
+		Name:        Name,
+		ProductType: &ProductType,
+		Unit:        &Unit,
+		Note:        &Note,
 	}
 
 	err := tx.Create(newRecord)
@@ -37,7 +34,7 @@ func (a *WmsMaterialService) AddWmsMaterialDB(ctx context.Context, ProductCode s
 }
 
 // GetWmsMaterialDB will get wms record from the DB in condition
-func (a *WmsMaterialService) GetWmsMaterialDB(ctx context.Context, id int64, ProductCode string) ([]*model_openiiot.WmsMaterial, error) {
+func (a *WmsMaterialService) GetWmsMaterialDB(ctx context.Context, id int64, ProductCode string, Name string, ProductType string, Unit string, Note string) ([]*model_openiiot.WmsMaterial, error) {
 	table := a.db.DBOpeniiotQuery.WmsMaterial
 	tx := table.WithContext(ctx).Select(field.ALL)
 	if id != 0 {
@@ -46,7 +43,18 @@ func (a *WmsMaterialService) GetWmsMaterialDB(ctx context.Context, id int64, Pro
 	if ProductCode != "" {
 		tx = tx.Where(table.ProductCode.Eq(ProductCode))
 	}
-
+	if Name != "" {
+		tx = tx.Where(table.Name.Eq(Name))
+	}
+	if ProductType != "" {
+		tx = tx.Where(table.ProductType.Eq(ProductType))
+	}
+	if Unit != "" {
+		tx = tx.Where(table.Unit.Eq(Unit))
+	}
+	if Note != "" {
+		tx = tx.Where(table.Note.Eq(Note))
+	}
 	tx.Limit(consts.TENANT_RETURN_LIMIT).Order(table.Name)
 	data, err := tx.Find()
 	if err != nil {
@@ -57,7 +65,7 @@ func (a *WmsMaterialService) GetWmsMaterialDB(ctx context.Context, id int64, Pro
 }
 
 // UpdateWmsMaterialDB will update wms record from the DB.
-func (a *WmsMaterialService) UpdateWmsMaterialDB(ctx context.Context, id int64, ProductCode string, Name string, StorageLocationID int64, ProductType string, Unit string, Note string) error {
+func (a *WmsMaterialService) UpdateWmsMaterialDB(ctx context.Context, id int64, ProductCode string, Name string, ProductType string, Unit string, Note string) error {
 	table := a.db.DBOpeniiotQuery.WmsMaterial
 	tx := table.WithContext(ctx).Where(table.ID.Eq(id))
 	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
@@ -70,9 +78,6 @@ func (a *WmsMaterialService) UpdateWmsMaterialDB(ctx context.Context, id int64, 
 	}
 	if Name != "" {
 		updates[table.Name.ColumnName().String()] = Name
-	}
-	if StorageLocationID != 0 {
-		updates[table.StorageLocationID.ColumnName().String()] = StorageLocationID
 	}
 	if ProductType != "" {
 		updates[table.ProductType.ColumnName().String()] = ProductType
