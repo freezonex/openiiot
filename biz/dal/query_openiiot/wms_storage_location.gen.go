@@ -31,6 +31,7 @@ func newWmsStorageLocation(db *gorm.DB, opts ...gen.DOOption) wmsStorageLocation
 	_wmsStorageLocation.Name = field.NewString(tableName, "name")
 	_wmsStorageLocation.Occupied = field.NewBool(tableName, "occupied")
 	_wmsStorageLocation.MaterialName = field.NewString(tableName, "material_name")
+	_wmsStorageLocation.MaterialQuantity = field.NewInt32(tableName, "material_quantity")
 	_wmsStorageLocation.UpdateTime = field.NewTime(tableName, "update_time")
 	_wmsStorageLocation.CreateTime = field.NewTime(tableName, "create_time")
 	_wmsStorageLocation.MaterialQuantity = field.NewString(tableName, "material_quantity")
@@ -49,9 +50,9 @@ type wmsStorageLocation struct {
 	Name             field.String
 	Occupied         field.Bool
 	MaterialName     field.String
+	MaterialQuantity field.Int32
 	UpdateTime       field.Time
 	CreateTime       field.Time
-	MaterialQuantity field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -73,6 +74,7 @@ func (w *wmsStorageLocation) updateTableName(table string) *wmsStorageLocation {
 	w.Name = field.NewString(table, "name")
 	w.Occupied = field.NewBool(table, "occupied")
 	w.MaterialName = field.NewString(table, "material_name")
+	w.MaterialQuantity = field.NewInt32(table, "material_quantity")
 	w.UpdateTime = field.NewTime(table, "update_time")
 	w.CreateTime = field.NewTime(table, "create_time")
 	w.MaterialQuantity = field.NewString(table, "material_quantity")
@@ -110,6 +112,7 @@ func (w *wmsStorageLocation) fillFieldMap() {
 	w.fieldMap["name"] = w.Name
 	w.fieldMap["occupied"] = w.Occupied
 	w.fieldMap["material_name"] = w.MaterialName
+	w.fieldMap["material_quantity"] = w.MaterialQuantity
 	w.fieldMap["update_time"] = w.UpdateTime
 	w.fieldMap["create_time"] = w.CreateTime
 	w.fieldMap["material_quantity"] = w.MaterialQuantity

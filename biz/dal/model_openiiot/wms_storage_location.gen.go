@@ -17,9 +17,9 @@ type WmsStorageLocation struct {
 	Name             string    `gorm:"column:name;not null" json:"name"`
 	Occupied         *bool     `gorm:"column:occupied" json:"occupied"`
 	MaterialName     *string   `gorm:"column:material_name" json:"material_name"`
+	MaterialQuantity *int32    `gorm:"column:material_quantity" json:"material_quantity"`
 	UpdateTime       time.Time `gorm:"column:update_time;not null;default:CURRENT_TIMESTAMP" json:"update_time"`
 	CreateTime       time.Time `gorm:"column:create_time;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
-	MaterialQuantity *string   `gorm:"column:material_quantity" json:"material_quantity"`
 }
 
 // TableName WmsStorageLocation's table name
