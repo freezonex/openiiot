@@ -1,9 +1,10 @@
 package wms_warehouse
 
 import (
+	"sync"
+
 	"freezonex/openiiot/biz/config"
 	"freezonex/openiiot/biz/dal/mysql"
-	"sync"
 )
 
 type WmsWarehouseService struct {
