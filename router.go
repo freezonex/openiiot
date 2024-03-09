@@ -3,6 +3,8 @@ package main
 import (
 	//"context"
 	//"os"
+	"github.com/cloudwego/hertz/pkg/app/server"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"freezonex/openiiot/biz/config"
 	"freezonex/openiiot/biz/dal/mysql"
@@ -29,9 +31,6 @@ import (
 	"freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 	"freezonex/openiiot/biz/service/wms_warehouse"
-
-	"github.com/cloudwego/hertz/pkg/app/server"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 // customizeRegister register customize routers.
