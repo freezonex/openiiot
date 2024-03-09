@@ -2,6 +2,7 @@ package wms_inbound_record
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
