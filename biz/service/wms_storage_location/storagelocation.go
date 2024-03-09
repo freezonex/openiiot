@@ -2,16 +2,13 @@ package wms_storage_location
 
 import (
 	"context"
-	"freezonex/openiiot/biz/service/utils/common"
-	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
-
+	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"freezonex/openiiot/biz/middleware"
-
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-
-	"github.com/cloudwego/hertz/pkg/app"
+	"freezonex/openiiot/biz/service/utils/common"
+	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 )
 
 func (a *WmsStorageLocationService) AddStorageLocation(ctx context.Context, req *freezonex_openiiot_api.AddStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddStorageLocationResponse, error) {

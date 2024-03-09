@@ -2,9 +2,8 @@ package wms_outbound
 
 import (
 	"freezonex/openiiot/biz/config"
-	"sync"
-
 	"freezonex/openiiot/biz/dal/mysql"
+	"sync"
 )
 
 type WmsOutboundService struct {

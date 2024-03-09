@@ -2,15 +2,16 @@ package wms_material
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	"strconv"
+
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
 	storagelocation "freezonex/openiiot/biz/service/wms_storage_location"
 	"freezonex/openiiot/biz/service/wms_storagelocationmaterial"
 	"freezonex/openiiot/biz/service/wms_warehouse"
-	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
-	"strconv"
 )
 
 func (a *WmsMaterialService) AddWmsMaterial(ctx context.Context, req *freezonex_openiiot_api.AddMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddMaterialResponse, error) {

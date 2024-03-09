@@ -3,9 +3,10 @@ package wms_rfid_material
 import (
 	"context"
 	"errors"
+	"gorm.io/gen/field"
+
 	"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/service/utils/common"
-	"gorm.io/gen/field"
 )
 
 // AddWmsRfidMaterialDB will add wms record to the DB.

@@ -1,9 +1,8 @@
 package app
 
 import (
-	"sync"
-
 	"freezonex/openiiot/biz/dal/mysql"
+	"sync"
 )
 
 type AppService struct {
