@@ -2,15 +2,14 @@ package handler
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	"net/http"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/supos"
 	"freezonex/openiiot/biz/service/user"
-
-	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 type UserHandler struct {
