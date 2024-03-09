@@ -1,9 +1,10 @@
 package wms_rfid_material
 
 import (
+	"sync"
+
 	"freezonex/openiiot/biz/config"
 	"freezonex/openiiot/biz/dal/mysql"
-	"sync"
 )
 
 type WmsRfidMaterialService struct {

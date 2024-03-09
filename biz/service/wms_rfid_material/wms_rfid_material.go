@@ -2,11 +2,13 @@ package wms_rfid_material
 
 import (
 	"context"
+
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
-	"github.com/cloudwego/hertz/pkg/app"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 func (a *WmsRfidMaterialService) AddWmsRfidMaterial(ctx context.Context, req *freezonex_openiiot_api.AddRfidMaterialRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddRfidMaterialResponse, error) {

@@ -1,8 +1,9 @@
 package wms_stocktaking_record
 
 import (
-	"freezonex/openiiot/biz/dal/mysql"
 	"sync"
+
+	"freezonex/openiiot/biz/dal/mysql"
 )
 
 type WmsStocktakingRecordService struct {
