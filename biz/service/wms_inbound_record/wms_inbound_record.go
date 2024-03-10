@@ -54,7 +54,7 @@ func (a *WmsInboundRecordService) GetWmsInboundRecord(ctx context.Context, req *
 		storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, "", nil, "", v.StockLocationID)
 		warehouseService := wms_warehouse.DefaultWmsWarehouseService()
 		WarehouseID := storageLocationData[0].WarehouseID
-		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, 0, "", common.Int64ToString(WarehouseID), "", "", "", "", "")
+		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, WarehouseID, "", "", "", "", "", "", "")
 		locationame := warehouseData[0].Name + "-" + storageLocationData[0].Name
 
 		//u := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
