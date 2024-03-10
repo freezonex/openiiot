@@ -34,23 +34,23 @@ func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, 
 				}
 
 			}
-			operator := "default"
-			currentDate := a.generateRefID()
+		}
+		operator := "default"
+		currentDate := a.generateRefID()
 
-			var newRecord = &model_openiiot.WmsOutbound{
-				ID:       id,
-				RefID:    currentDate,
-				Type:     Type,
-				Note:     &note,
-				Status:   &status,
-				Source:   source,
-				Operator: operator,
-			}
+		var newRecord = &model_openiiot.WmsOutbound{
+			ID:       id,
+			RefID:    currentDate,
+			Type:     Type,
+			Note:     &note,
+			Status:   &status,
+			Source:   source,
+			Operator: operator,
+		}
 
-			err := tx.Create(newRecord)
-			if err != nil {
-				return -1, err
-			}
+		err := tx.Create(newRecord)
+		if err != nil {
+			return -1, err
 		}
 	}
 	if source == "manual" {
@@ -64,24 +64,24 @@ func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, 
 				}
 
 			}
-			operator := "default"
-			status1 := "done"
-			currentDate := a.generateRefID()
+		}
+		operator := "default"
+		status1 := "done"
+		currentDate := a.generateRefID()
 
-			var newRecord = &model_openiiot.WmsOutbound{
-				ID:       id,
-				RefID:    currentDate,
-				Type:     Type,
-				Note:     &note,
-				Status:   &status1,
-				Source:   source,
-				Operator: operator,
-			}
+		var newRecord = &model_openiiot.WmsOutbound{
+			ID:       id,
+			RefID:    currentDate,
+			Type:     Type,
+			Note:     &note,
+			Status:   &status1,
+			Source:   source,
+			Operator: operator,
+		}
 
-			err := tx.Create(newRecord)
-			if err != nil {
-				return -1, err
-			}
+		err := tx.Create(newRecord)
+		if err != nil {
+			return -1, err
 		}
 	}
 	return id, nil
