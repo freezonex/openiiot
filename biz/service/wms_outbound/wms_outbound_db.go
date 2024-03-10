@@ -88,7 +88,7 @@ func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, 
 }
 
 // GetWmsOutboundDB will get wms record from the DB in condition
-func (a *WmsOutboundService) GetWmsOutboundDB(ctx context.Context, id int64, RefId string) ([]*model_openiiot.WmsOutbound, error) {
+func (a *WmsOutboundService) GetWmsOutboundDB(ctx context.Context, id int64, RefId string, Type string) ([]*model_openiiot.WmsOutbound, error) {
 	table := a.db.DBOpeniiotQuery.WmsOutbound
 	tx := table.WithContext(ctx).Select(field.ALL)
 	if id != 0 {
@@ -96,6 +96,9 @@ func (a *WmsOutboundService) GetWmsOutboundDB(ctx context.Context, id int64, Ref
 	}
 	if RefId != "" {
 		tx = tx.Where(table.RefID.Eq(RefId))
+	}
+	if Type != "" {
+		tx = tx.Where(table.Type.Eq(Type))
 	}
 
 	data, err := tx.Find()
