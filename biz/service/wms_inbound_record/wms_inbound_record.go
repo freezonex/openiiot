@@ -2,6 +2,7 @@ package wms_inbound_record
 
 import (
 	"context"
+	"gorm.io/gen/field"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
@@ -30,7 +31,17 @@ import (
 
 // GetWmsInboundRecord will get wms record in condition
 func (a *WmsInboundRecordService) GetWmsInboundRecord(ctx context.Context, req *freezonex_openiiot_api.GetInboundRecordRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetInboundRecordResponse, error) {
-	wmss, err := a.GetWmsInboundRecordDB(ctx, common.StringToInt64(req.Id), common.StringToInt64(req.RefId))
+	table := a.db.DBOpeniiotQuery.WmsInbound
+	tx := table.WithContext(ctx).Select(field.ALL)
+	if req.RefId != "" {
+		tx = tx.Where(table.RefID.Eq(req.RefId))
+	}
+	if req.Id != "" {
+		tx = tx.Where(table.ID.Eq(common.StringToInt64(req.Id)))
+	}
+	wmsInbounddata, err := tx.Find()
+
+	wmss, err := a.GetWmsInboundRecordDB(ctx, 0, wmsInbounddata[0].ID)
 
 	if err != nil {
 		logs.Error(ctx, "event=GetWmsInboundRecord error=%v", err.Error())

@@ -27,7 +27,7 @@ func (a *WmsInboundService) AddWmsInbound(ctx context.Context, req *freezonex_op
 
 // GetWmsInbound will get wms record in condition
 func (a *WmsInboundService) GetWmsInbound(ctx context.Context, req *freezonex_openiiot_api.GetInboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetInboundResponse, error) {
-	wmss, err := a.GetWmsInboundDB(ctx, common.StringToInt64(req.Id), req.RefId)
+	wmss, err := a.GetWmsInboundDB(ctx, common.StringToInt64(req.Id), req.RefId, req.Type)
 
 	if err != nil {
 		logs.Error(ctx, "event=GetWmsInbound error=%v", err.Error())
