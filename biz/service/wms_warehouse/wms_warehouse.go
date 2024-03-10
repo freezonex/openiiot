@@ -43,7 +43,7 @@ func (a *WmsWarehouseService) GetWmsWarehouse(ctx context.Context, req *freezone
 
 	for _, v := range wmss {
 		storagelocationService := storagelocation.DefaultStorageLocationService()
-		storages, err := storagelocationService.GetStorageLocationDB(ctx, common.StringToInt64(v.WarehouseID), "", nil, "")
+		storages, err := storagelocationService.GetStorageLocationDB(ctx, common.StringToInt64(v.WarehouseID), "", nil, "", 0)
 		var convertedStorages []*freezonex_openiiot_api.StorageLocation
 
 		for _, storage := range storages {

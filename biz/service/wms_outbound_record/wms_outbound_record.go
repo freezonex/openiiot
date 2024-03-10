@@ -51,7 +51,7 @@ func (a *WmsOutboundRecordService) GetWmsOutboundRecord(ctx context.Context, req
 		var convertedimaterials []*freezonex_openiiot_api.Inventory
 
 		storageLocationService := storagelocation.DefaultStorageLocationService()
-		storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, v.StockLocationID, "", nil, "")
+		storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, "", nil, "", v.StockLocationID)
 		warehouseService := wms_warehouse.DefaultWmsWarehouseService()
 		WarehouseID := storageLocationData[0].WarehouseID
 		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, 0, "", common.Int64ToString(WarehouseID), "", "", "", "", "")
