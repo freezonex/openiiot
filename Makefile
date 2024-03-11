@@ -22,7 +22,8 @@ docker_all: $(SERVICES)
 
 $(SERVICES):
 	$(eval SERVICE_TAG := $(call get_tag,$@,$(TAG)))
-	docker build --platform $(PLATFORM) -t $(DOCKER_PREFIX)$@:$(TAG) -f $(DOCKERFILE_FOLDER)/$@/$(DOCKERFILE_NAME) .
+	@echo "Building with tag: $(SERVICE_TAG)"
+	docker build --platform $(PLATFORM) -t $(DOCKER_PREFIX)$@:$(SERVICE_TAG) -f $(DOCKERFILE_FOLDER)/$@/$(DOCKERFILE_NAME) .
 
 clean_all: $(addprefix clean_,$(SERVICES))
 
