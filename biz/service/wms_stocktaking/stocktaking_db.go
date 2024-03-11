@@ -21,12 +21,6 @@ func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid stri
 	if Source == "" {
 		return -1, errors.New("Source can not be empty")
 	}
-	if Note == "" {
-		return -1, errors.New("Note can not be empty")
-	}
-	if Status == "" {
-		return -1, errors.New("Status can not be empty")
-	}
 	table := a.db.DBOpeniiotQuery.WmsStocktaking
 	tx := table.WithContext(ctx)
 	existRecord, _ := tx.Where(table.RefID.Eq(refid)).First()
