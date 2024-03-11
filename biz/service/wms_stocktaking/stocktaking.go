@@ -9,20 +9,25 @@ import (
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
+	"freezonex/openiiot/biz/service/wms_stocktaking_record"
 )
 
 func (a *WmsStocktakingService) AddStocktaking(ctx context.Context, req *freezonex_openiiot_api.AddStocktakingRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddStocktakingResponse, error) {
 	var stocktakingID int64
 	var err error // 预先声明错误变量，以便在循环外部使用
+	stocktakingID, err = a.AddStocktakingDB(ctx, common.Int64ToString(common.GetUUID()), req.Type, req.Source, "", "")
 
 	for _, b := range req.ShelfRecords {
-		for _ = range b.Inventory {
-			stocktakingID, err = a.AddStocktakingDB(ctx, common.Int64ToString(common.GetUUID()), req.Type, req.Source, "", "")
-
+		for _, d := range b.Inventory {
+			stocktakingrecordservie := wms_stocktaking_record.DefaultStocktakingRecordService()
+			_, err := stocktakingrecordservie.AddStocktakingRecordDB(ctx, common.GetUUID(), stocktakingID, common.StringToInt64(b.StorageLocationId), common.StringToInt64(d.MaterialId), d.Quantity, d.StockQuantity, d.Discrepancy)
 			if err != nil {
-				logs.Error(ctx, "event=AddStocktaking error=%v", err.Error())
 				return nil, err
 			}
+		}
+		if err != nil {
+			logs.Error(ctx, "event=AddStocktaking error=%v", err.Error())
+			return nil, err
 		}
 	}
 
