@@ -16,4 +16,4 @@ COPY biz/config/conf/*.yml /openiiot/conf/
 
 EXPOSE 8085 
 
-CMD ["./server", "-conf-dir=conf/config.yml"]
+CMD ["./server", "-conf-dir=conf"]
