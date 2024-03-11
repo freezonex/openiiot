@@ -1,4 +1,5 @@
 kubectl delete -f deployment/k8s/openiiot-server-deployment.yaml
+sleep 3
 docker rmi openiiot_server:1.0.1
 echo "stop old deployment successfully"
 
