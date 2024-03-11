@@ -50,12 +50,11 @@ save:
 	$(foreach service,$(SERVICES),$(eval SERVICE_TAG := $(call get_tag,$(service))) docker save -o $(SAVE_DIR)/$(DOCKER_PREFIX)$(service).tar $(DOCKER_PREFIX)$(service):$(SERVICE_TAG);)
 	
 $(addprefix save_,$(SERVICES)):
-    $(eval SERVICE := $(subst save_,,$@))
-    $(eval SERVICE_TAG := $(call get_tag,$(SERVICE)))
-    @echo "Saving service $(SERVICE) with tag $(SERVICE_TAG)..."
-    @mkdir -p $(SAVE_DIR)
-    docker save -o $(SAVE_DIR)/$(DOCKER_PREFIX)$(SERVICE).tar $(DOCKER_PREFIX)$(SERVICE):$(SERVICE_TAG)
-
+	$(eval SERVICE := $(subst save_,,$@))
+	$(eval SERVICE_TAG := $(call get_tag,$(SERVICE)))
+	@echo "Saving service $(SERVICE) with tag $(SERVICE_TAG)..."
+	@mkdir -p $(SAVE_DIR)
+	docker save -o $(SAVE_DIR)/$(DOCKER_PREFIX)$(SERVICE).tar $(DOCKER_PREFIX)$(SERVICE):$(SERVICE_TAG)
 
 help:
 	@echo "1. push image to sandbox"
