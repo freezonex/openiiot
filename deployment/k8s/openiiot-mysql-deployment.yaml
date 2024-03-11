@@ -24,7 +24,7 @@ spec:
             - name: MYSQL_USER
               value: "openiiot"
             - name: MYSQL_PASSWORD
-              value: "root1234"
+              value: "openiiot1234"
           ports:
             - containerPort: 3306
           resources:
