@@ -16,8 +16,8 @@ func (a *WmsStocktakingService) AddStocktaking(ctx context.Context, req *freezon
 	var err error // 预先声明错误变量，以便在循环外部使用
 
 	for _, b := range req.ShelfRecords {
-		for _, c := range b.Inventory {
-			stocktakingID, err = a.AddStocktakingDB(ctx, c.Rfid, req.Type, req.Source, "", "")
+		for _ = range b.Inventory {
+			stocktakingID, err = a.AddStocktakingDB(ctx, common.Int64ToString(common.GetUUID()), req.Type, req.Source, "", "")
 
 			if err != nil {
 				logs.Error(ctx, "event=AddStocktaking error=%v", err.Error())
