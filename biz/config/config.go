@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -8,9 +9,11 @@ import (
 	"runtime"
 	"strings"
 
-	"freezonex/openiiot/biz/service/utils/cache"
-
 	yaml "gopkg.in/yaml.v2"
+
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+
+	"freezonex/openiiot/biz/service/utils/cache"
 )
 
 type DBConfig struct {
@@ -64,21 +67,30 @@ type Config struct {
 }
 
 func Init() (*Config, error) {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		return nil, errors.New("no caller information")
-	}
 	var c Config
-	configFile := path.Join(path.Dir(filename), "conf/config.yml")
+	var configDir string
 
 	args := os.Args
 	fmt.Print(args)
 	for _, v := range args {
 		if strings.HasPrefix(v, "-conf-dir=") {
-			configFile = v[10:]
+			configDir = v[10:]
 		}
 	}
 
+	ctx := context.TODO()
+	runtime_idc_name := os.Getenv("RUNTIME_IDC_NAME")
+	if runtime_idc_name == "ci" || runtime_idc_name == "local" {
+		_, filename, _, ok := runtime.Caller(0)
+		if !ok {
+			return nil, errors.New("no caller information")
+		}
+
+		configDir = path.Join(path.Dir(filename), "conf")
+	}
+
+	configFile := path.Join(configDir, runtime_idc_name+".yml")
+	logs.CtxInfof(ctx, "config file path: %v", configFile)
 	cf, err := os.ReadFile(configFile)
 	if err != nil {
 		return nil, err
