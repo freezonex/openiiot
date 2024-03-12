@@ -2,7 +2,6 @@ package wms_stocktaking_record
 
 import (
 	"context"
-	"freezonex/openiiot/biz/service/wms_warehouse"
 	"gorm.io/gen/field"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -11,6 +10,7 @@ import (
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
+	"freezonex/openiiot/biz/service/wms_warehouse"
 )
 
 // GetStocktakingRecord will get storagelocation record in condition
