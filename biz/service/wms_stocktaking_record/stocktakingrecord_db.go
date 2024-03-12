@@ -70,3 +70,34 @@ func (a *WmsStocktakingRecordService) AddStocktakingRecordDB(ctx context.Context
 
 	return id, nil
 }
+
+// UpdateWmsWarehouseDB will update wms record from the DB.
+func (a *WmsStocktakingRecordService) UpdateStocktakingRecordDB(ctx context.Context, ID int64, StocktakingID int64, StockLocationID int64, MaterialID int64, Quantity int32, StockQuantity int32, Discrepancy int32) (int64, error) {
+	table := a.db.DBOpeniiotQuery.WmsStocktakingRecord
+	tx := table.WithContext(ctx).Where(table.ID.Eq(ID))
+	existRecord, _ := tx.Where(table.ID.Eq(ID)).First()
+	if existRecord == nil {
+		return 0, errors.New("wms does not exist")
+	}
+	updates := make(map[string]interface{})
+	if StocktakingID != 0 {
+		updates[table.StocktakingID.ColumnName().String()] = StocktakingID
+	}
+	if StockLocationID != 0 {
+		updates[table.StockLocationID.ColumnName().String()] = StockLocationID
+	}
+	if MaterialID != 0 {
+		updates[table.MaterialID.ColumnName().String()] = MaterialID
+	}
+	if Quantity != 0 {
+		updates[table.Quantity.ColumnName().String()] = Quantity
+	}
+	if StockQuantity != 0 {
+		updates[table.StockQuantity.ColumnName().String()] = StockQuantity
+	}
+	if Discrepancy != 0 {
+		updates[table.Discrepancy.ColumnName().String()] = Discrepancy
+	}
+
+	return ID, nil
+}

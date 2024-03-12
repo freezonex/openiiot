@@ -3,12 +3,12 @@ package wms_inbound
 import (
 	"context"
 
+	"freezonex/openiiot/biz/service/utils/common"
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
-	"freezonex/openiiot/biz/service/utils/common"
 )
 
 func (a *WmsInboundService) AddWmsInbound(ctx context.Context, req *freezonex_openiiot_api.AddInboundRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddInboundResponse, error) {
