@@ -45,7 +45,7 @@ func (a *WmsStorageLocationService) AddStorageLocationDB(ctx context.Context, wa
 }
 
 // GetStorageLocationDB will get storagelocation record from the DB in condition
-func (a *WmsStorageLocationService) GetStorageLocationDB(ctx context.Context, warehouseid int64, name string, occupied *bool, materialname string) ([]*model_openiiot.WmsStorageLocation, error) {
+func (a *WmsStorageLocationService) GetStorageLocationDB(ctx context.Context, warehouseid int64, name string, occupied *bool, materialname string, ID int64) ([]*model_openiiot.WmsStorageLocation, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsStorageLocation
 	tx := table.WithContext(ctx).Select(field.ALL)
@@ -60,6 +60,9 @@ func (a *WmsStorageLocationService) GetStorageLocationDB(ctx context.Context, wa
 	}
 	if occupied != nil {
 		tx = tx.Where(table.Occupied.Is(*occupied))
+	}
+	if ID != 0 {
+		tx = tx.Where(table.ID.Eq(ID))
 	}
 
 	tx.Limit(consts.TENANT_RETURN_LIMIT).Order(table.Name)

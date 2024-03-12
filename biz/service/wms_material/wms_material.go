@@ -51,7 +51,7 @@ func (a *WmsMaterialService) GetWmsMaterial(ctx context.Context, req *freezonex_
 			StorageLocationId = append(StorageLocationId, idStr)
 
 			storageLocationService := storagelocation.DefaultStorageLocationService()
-			storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, data.StoreLocationID, "", nil, "")
+			storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, "", nil, "", data.StoreLocationID)
 			warehouseService := wms_warehouse.DefaultWmsWarehouseService()
 			WarehouseID := storageLocationData[0].WarehouseID
 			warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, 0, "", common.Int64ToString(WarehouseID), "", "", "", "", "")

@@ -2,6 +2,7 @@ package wms_stocktaking_record
 
 import (
 	"context"
+	"gorm.io/gen/field"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
@@ -13,7 +14,16 @@ import (
 
 // GetStocktakingRecord will get storagelocation record in condition
 func (a *WmsStocktakingRecordService) GetStocktakingRecord(ctx context.Context, req *freezonex_openiiot_api.GetStocktakingRecordRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetStocktakingRecordResponse, error) {
-	storagelocations, err := a.GetStocktakingRecordDB(ctx, common.StringToInt64(req.Id), 0, 0, 0, 0, 0, 0)
+	table := a.db.DBOpeniiotQuery.WmsStocktaking
+	tx := table.WithContext(ctx).Select(field.ALL)
+	if req.RefId != "" {
+		tx = tx.Where(table.RefID.Eq(req.RefId))
+	}
+	if req.Id != "" {
+		tx = tx.Where(table.ID.Eq(common.StringToInt64(req.Id)))
+	}
+	wmsStocktaking, err := tx.Find()
+	storagelocations, err := a.GetStocktakingRecordDB(ctx, 0, wmsStocktaking[0].ID, 0, 0, 0, 0, 0)
 
 	if err != nil {
 		logs.Error(ctx, "event=GetStocktakingRecord error=%v", err.Error())

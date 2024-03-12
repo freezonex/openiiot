@@ -16,16 +16,10 @@ func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid stri
 		return -1, errors.New("refid can not be empty")
 	}
 	if Type == "" {
-		return -1, errors.New("type1 can not be empty")
+		return -1, errors.New("Type can not be empty")
 	}
 	if Source == "" {
-		return -1, errors.New("type1 can not be empty")
-	}
-	if Note == "" {
-		return -1, errors.New("type1 can not be empty")
-	}
-	if Status == "" {
-		return -1, errors.New("type1 can not be empty")
+		return -1, errors.New("Source can not be empty")
 	}
 	table := a.db.DBOpeniiotQuery.WmsStocktaking
 	tx := table.WithContext(ctx)

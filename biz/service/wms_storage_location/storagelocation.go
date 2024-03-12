@@ -28,7 +28,7 @@ func (a *WmsStorageLocationService) AddStorageLocation(ctx context.Context, req 
 
 // GetStorageLocation will get storagelocation record in condition
 func (a *WmsStorageLocationService) GetStorageLocation(ctx context.Context, req *freezonex_openiiot_api.GetStorageLocationRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetStorageLocationResponse, error) {
-	storagelocations, err := a.GetStorageLocationDB(ctx, common.StringToInt64(req.WarehouseId), req.Name, nil, "")
+	storagelocations, err := a.GetStorageLocationDB(ctx, common.StringToInt64(req.WarehouseId), req.Name, nil, "", 0)
 
 	if err != nil {
 		logs.Error(ctx, "event=GetStorageLocation error=%v", err.Error())

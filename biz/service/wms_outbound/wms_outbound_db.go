@@ -34,23 +34,23 @@ func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, 
 				}
 
 			}
-			operator := "default"
-			currentDate := a.generateRefID()
+		}
+		operator := "default"
+		currentDate := a.generateRefID()
 
-			var newRecord = &model_openiiot.WmsOutbound{
-				ID:       id,
-				RefID:    currentDate,
-				Type:     Type,
-				Note:     &note,
-				Status:   &status,
-				Source:   source,
-				Operator: operator,
-			}
+		var newRecord = &model_openiiot.WmsOutbound{
+			ID:       id,
+			RefID:    currentDate,
+			Type:     Type,
+			Note:     &note,
+			Status:   &status,
+			Source:   source,
+			Operator: operator,
+		}
 
-			err := tx.Create(newRecord)
-			if err != nil {
-				return -1, err
-			}
+		err := tx.Create(newRecord)
+		if err != nil {
+			return -1, err
 		}
 	}
 	if source == "manual" {
@@ -64,31 +64,31 @@ func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, 
 				}
 
 			}
-			operator := "default"
-			status1 := "done"
-			currentDate := a.generateRefID()
+		}
+		operator := "default"
+		status1 := "done"
+		currentDate := a.generateRefID()
 
-			var newRecord = &model_openiiot.WmsOutbound{
-				ID:       id,
-				RefID:    currentDate,
-				Type:     Type,
-				Note:     &note,
-				Status:   &status1,
-				Source:   source,
-				Operator: operator,
-			}
+		var newRecord = &model_openiiot.WmsOutbound{
+			ID:       id,
+			RefID:    currentDate,
+			Type:     Type,
+			Note:     &note,
+			Status:   &status1,
+			Source:   source,
+			Operator: operator,
+		}
 
-			err := tx.Create(newRecord)
-			if err != nil {
-				return -1, err
-			}
+		err := tx.Create(newRecord)
+		if err != nil {
+			return -1, err
 		}
 	}
 	return id, nil
 }
 
 // GetWmsOutboundDB will get wms record from the DB in condition
-func (a *WmsOutboundService) GetWmsOutboundDB(ctx context.Context, id int64, RefId string) ([]*model_openiiot.WmsOutbound, error) {
+func (a *WmsOutboundService) GetWmsOutboundDB(ctx context.Context, id int64, RefId string, Type string) ([]*model_openiiot.WmsOutbound, error) {
 	table := a.db.DBOpeniiotQuery.WmsOutbound
 	tx := table.WithContext(ctx).Select(field.ALL)
 	if id != 0 {
@@ -96,6 +96,9 @@ func (a *WmsOutboundService) GetWmsOutboundDB(ctx context.Context, id int64, Ref
 	}
 	if RefId != "" {
 		tx = tx.Where(table.RefID.Eq(RefId))
+	}
+	if Type != "" {
+		tx = tx.Where(table.Type.Eq(Type))
 	}
 
 	data, err := tx.Find()

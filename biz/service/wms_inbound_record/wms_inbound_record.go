@@ -2,6 +2,7 @@ package wms_inbound_record
 
 import (
 	"context"
+	"gorm.io/gen/field"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
@@ -30,7 +31,17 @@ import (
 
 // GetWmsInboundRecord will get wms record in condition
 func (a *WmsInboundRecordService) GetWmsInboundRecord(ctx context.Context, req *freezonex_openiiot_api.GetInboundRecordRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetInboundRecordResponse, error) {
-	wmss, err := a.GetWmsInboundRecordDB(ctx, common.StringToInt64(req.Id), common.StringToInt64(req.RefId))
+	table := a.db.DBOpeniiotQuery.WmsInbound
+	tx := table.WithContext(ctx).Select(field.ALL)
+	if req.RefId != "" {
+		tx = tx.Where(table.RefID.Eq(req.RefId))
+	}
+	if req.Id != "" {
+		tx = tx.Where(table.ID.Eq(common.StringToInt64(req.Id)))
+	}
+	wmsInbounddata, err := tx.Find()
+
+	wmss, err := a.GetWmsInboundRecordDB(ctx, 0, wmsInbounddata[0].ID)
 
 	if err != nil {
 		logs.Error(ctx, "event=GetWmsInboundRecord error=%v", err.Error())
@@ -51,10 +62,10 @@ func (a *WmsInboundRecordService) GetWmsInboundRecord(ctx context.Context, req *
 		var convertedimaterials []*freezonex_openiiot_api.Inventory
 
 		storageLocationService := storagelocation.DefaultStorageLocationService()
-		storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, v.StockLocationID, "", nil, "")
+		storageLocationData, _ := storageLocationService.GetStorageLocationDB(ctx, 0, "", nil, "", v.StockLocationID)
 		warehouseService := wms_warehouse.DefaultWmsWarehouseService()
 		WarehouseID := storageLocationData[0].WarehouseID
-		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, 0, "", common.Int64ToString(WarehouseID), "", "", "", "", "")
+		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, WarehouseID, "", "", "", "", "", "", "")
 		locationame := warehouseData[0].Name + "-" + storageLocationData[0].Name
 
 		//u := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
