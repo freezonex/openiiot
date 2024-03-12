@@ -12,9 +12,6 @@ import (
 // AddStocktakingDB will add Stocktaking record to the DB.
 func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid string, Type string, Source string, Note string, Status string) (int64, error) {
 
-	if refid == "" {
-		return -1, errors.New("refid can not be empty")
-	}
 	if Type == "" {
 		return -1, errors.New("Type can not be empty")
 	}
@@ -23,10 +20,6 @@ func (a *WmsStocktakingService) AddStocktakingDB(ctx context.Context, refid stri
 	}
 	table := a.db.DBOpeniiotQuery.WmsStocktaking
 	tx := table.WithContext(ctx)
-	existRecord, _ := tx.Where(table.RefID.Eq(refid)).First()
-	if existRecord != nil {
-		return -1, errors.New("refid exist")
-	}
 	id := common.GetUUID()
 
 	newRecord := &model_openiiot.WmsStocktaking{
