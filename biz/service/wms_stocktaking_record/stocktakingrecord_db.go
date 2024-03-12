@@ -55,7 +55,7 @@ func (a *WmsStocktakingRecordService) AddStocktakingRecordDB(ctx context.Context
 	id := common.GetUUID()
 
 	newRecord := &model_openiiot.WmsStocktakingRecord{
-		ID:              ID,
+		ID:              id,
 		StocktakingID:   StocktakingID,
 		StockLocationID: StockLocationID,
 		MaterialID:      MaterialID,
