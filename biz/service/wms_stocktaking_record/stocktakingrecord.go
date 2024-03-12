@@ -24,43 +24,46 @@ func (a *WmsStocktakingRecordService) GetStocktakingRecord(ctx context.Context, 
 		tx = tx.Where(table.ID.Eq(common.StringToInt64(req.Id)))
 	}
 	wmsStocktaking, err := tx.Find()
-	storagelocations, err := a.GetStocktakingRecordDB(ctx, 0, wmsStocktaking[0].ID, 0, 0, 0, 0, 0)
-
-	if err != nil {
-		logs.Error(ctx, "event=GetStocktakingRecord error=%v", err.Error())
-		return nil, err
-	}
 
 	resp := new(freezonex_openiiot_api.GetStocktakingRecordResponse)
 	data := make([]*freezonex_openiiot_api.ShelfInventory, 0)
 	data1 := make([]*freezonex_openiiot_api.Inventory, 0)
 
-	for _, v := range storagelocations {
-		table := a.db.DBOpeniiotQuery.WmsStorageLocation
-		existRecord, _ := table.WithContext(ctx).Select(field.ALL).Where(table.ID.Eq(v.StockLocationID)).First()
-		warehouseService := wms_warehouse.DefaultWmsWarehouseService()
-		WarehouseID := existRecord.WarehouseID
-		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, WarehouseID, "", "", "", "", "", "", "")
-		locationame := existRecord.Name + "-" + warehouseData[0].Name
+	for _, wmsStocktakings := range wmsStocktaking {
+		storagelocations, _ := a.GetStocktakingRecordDB(ctx, 0, wmsStocktakings.ID, 0, 0, 0, 0, 0)
 
-		table1 := a.db.DBOpeniiotQuery.WmsMaterial
-		existRecord1, _ := table1.WithContext(ctx).Select(table1.Name).Where(table1.ID.Eq(v.MaterialID)).First()
+		for _, v := range storagelocations {
+			table := a.db.DBOpeniiotQuery.WmsStorageLocation
+			existRecord, _ := table.WithContext(ctx).Select(field.ALL).Where(table.ID.Eq(v.StockLocationID)).First()
+			warehouseService := wms_warehouse.DefaultWmsWarehouseService()
+			WarehouseID := existRecord.WarehouseID
+			warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, WarehouseID, "", "", "", "", "", "", "")
+			locationame := existRecord.Name + "-" + warehouseData[0].Name
 
-		data1 = append(data1, &freezonex_openiiot_api.Inventory{
-			Rfid:          "",
-			MaterialId:    common.Int64ToString(v.MaterialID),
-			Quantity:      *v.Quantity,
-			MaterialName:  existRecord1.Name,
-			StockQuantity: *v.StockQuantity,
-			Discrepancy:   *v.Discrepancy,
-		})
+			table1 := a.db.DBOpeniiotQuery.WmsMaterial
+			existRecord1, _ := table1.WithContext(ctx).Select(table1.Name).Where(table1.ID.Eq(v.MaterialID)).First()
 
-		data = append(data, &freezonex_openiiot_api.ShelfInventory{
-			StorageLocationId: common.Int64ToString(v.StocktakingID),
-			Inventory:         data1,
-			StorageLocation:   locationame,
-		})
+			data1 = append(data1, &freezonex_openiiot_api.Inventory{
+				Rfid:          "",
+				MaterialId:    common.Int64ToString(v.MaterialID),
+				Quantity:      *v.Quantity,
+				MaterialName:  existRecord1.Name,
+				StockQuantity: *v.StockQuantity,
+				Discrepancy:   *v.Discrepancy,
+			})
+
+			data = append(data, &freezonex_openiiot_api.ShelfInventory{
+				StorageLocationId: common.Int64ToString(v.StocktakingID),
+				Inventory:         data1,
+				StorageLocation:   locationame,
+			})
+		}
 	}
+	if err != nil {
+		logs.Error(ctx, "event=GetStocktakingRecord error=%v", err.Error())
+		return nil, err
+	}
+
 	resp.Data = data
 	resp.BaseResp = middleware.SuccessResponseOK
 

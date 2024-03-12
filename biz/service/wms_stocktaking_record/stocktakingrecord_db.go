@@ -98,6 +98,6 @@ func (a *WmsStocktakingRecordService) UpdateStocktakingRecordDB(ctx context.Cont
 	if Discrepancy != 0 {
 		updates[table.Discrepancy.ColumnName().String()] = Discrepancy
 	}
-
+	_, _ = tx.Updates(updates)
 	return ID, nil
 }
