@@ -37,7 +37,7 @@ func (a *WmsStocktakingRecordService) GetStocktakingRecord(ctx context.Context, 
 
 	for _, v := range storagelocations {
 		table := a.db.DBOpeniiotQuery.WmsStorageLocation
-		existRecord, _ := table.WithContext(ctx).Select(table.Name).Where(table.ID.Eq(v.StockLocationID)).First()
+		existRecord, _ := table.WithContext(ctx).Select(field.ALL).Where(table.ID.Eq(v.StockLocationID)).First()
 		warehouseService := wms_warehouse.DefaultWmsWarehouseService()
 		WarehouseID := existRecord.WarehouseID
 		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, 0, "", common.Int64ToString(WarehouseID), "", "", "", "", "")
