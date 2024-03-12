@@ -10,6 +10,7 @@ import (
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
+	"freezonex/openiiot/biz/service/wms_warehouse"
 )
 
 // GetStocktakingRecord will get storagelocation record in condition
@@ -37,6 +38,10 @@ func (a *WmsStocktakingRecordService) GetStocktakingRecord(ctx context.Context, 
 	for _, v := range storagelocations {
 		table := a.db.DBOpeniiotQuery.WmsStorageLocation
 		existRecord, _ := table.WithContext(ctx).Select(table.Name).Where(table.ID.Eq(v.StockLocationID)).First()
+		warehouseService := wms_warehouse.DefaultWmsWarehouseService()
+		WarehouseID := existRecord.WarehouseID
+		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, 0, "", common.Int64ToString(WarehouseID), "", "", "", "", "")
+		locationame := existRecord.Name + "-" + warehouseData[0].Name
 
 		table1 := a.db.DBOpeniiotQuery.WmsMaterial
 		existRecord1, _ := table1.WithContext(ctx).Select(table1.Name).Where(table1.ID.Eq(v.MaterialID)).First()
@@ -53,7 +58,7 @@ func (a *WmsStocktakingRecordService) GetStocktakingRecord(ctx context.Context, 
 		data = append(data, &freezonex_openiiot_api.ShelfInventory{
 			StorageLocationId: common.Int64ToString(v.StocktakingID),
 			Inventory:         data1,
-			StorageLocation:   existRecord.Name,
+			StorageLocation:   locationame,
 		})
 	}
 	resp.Data = data
