@@ -1,6 +1,7 @@
 package main
 
 import (
+	"freezonex/openiiot/biz/service/wms_rfid_material"
 	//"context"
 	//"os"
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -523,31 +524,31 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	wmsRfidmaterialGroup := r.Group("/wms/rfidmaterial", middleware.Access())
 	{
-		wmsHandler := handler.NewWmsOutboundHandler(wms_outbound.NewWmsOutboundService(db))
+		wmsHandler := handler.NewWmsRfidMaterialHandler(wms_rfid_material.NewWmsRfidMaterialService(db))
 		wmsRfidmaterialGroup.POST(
 			"/add",
 			middleware.Response(
 				"/wms/rfidmaterial/add",
-				wmsHandler.AddWmsOutbound,
-				&iiotpb.AddOutboundRequest{}))
+				wmsHandler.AddWmsRfidMaterial,
+				&iiotpb.AddRfidMaterialRequest{}))
 		wmsRfidmaterialGroup.POST(
 			"/update",
 			middleware.Response(
 				"/wms/rfidmaterial/update",
-				wmsHandler.UpdateWmsOutbound,
-				&iiotpb.UpdateOutboundRequest{}))
+				wmsHandler.UpdateWmsRfidMaterial,
+				&iiotpb.UpdateRfidMaterialRequest{}))
 		wmsRfidmaterialGroup.POST(
 			"/delete",
 			middleware.Response(
 				"/wms/rfidmaterial/delete",
-				wmsHandler.DeleteWmsOutbound,
-				&iiotpb.DeleteOutboundRequest{}))
+				wmsHandler.DeleteWmsRfidMaterial,
+				&iiotpb.DeleteRfidMaterialRequest{}))
 		wmsRfidmaterialGroup.POST(
 			"/get",
 			middleware.Response(
 				"/wms/rfidmaterial/get",
-				wmsHandler.GetWmsOutbound,
-				&iiotpb.GetOutboundRequest{}))
+				wmsHandler.GetWmsRfidMaterial,
+				&iiotpb.GetRfidMaterialRequest{}))
 	}
 
 	wmsInboundRecordGroup := r.Group("/wms/inbound/detail", middleware.Access())
