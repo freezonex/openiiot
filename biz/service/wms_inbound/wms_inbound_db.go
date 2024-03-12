@@ -12,8 +12,6 @@ import (
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/common"
 	"freezonex/openiiot/biz/service/wms_inbound_record"
-	"freezonex/openiiot/biz/service/wms_stocktaking"
-	"freezonex/openiiot/biz/service/wms_stocktaking_record"
 )
 
 // AddWmsInboundDB will add wms record to the DB.
@@ -30,31 +28,7 @@ func (a *WmsInboundService) AddWmsInboundDB(ctx context.Context, type1 string, s
 				if err != nil {
 					return -1, err
 				}
-				table := a.db.DBOpeniiotQuery.WmsStocktakingRecord
-				tx := table.WithContext(ctx).Select(field.ALL).Where(table.MaterialID.Eq(common.StringToInt64(invotry.MaterialId))).Where(table.StockLocationID.Eq(common.StringToInt64(record.StorageLocationId)))
-				StocktakingRecordData, err := tx.Find()
-				if len(StocktakingRecordData) == 0 {
-					Stocktaking := wms_stocktaking.DefaultStocktakingService()
-					StocktakingId, err := Stocktaking.AddStocktakingDB(ctx, invotry.Rfid, type1, source, "", "")
-					if err != nil {
-						return -1, err
-					}
-
-					StocktakingRecordDataFound := wms_stocktaking_record.DefaultStocktakingRecordService()
-					_, err = StocktakingRecordDataFound.AddStocktakingRecordDB(ctx, 0, StocktakingId, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity, invotry.Quantity, invotry.Discrepancy)
-					if err != nil {
-						return -1, err
-					}
-				} else {
-					num := *StocktakingRecordData[0].StockQuantity + invotry.Quantity
-					StocktakingRecordDataFound := wms_stocktaking_record.DefaultStocktakingRecordService()
-					_, err := StocktakingRecordDataFound.UpdateStocktakingRecordDB(ctx, StocktakingRecordData[0].ID, StocktakingRecordData[0].StocktakingID, StocktakingRecordData[0].StockLocationID, StocktakingRecordData[0].MaterialID, invotry.Quantity, num, num-*StocktakingRecordData[0].Quantity)
-					if err != nil {
-						return -1, err
-					}
-				}
 			}
-
 		}
 		operator := "default"
 		status1 := "done"
@@ -83,30 +57,6 @@ func (a *WmsInboundService) AddWmsInboundDB(ctx context.Context, type1 string, s
 				_, err := inboundrecordservie.AddWmsInboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
 				if err != nil {
 					return -1, err
-				}
-
-				table := a.db.DBOpeniiotQuery.WmsStocktakingRecord
-				tx := table.WithContext(ctx).Select(field.ALL).Where(table.MaterialID.Eq(common.StringToInt64(invotry.MaterialId))).Where(table.StockLocationID.Eq(common.StringToInt64(record.StorageLocationId)))
-				StocktakingRecordData, err := tx.Find()
-				if len(StocktakingRecordData) == 0 {
-					Stocktaking := wms_stocktaking.DefaultStocktakingService()
-					StocktakingId, err := Stocktaking.AddStocktakingDB(ctx, invotry.Rfid, type1, source, "", "")
-					if err != nil {
-						return -1, err
-					}
-
-					StocktakingRecordDataFound := wms_stocktaking_record.DefaultStocktakingRecordService()
-					_, err = StocktakingRecordDataFound.AddStocktakingRecordDB(ctx, 0, StocktakingId, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity, invotry.Quantity, invotry.Discrepancy)
-					if err != nil {
-						return -1, err
-					}
-				} else {
-					num := *StocktakingRecordData[0].StockQuantity + invotry.Quantity
-					StocktakingRecordDataFound := wms_stocktaking_record.DefaultStocktakingRecordService()
-					_, err := StocktakingRecordDataFound.UpdateStocktakingRecordDB(ctx, StocktakingRecordData[0].ID, StocktakingRecordData[0].StocktakingID, StocktakingRecordData[0].StockLocationID, StocktakingRecordData[0].MaterialID, invotry.Quantity, num, num-*StocktakingRecordData[0].Quantity)
-					if err != nil {
-						return -1, err
-					}
 				}
 			}
 		}

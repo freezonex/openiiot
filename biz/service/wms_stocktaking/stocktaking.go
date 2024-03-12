@@ -2,6 +2,7 @@ package wms_stocktaking
 
 import (
 	"context"
+	"gorm.io/gen/field"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	logs "github.com/cloudwego/hertz/pkg/common/hlog"
@@ -20,7 +21,10 @@ func (a *WmsStocktakingService) AddStocktaking(ctx context.Context, req *freezon
 	for _, b := range req.ShelfRecords {
 		for _, d := range b.Inventory {
 			stocktakingrecordservie := wms_stocktaking_record.DefaultStocktakingRecordService()
-			_, err := stocktakingrecordservie.AddStocktakingRecordDB(ctx, common.GetUUID(), stocktakingID, common.StringToInt64(b.StorageLocationId), common.StringToInt64(d.MaterialId), d.Quantity, d.StockQuantity, d.Discrepancy)
+			table := a.db.DBOpeniiotQuery.WmsStocktakingRecord
+			tx := table.WithContext(ctx).Select(field.ALL).Where(table.StockLocationID.Eq(common.StringToInt64(b.StorageLocationId))).Where(table.MaterialID.Eq(common.StringToInt64(d.MaterialId)))
+			data, err := tx.Find()
+			_, err = stocktakingrecordservie.AddStocktakingRecordDB(ctx, common.GetUUID(), stocktakingID, common.StringToInt64(b.StorageLocationId), common.StringToInt64(d.MaterialId), d.Quantity, *data[0].StockQuantity, d.Discrepancy)
 			if err != nil {
 				return nil, err
 			}
