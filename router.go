@@ -521,6 +521,35 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				&iiotpb.GetOutboundRequest{}))
 	}
 
+	wmsRfidmaterialGroup := r.Group("/wms/rfidmaterial", middleware.Access())
+	{
+		wmsHandler := handler.NewWmsOutboundHandler(wms_outbound.NewWmsOutboundService(db))
+		wmsRfidmaterialGroup.POST(
+			"/add",
+			middleware.Response(
+				"/wms/rfidmaterial/add",
+				wmsHandler.AddWmsOutbound,
+				&iiotpb.AddOutboundRequest{}))
+		wmsRfidmaterialGroup.POST(
+			"/update",
+			middleware.Response(
+				"/wms/rfidmaterial/update",
+				wmsHandler.UpdateWmsOutbound,
+				&iiotpb.UpdateOutboundRequest{}))
+		wmsRfidmaterialGroup.POST(
+			"/delete",
+			middleware.Response(
+				"/wms/rfidmaterial/delete",
+				wmsHandler.DeleteWmsOutbound,
+				&iiotpb.DeleteOutboundRequest{}))
+		wmsRfidmaterialGroup.POST(
+			"/get",
+			middleware.Response(
+				"/wms/rfidmaterial/get",
+				wmsHandler.GetWmsOutbound,
+				&iiotpb.GetOutboundRequest{}))
+	}
+
 	wmsInboundRecordGroup := r.Group("/wms/inbound/detail", middleware.Access())
 	{
 		wmsHandler1 := handler.NewWmsInboundRecordHandler(wms_inbound_record.NewWmsInboundRecordService(db))
