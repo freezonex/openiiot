@@ -40,7 +40,7 @@ func (a *WmsStocktakingRecordService) GetStocktakingRecord(ctx context.Context, 
 		existRecord, _ := table.WithContext(ctx).Select(field.ALL).Where(table.ID.Eq(v.StockLocationID)).First()
 		warehouseService := wms_warehouse.DefaultWmsWarehouseService()
 		WarehouseID := existRecord.WarehouseID
-		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, 0, "", common.Int64ToString(WarehouseID), "", "", "", "", "")
+		warehouseData, _ := warehouseService.GetWmsWarehouseDB(ctx, WarehouseID, "", "", "", "", "", "", "")
 		locationame := existRecord.Name + "-" + warehouseData[0].Name
 
 		table1 := a.db.DBOpeniiotQuery.WmsMaterial
