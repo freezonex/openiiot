@@ -9,7 +9,7 @@ import (
 )
 
 // AddWmsInboundRecordDB will add wms record to the DB.
-func (a *WmsInboundRecordService) AddWmsInboundRecordDB(ctx context.Context, InboundId int64, storagelocation int64, MaterialId int64, quantity int32) (int64, error) {
+func (a *WmsInboundRecordService) AddWmsInboundRecordDB(ctx context.Context, InboundId int64, storagelocation int64, MaterialId int64, quantity int32, source string, rfid string) (int64, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsInboundRecord
 	tx := table.WithContext(ctx)
@@ -27,14 +27,27 @@ func (a *WmsInboundRecordService) AddWmsInboundRecordDB(ctx context.Context, Inb
 		updates := make(map[string]interface{})
 		updates[table1.Quantity.ColumnName().String()] = newQuantity
 		_, err := tx2.Updates(updates)
-		updates2 := make(map[string]interface{})
-		updates2[table3.Occupied.ColumnName().String()] = true
-		updates2[table3.MaterialName.ColumnName().String()] = material.Name
-		_, err = tx3.Updates(updates2)
-		if err != nil {
-			return -1, err
+		if source == "PDA" {
+			c := a.db.DBOpeniiotQuery.WmsRfidMaterial
+			d, _ := c.WithContext(ctx).Where(c.Rfid.Eq(rfid)).First()
+			e := a.db.DBOpeniiotQuery.WmsMaterial
+			f, _ := e.WithContext(ctx).Where(e.ID.Eq(d.MaterialID)).First()
+			updates2 := make(map[string]interface{})
+			updates2[table3.Occupied.ColumnName().String()] = true
+			updates2[table3.MaterialName.ColumnName().String()] = f.Name
+			_, err = tx3.Updates(updates2)
+			if err != nil {
+				return -1, err
+			}
+		} else {
+			updates2 := make(map[string]interface{})
+			updates2[table3.Occupied.ColumnName().String()] = true
+			updates2[table3.MaterialName.ColumnName().String()] = material.Name
+			_, err = tx3.Updates(updates2)
+			if err != nil {
+				return -1, err
+			}
 		}
-
 	}
 	if existRecord == nil {
 		id1 := common.GetUUID()
