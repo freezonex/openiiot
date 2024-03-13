@@ -24,7 +24,7 @@ func (a *WmsStocktakingService) AddStocktaking(ctx context.Context, req *freezon
 			table := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
 			tx := table.WithContext(ctx).Select(field.ALL).Where(table.StoreLocationID.Eq(common.StringToInt64(b.StorageLocationId))).Where(table.MaterialID.Eq(common.StringToInt64(d.MaterialId)))
 			data, err := tx.Find()
-			_, err = stocktakingrecordservie.AddStocktakingRecordDB(ctx, common.GetUUID(), stocktakingID, common.StringToInt64(b.StorageLocationId), common.StringToInt64(d.MaterialId), d.Quantity, data[0].Quantity, data[0].Quantity-d.Quantity)
+			_, err = stocktakingrecordservie.AddStocktakingRecordDB(ctx, common.GetUUID(), stocktakingID, common.StringToInt64(b.StorageLocationId), common.StringToInt64(d.MaterialId), d.Quantity, data[0].Quantity, d.Quantity-data[0].Quantity)
 			if err != nil {
 				return nil, err
 			}
