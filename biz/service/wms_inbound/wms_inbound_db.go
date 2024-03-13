@@ -24,7 +24,7 @@ func (a *WmsInboundService) AddWmsInboundDB(ctx context.Context, type1 string, s
 		for _, record := range shelfrecords {
 			for _, invotry := range record.Inventory {
 				inboundrecordservie := wms_inbound_record.DefaultWmsInboundRecordService()
-				_, err := inboundrecordservie.AddWmsInboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
+				_, err := inboundrecordservie.AddWmsInboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity, source, invotry.Rfid)
 				if err != nil {
 					return -1, err
 				}
@@ -54,7 +54,7 @@ func (a *WmsInboundService) AddWmsInboundDB(ctx context.Context, type1 string, s
 
 			for _, invotry := range record.Inventory {
 				inboundrecordservie := wms_inbound_record.DefaultWmsInboundRecordService()
-				_, err := inboundrecordservie.AddWmsInboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
+				_, err := inboundrecordservie.AddWmsInboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity, source, "")
 				if err != nil {
 					return -1, err
 				}
