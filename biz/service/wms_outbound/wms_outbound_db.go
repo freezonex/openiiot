@@ -28,7 +28,7 @@ func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, 
 
 			for _, invotry := range record.Inventory {
 				outboundrecordservie := wms_outbound_record.DefaultWmsOutboundRecordService()
-				_, err := outboundrecordservie.AddWmsOutboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
+				_, err := outboundrecordservie.AddWmsOutboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity, source, invotry.Rfid)
 				if err != nil {
 					return -1, err
 				}
@@ -57,7 +57,7 @@ func (a *WmsOutboundService) AddWmsOutboundDB(ctx context.Context, Type string, 
 
 			for _, invotry := range record.Inventory {
 				outboundrecordservie := wms_outbound_record.DefaultWmsOutboundRecordService()
-				_, err := outboundrecordservie.AddWmsOutboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity)
+				_, err := outboundrecordservie.AddWmsOutboundRecordDB(ctx, id, common.StringToInt64(record.StorageLocationId), common.StringToInt64(invotry.MaterialId), invotry.Quantity, source, invotry.Rfid)
 				if err != nil {
 					return -1, err
 				}

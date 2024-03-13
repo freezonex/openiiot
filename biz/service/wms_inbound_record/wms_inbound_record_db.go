@@ -16,6 +16,14 @@ func (a *WmsInboundRecordService) AddWmsInboundRecordDB(ctx context.Context, Inb
 	id := common.GetUUID()
 	table1 := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
 	tx1 := table1.WithContext(ctx)
+	if source == "PDA" {
+		c := a.db.DBOpeniiotQuery.WmsRfidMaterial
+		d, err := c.WithContext(ctx).Where(c.Rfid.Eq(rfid)).First()
+		MaterialId = d.MaterialID
+		if err != nil {
+			return -1, err
+		}
+	}
 	existRecord, _ := tx1.Where(table1.StoreLocationID.Eq(storagelocation), table1.MaterialID.Eq(MaterialId)).First()
 	tx2 := table1.WithContext(ctx).Where(table1.StoreLocationID.Eq(storagelocation), table1.MaterialID.Eq(MaterialId))
 	table3 := a.db.DBOpeniiotQuery.WmsStorageLocation
@@ -50,6 +58,14 @@ func (a *WmsInboundRecordService) AddWmsInboundRecordDB(ctx context.Context, Inb
 		}
 	}
 	if existRecord == nil {
+		if source == "PDA" {
+			c := a.db.DBOpeniiotQuery.WmsRfidMaterial
+			d, err := c.WithContext(ctx).Where(c.Rfid.Eq(rfid)).First()
+			MaterialId = d.MaterialID
+			if err != nil {
+				return -1, err
+			}
+		}
 		id1 := common.GetUUID()
 		var newRecord1 = &model_openiiot.WmsStorageLocationMaterial{
 			ID:              id1,

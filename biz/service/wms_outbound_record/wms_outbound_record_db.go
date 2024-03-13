@@ -10,13 +10,21 @@ import (
 )
 
 // AddWmsOutboundRecordDB will add wms record to the DB.
-func (a *WmsOutboundRecordService) AddWmsOutboundRecordDB(ctx context.Context, outboundid int64, storagelocation int64, MaterialId int64, quantity int32) (int64, error) {
+func (a *WmsOutboundRecordService) AddWmsOutboundRecordDB(ctx context.Context, outboundid int64, storagelocation int64, MaterialId int64, quantity int32, source string, rfid string) (int64, error) {
 
 	table := a.db.DBOpeniiotQuery.WmsOutboundRecord
 	tx := table.WithContext(ctx)
 	id := common.GetUUID()
 	table1 := a.db.DBOpeniiotQuery.WmsStorageLocationMaterial
 	tx1 := table1.WithContext(ctx)
+	if source == "PDA" {
+		c := a.db.DBOpeniiotQuery.WmsRfidMaterial
+		d, err := c.WithContext(ctx).Where(c.Rfid.Eq(rfid)).First()
+		MaterialId = d.MaterialID
+		if err != nil {
+			return -1, err
+		}
+	}
 	existRecord, _ := tx1.Where(table1.StoreLocationID.Eq(storagelocation), table1.MaterialID.Eq(MaterialId)).First()
 	tx2 := table1.WithContext(ctx).Where(table1.StoreLocationID.Eq(storagelocation), table1.MaterialID.Eq(MaterialId))
 	table3 := a.db.DBOpeniiotQuery.WmsStorageLocation
