@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: openiiot-nodered
-          image: openiiot_nodered:1.0.0
+          image: localhost:5000/openiiot_nodered:1.0.0
           ports:
             - containerPort: 1880
             - containerPort: 43893

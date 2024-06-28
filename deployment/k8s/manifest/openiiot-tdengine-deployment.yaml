@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: openiiot-tdengine
-          image: openiiot_tdengine:1.0.0
+          image: localhost:5000/openiiot_tdengine:1.0.0
           ports:
             - containerPort: 6030
             - containerPort: 6041

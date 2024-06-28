@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: openiiot-emqx
-          image: openiiot_emqx:1.0.0
+          image: localhost:5000/openiiot_emqx:1.0.0
           env:
             - name: EMQX_NODE_NAME
               value: "emqx@node1.emqx.io"
