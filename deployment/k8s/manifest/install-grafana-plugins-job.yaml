@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: install-plugins
-        image: openiiot_grafana:1.0.0
+        image: localhost:5000/openiiot_grafana:1.0.0
         command: ["/bin/sh", "-c", "/opt/grafana/install-plugins.sh"]
         volumeMounts:
         - name: plugin-volume

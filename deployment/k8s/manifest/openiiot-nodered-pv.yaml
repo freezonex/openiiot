@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: openiiot-mysql-pv
+  name: openiiot-nodered-pv
   labels:
-    type: openiiot-mysql
+    type: openiiot-nodered
 spec:
   capacity:
     storage: 1Gi
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 192.168.1.186
-    path: "/volumes/nfs/openiiot/mysql_data"
+    server: 127.0.0.1
+    path: "/volumes/nfs/openiiot/nodered_data"
 

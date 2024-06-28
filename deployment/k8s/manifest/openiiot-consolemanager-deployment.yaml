@@ -1,23 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openiiot-web
+  name: openiiot-consolemanager
   namespace: openiiot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: openiiot-web
+      app: openiiot-consolemanager
   template:
     metadata:
       labels:
-        app: openiiot-web
+        app: openiiot-consolemanager
     spec:
       containers:
-        - name: openiiot-web
-          image: openiiot_web:1.0.0
+        - name: openiiot-consolemanager
+          image: localhost:5000/openiiot_consolemanager:1.0.0
+          imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 81
           resources:
             requests:
               cpu: "10m"

@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: openiiot-server
-          image: openiiot_server:1.0.1
+          image: localhost:5000/openiiot_server:1.0.0
+          imagePullPolicy: Always
           env:
             - name: RUNTIME_IDC_NAME
               value: "sg"

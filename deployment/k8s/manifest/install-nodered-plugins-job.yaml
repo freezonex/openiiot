@@ -9,7 +9,7 @@ spec:
     spec:
       containers:
       - name: install-plugins
-        image: openiiot_nodered:1.0.0
+        image: localhost:5000/openiiot_nodered:1.0.0
         command: ["/bin/sh", "-c"]
         args: ["cp /opt/nodered/package.json /data/ && /opt/nodered/install-plugins.sh"]
         volumeMounts:

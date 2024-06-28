@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: openiiot-mysql
-          image: openiiot_mysql:1.0.0
+          image: localhost:5000/openiiot_mysql:1.0.0
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: "root1234"

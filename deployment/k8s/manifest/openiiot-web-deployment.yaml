@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openiiot-web
+  namespace: openiiot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openiiot-web
+  template:
+    metadata:
+      labels:
+        app: openiiot-web
+    spec:
+      containers:
+        - name: openiiot-web
+          image: localhost:5000/openiiot_web:1.0.0
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+

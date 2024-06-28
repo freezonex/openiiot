@@ -1,23 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openiiot-consolemanager
+  name: openiiot-pma
   namespace: openiiot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: openiiot-consolemanager
+      app: openiiot-pma
   template:
     metadata:
       labels:
-        app: openiiot-consolemanager
+        app: openiiot-pma
     spec:
       containers:
-        - name: openiiot-consolemanager
-          image: openiiot_consolemanager:1.0.0
+        - name: openiiot-pma
+          image: phpmyadmin/phpmyadmin
+          env:
+            - name: PMA_ARBITRARY
+              value: "1"
           ports:
-            - containerPort: 81
+            - containerPort: 80
           resources:
             requests:
               cpu: "10m"
