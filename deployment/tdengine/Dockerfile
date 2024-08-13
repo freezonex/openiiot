@@ -1,4 +1,4 @@
-FROM tdengine/tdengine:3.1.1.0
+FROM tdengine/tdengine:3.3.2.0
 EXPOSE 6030
 EXPOSE 6041
 EXPOSE 6043-6049
