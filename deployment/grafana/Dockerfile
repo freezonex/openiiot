@@ -1,4 +1,4 @@
-FROM grafana/grafana-enterprise
+FROM grafana/grafana-enterprise:11.0.1
 
 # Install plugins
 RUN grafana cli plugins install grafana-mqtt-datasource && \

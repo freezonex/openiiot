@@ -1,7 +1,7 @@
 PLATFORM ?= linux/amd64
 TAG_PREFIX ?= registry:5000/
 TAG_PREFIX_SANDBOX ?= eco-registry.supos.com/supvxcen/
-DOCKER_PREFIX ?= openiiot_
+DOCKER_PREFIX ?= openiiot-
 DEFAULT_TAG := 1.0.0
 # Define specific tags for services here, e.g., server_TAG := 1.0.1
 server_TAG := 1.0.0

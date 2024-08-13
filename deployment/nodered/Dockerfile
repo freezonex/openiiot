@@ -1,4 +1,4 @@
-FROM nodered/node-red
+FROM nodered/node-red:4.0.2
 
 # Copy custom Node-RED nodes package.json
 COPY deployment/nodered/data/package.json /data/
