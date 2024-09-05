@@ -1,7 +1,7 @@
 version: '3'
 services:
   openiiot-server:
-    image: openiiot_server:1.0.0
+    image: openiiot-server:1.0.0
     container_name: openiiot-server
     environment:
       - "SUPOS_CURRENT_USERNAME=hongzhi"
@@ -11,14 +11,14 @@ services:
     restart: unless-stopped
 
   openiiot-web:
-    image: openiiot_web:1.0.0
+    image: openiiot-web:1.0.0
     container_name: openiiot-web
     ports:
       - "80:80"
     restart: unless-stopped
 
   openiiot-nodered:
-    image: openiiot_nodered:1.0.0
+    image: openiiot-nodered:1.0.0
     container_name: openiiot-nodered
     ports:
       - "1880:1880"
@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
 
   openiiot-grafana:
-    image: openiiot_grafana:1.0.0
+    image: openiiot-grafana:1.0.0
     container_name: openiiot-grafana
     environment:
       - "GF_SECURITY_ALLOW_EMBEDDING=true"
@@ -39,9 +39,10 @@ services:
       - "3000:3000"
     restart: unless-stopped
 
-  openiiot-emqx1:
-    image: openiiot_emqx:1.0.0
-    container_name: openiiot-emqx1
+  openiiot-emqx:
+    #image: emqx:5.7.2
+    image: openiiot-emqx:1.0.0
+    container_name: openiiot-emqx
     environment:
       - "EMQX_NODE_NAME=emqx@node1.emqx.io"
       - "EMQX_CLUSTER__DISCOVERY_STRATEGY=static"
@@ -62,7 +63,7 @@ services:
     restart: unless-stopped
 
   openiiot-tdengine:
-    image: openiiot_tdengine:1.0.0
+    image: openiiot-tdengine:1.0.0
     container_name: openiiot-tdengine
     volumes:
       - tdengine_data:/var/lib/taosw
@@ -75,7 +76,7 @@ services:
     restart: unless-stopped
 
   openiiot-mysql:
-    image: openiiot_mysql:1.0.0
+    image: openiiot-mysql:1.0.0
     container_name: openiiot-mysql
     environment:
       MYSQL_ROOT_PASSWORD: root1234

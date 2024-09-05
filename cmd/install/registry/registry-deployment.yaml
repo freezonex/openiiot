@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: middleware-registry
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: middleware-registry
+  template:
+    metadata:
+      labels:
+        app: middleware-registry
+    spec:
+      containers:
+      - name: registry
+        image: registry:2
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: registry-storage
+          mountPath: /var/lib/registry
+      volumes:
+      - name: registry-storage
+        persistentVolumeClaim:
+          claimName: registry-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: middleware-registry
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000

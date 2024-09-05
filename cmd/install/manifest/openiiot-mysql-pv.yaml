@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: openiiot-mysql-pv
+  labels:
+    type: openiiot-mysql
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/volumes/openiiot/mysql"
+

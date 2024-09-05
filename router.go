@@ -17,6 +17,7 @@ import (
 	"freezonex/openiiot/biz/service/emqx"
 	"freezonex/openiiot/biz/service/flow"
 	"freezonex/openiiot/biz/service/grafana"
+	"freezonex/openiiot/biz/service/k8s"
 	"freezonex/openiiot/biz/service/supos"
 	"freezonex/openiiot/biz/service/tdengine"
 	"freezonex/openiiot/biz/service/tenant"
@@ -26,6 +27,12 @@ import (
 // customizeRegister register customize routers.
 func customizeRegister(r *server.Hertz, c *config.Config) {
 	db, err := mysql.Init(&c.DBConfig)
+	if err != nil {
+		logs.Errorf("cannot connect to mysql database, err: %v", err)
+		panic(err)
+	}
+
+	k8s, err := k8s.NewK8sService(db, &c.K8sConfig)
 	if err != nil {
 		logs.Errorf("cannot connect to mysql database, err: %v", err)
 		panic(err)
@@ -57,7 +64,7 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	tenantGroup := r.Group("/tenant", middleware.Access())
 	{
-		tenantHandler := handler.NewTenantHandler(tenant.NewTenantService(db, &c.K8sConfig))
+		tenantHandler := handler.NewTenantHandler(tenant.NewTenantService(db, &c.GeneralConfig, k8s))
 		tenantGroup.POST(
 			"/add",
 			middleware.Response(
@@ -88,6 +95,24 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/tenant/allname",
 				tenantHandler.GetAllTenantName,
 				&iiotpb.GetAllTenantNameRequest{}))
+		tenantGroup.POST(
+			"/component/add",
+			middleware.Response(
+				"/tenant/component/add",
+				tenantHandler.AddTenantComponent,
+				&iiotpb.AddTenantComponentRequest{}))
+		tenantGroup.POST(
+			"/component/delete",
+			middleware.Response(
+				"/tenant/component/delete",
+				tenantHandler.DeleteTenantComponent,
+				&iiotpb.DeleteTenantComponentRequest{}))
+		tenantGroup.GET(
+			"/component/get",
+			middleware.Response(
+				"/tenant/component/get",
+				tenantHandler.GetTenantComponent,
+				&iiotpb.GetTenantComponentRequest{}))
 	}
 
 	userGroup := r.Group("/user", middleware.Access())

@@ -5,13 +5,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"freezonex/openiiot/biz/service/user"
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 	"strconv"
 	"strings"
+
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/utils/cache"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/google/uuid"
 )
@@ -81,10 +83,10 @@ func (a *SuposService) GetAccessToken(ctx context.Context, req *freezonex_openii
 				cache.Set("CurrentUserRole", userRole)
 				cache.Set("CurrentTenantId", strconv.FormatInt(tenantId, 10))
 
-				context.WithValue(ctx, "currentuserid", id)
-				context.WithValue(ctx, "currentusername", username1)
-				context.WithValue(ctx, "currentuserrole", userRole)
-				context.WithValue(ctx, "currenttenantid", tenantId)
+				ctx = context.WithValue(ctx, "currentuserid", id)
+				ctx = context.WithValue(ctx, "currentusername", username1)
+				ctx = context.WithValue(ctx, "currentuserrole", userRole)
+				ctx = context.WithValue(ctx, "currenttenantid", tenantId)
 				if err != nil {
 					return nil, err
 				}

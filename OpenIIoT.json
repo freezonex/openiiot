@@ -1,0 +1,298 @@
+{
+	"info": {
+		"_postman_id": "b8cc30a2-aedf-459c-957d-9a1c352cd85a",
+		"name": "OpenIIoT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9884522",
+		"_collection_link": "https://gold-comet-5540.postman.co/workspace/bytedance~26b52441-bfa8-487c-909e-c9acab28f049/collection/9884522-b8cc30a2-aedf-459c-957d-9a1c352cd85a?action=share&source=collection_link&creator=9884522"
+	},
+	"item": [
+		{
+			"name": "Tenant",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://supcononenorth.fortiddns.com:31585/tenant/get",
+							"protocol": "http",
+							"host": [
+								"supcononenorth",
+								"fortiddns",
+								"com"
+							],
+							"port": "31585",
+							"path": [
+								"tenant",
+								"get"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1234",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-",
+								"value": "Bear dfghfh",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"tenant1\",\n    \"description\": \"tenant 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://supcononenorth.fortiddns.com:31585/tenant/add",
+							"protocol": "http",
+							"host": [
+								"supcononenorth",
+								"fortiddns",
+								"com"
+							],
+							"port": "31585",
+							"path": [
+								"tenant",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "component/add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-",
+								"value": "Bear dfghfh",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tenant_name\": \"dt\",\n    \"component_name\": \"nodered\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://supcononenorth.fortiddns.com:31585/tenant/component/add",
+							"protocol": "http",
+							"host": [
+								"supcononenorth",
+								"fortiddns",
+								"com"
+							],
+							"port": "31585",
+							"path": [
+								"tenant",
+								"component",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "component/get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-",
+								"value": "Bear dfghfh",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"dt\",\n    \"description\": \"default tenant\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://supcononenorth.fortiddns.com:31585/tenant/component/get?tenant_name=dt",
+							"protocol": "http",
+							"host": [
+								"supcononenorth",
+								"fortiddns",
+								"com"
+							],
+							"port": "31585",
+							"path": [
+								"tenant",
+								"component",
+								"get"
+							],
+							"query": [
+								{
+									"key": "tenant_name",
+									"value": "dt"
+								},
+								{
+									"key": "component_name",
+									"value": "nodered",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "component/delete",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-",
+								"value": "Bear dfghfh",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tenant_name\": \"dt\",\n    \"component_name\": \"nodered2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://supcononenorth.fortiddns.com:31585/tenant/component/delete",
+							"protocol": "http",
+							"host": [
+								"supcononenorth",
+								"fortiddns",
+								"com"
+							],
+							"port": "31585",
+							"path": [
+								"tenant",
+								"component",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 8548418657879015515,\n    \"name\": \"tenant2\",\n    \"description\": \"this is a updated tenant\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://supcononenorth.fortiddns.com:31585/tenant/update",
+							"protocol": "http",
+							"host": [
+								"supcononenorth",
+								"fortiddns",
+								"com"
+							],
+							"port": "31585",
+							"path": [
+								"tenant",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"tenant1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://supcononenorth.fortiddns.com:31585/tenant/delete",
+							"protocol": "http",
+							"host": [
+								"supcononenorth",
+								"fortiddns",
+								"com"
+							],
+							"port": "31585",
+							"path": [
+								"tenant",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://supcononenorth.fortiddns.com:31585/ping",
+							"protocol": "http",
+							"host": [
+								"supcononenorth",
+								"fortiddns",
+								"com"
+							],
+							"port": "31585",
+							"path": [
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Tenant Operation"
+		}
+	]
+}

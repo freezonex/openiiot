@@ -1,183 +1,84 @@
 package k8s
 
-func NoderedPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim {
-	return &PersistentVolumeClaim{
-		APIVersion: "v1",
-		Kind:       "PersistentVolumeClaim",
-		Metadata: Metadata{
-			Name: "openiiot-nodered-pvc-" + name,
-		},
-		Spec: PersistentVolumeClaimSpec{
-			AccessModes: []string{"ReadWriteMany"},
-			Resources: struct {
-				Requests struct {
-					Storage string `json:"storage"`
-				} `json:"requests"`
-			}{
-				Requests: struct {
-					Storage string `json:"storage"`
-				}{
-					Storage: "1Gi",
-				},
-			},
-			VolumeName:       "openiiot-nodered-volume-" + name + "-" + id, // 如果不需要指定，可以将这一行删除
-			StorageClassName: "managed-nfs-storage",
-		},
+import (
+	"context"
+	"fmt"
+	"time"
+
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+// CreatePersistentVolumeClaim creates a persistentVolumeClaim based on the provided persistentVolumeClaim name.
+func (a *K8sService) CreatePersistentVolumeClaim(ctx context.Context, k8sUns K8sUns) error {
+
+	persistentVolumeClaim, err := a.getPersistentVolumeClaimSpec(ctx, k8sUns)
+	if err != nil {
+		return fmt.Errorf("failed to get persistentVolumeClaim spec: %w", err)
+	}
+
+	// Create the persistentVolumeClaim
+	_, err = a.clientset.CoreV1().PersistentVolumeClaims(a.GetNamespaceName(k8sUns)).Create(ctx, persistentVolumeClaim, metav1.CreateOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to create persistentVolumeClaim: %w", err)
+	}
+
+	return nil
+}
+
+// getPersistentVolumeClaimSpec returns a PersistentVolumeClaim spec based on the persistentVolumeClaim name
+func (a *K8sService) getPersistentVolumeClaimSpec(ctx context.Context, k8sUns K8sUns) (*corev1.PersistentVolumeClaim, error) {
+
+	componentName := k8sUns.ComponentName
+	if k8sUns.Tag != "" {
+		componentName = componentName + "-" + k8sUns.Tag
+	}
+
+	switch componentName {
+	case "emqx":
+		return a.EmqxPersistentVolumeClaim(ctx, k8sUns), nil
+	case "grafana":
+		return a.GrafanaPersistentVolumeClaim(ctx, k8sUns), nil
+	case "mysql":
+		return a.MysqlPersistentVolumeClaim(ctx, k8sUns), nil
+	case "nodered":
+		return a.NoderedPersistentVolumeClaim(ctx, k8sUns), nil
+	case "tdengine-data":
+		return a.TdengineDataPersistentVolumeClaim(ctx, k8sUns), nil
+	case "tdengine-log":
+		return a.TdengineLogPersistentVolumeClaim(ctx, k8sUns), nil
+	default:
+		return nil, fmt.Errorf("persistentVolumeClaim %s not found", componentName)
 	}
 }
 
-func GrafanaDataPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim {
-	return &PersistentVolumeClaim{
-		APIVersion: "v1",
-		Kind:       "PersistentVolumeClaim",
-		Metadata: Metadata{
-			Name: "openiiot-grafana-data-pvc-" + name,
-		},
-		Spec: PersistentVolumeClaimSpec{
-			AccessModes: []string{"ReadWriteMany"},
-			Resources: struct {
-				Requests struct {
-					Storage string `json:"storage"`
-				} `json:"requests"`
-			}{
-				Requests: struct {
-					Storage string `json:"storage"`
-				}{
-					Storage: "1Gi",
-				},
-			},
-			VolumeName:       "openiiot-grafana-data-volume-" + name + "-" + id,
-			StorageClassName: "managed-nfs-storage",
-		},
-	}
-}
+func (a *K8sService) DeletePersistentVolumeClaim(ctx context.Context, k8sUns K8sUns) error {
 
-func GrafanaConfigPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim {
-	return &PersistentVolumeClaim{
-		APIVersion: "v1",
-		Kind:       "PersistentVolumeClaim",
-		Metadata: Metadata{
-			Name: "openiiot-grafana-config-pvc-" + name,
-		},
-		Spec: PersistentVolumeClaimSpec{
-			AccessModes: []string{"ReadWriteMany"},
-			Resources: struct {
-				Requests struct {
-					Storage string `json:"storage"`
-				} `json:"requests"`
-			}{
-				Requests: struct {
-					Storage string `json:"storage"`
-				}{
-					Storage: "1Gi",
-				},
-			},
-			VolumeName:       "openiiot-grafana-config-volume-" + name + "-" + id,
-			StorageClassName: "managed-nfs-storage",
-		},
-	}
-}
+	persistentVolumeClaimName := a.GetPersistentVolumeClaimName(k8sUns)
+	namespaceName := a.GetNamespaceName(k8sUns)
 
-func TdenginePersistentVolumeClaimData(name string, id string) *PersistentVolumeClaim {
-	return &PersistentVolumeClaim{
-		APIVersion: "v1",
-		Kind:       "PersistentVolumeClaim",
-		Metadata: Metadata{
-			Name: "openiiot-tdengine-pvc-data-" + name,
-		},
-		Spec: PersistentVolumeClaimSpec{
-			AccessModes: []string{"ReadWriteMany"},
-			Resources: struct {
-				Requests struct {
-					Storage string `json:"storage"`
-				} `json:"requests"`
-			}{
-				Requests: struct {
-					Storage string `json:"storage"`
-				}{
-					Storage: "1Gi",
-				},
-			},
-			VolumeName:       "openiiot-tdengine-volume-data-" + name + "-" + id,
-			StorageClassName: "managed-nfs-storage",
-		},
+	// Delete the persistentVolumeClaim
+	err := a.clientset.CoreV1().PersistentVolumeClaims(namespaceName).Delete(ctx, persistentVolumeClaimName, metav1.DeleteOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to delete persistentVolumeClaim %s: %w", persistentVolumeClaimName, err)
 	}
-}
 
-func TdenginePersistentVolumeClaimLog(name string, id string) *PersistentVolumeClaim {
-	return &PersistentVolumeClaim{
-		APIVersion: "v1",
-		Kind:       "PersistentVolumeClaim",
-		Metadata: Metadata{
-			Name: "openiiot-tdengine-pvc-log-" + name,
-		},
-		Spec: PersistentVolumeClaimSpec{
-			AccessModes: []string{"ReadWriteMany"},
-			Resources: struct {
-				Requests struct {
-					Storage string `json:"storage"`
-				} `json:"requests"`
-			}{
-				Requests: struct {
-					Storage string `json:"storage"`
-				}{
-					Storage: "1Gi",
-				},
-			},
-			VolumeName:       "openiiot-tdengine-volume-log-" + name + "-" + id,
-			StorageClassName: "managed-nfs-storage",
-		},
-	}
-}
+	// Wait until the PersistentVolumeClaim is fully deleted
+	for {
+		// Check if the PersistentVolumeClaim still exists
+		_, err := a.clientset.CoreV1().PersistentVolumeClaims(namespaceName).Get(ctx, persistentVolumeClaimName, metav1.GetOptions{})
+		if err != nil {
+			if errors.IsNotFound(err) {
+				// PersistentVolumeClaim is fully deleted
+				break
+			}
+			return fmt.Errorf("failed to get PersistentVolumeClaim status: %w", err)
+		}
 
-func EmqxPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim {
-	return &PersistentVolumeClaim{
-		APIVersion: "v1",
-		Kind:       "PersistentVolumeClaim",
-		Metadata: Metadata{
-			Name: "openiiot-emqx-pvc-" + name,
-		},
-		Spec: PersistentVolumeClaimSpec{
-			AccessModes: []string{"ReadWriteMany"},
-			Resources: struct {
-				Requests struct {
-					Storage string `json:"storage"`
-				} `json:"requests"`
-			}{
-				Requests: struct {
-					Storage string `json:"storage"`
-				}{
-					Storage: "1Gi",
-				},
-			},
-			VolumeName:       "openiiot-emqx-volume-" + name + "-" + id,
-			StorageClassName: "managed-nfs-storage",
-		},
+		// PersistentVolumeClaim is still terminating, wait and retry
+		time.Sleep(2 * time.Second)
 	}
-}
 
-func MysqlPersistentVolumeClaim(name string, id string) *PersistentVolumeClaim {
-	return &PersistentVolumeClaim{
-		APIVersion: "v1",
-		Kind:       "PersistentVolumeClaim",
-		Metadata: Metadata{
-			Name: "openiiot-mysql-pvc-" + name,
-		},
-		Spec: PersistentVolumeClaimSpec{
-			AccessModes: []string{"ReadWriteMany"},
-			Resources: struct {
-				Requests struct {
-					Storage string `json:"storage"`
-				} `json:"requests"`
-			}{
-				Requests: struct {
-					Storage string `json:"storage"`
-				}{
-					Storage: "1Gi",
-				},
-			},
-			VolumeName:       "openiiot-mysql-volume-" + name + "-" + id,
-			StorageClassName: "managed-nfs-storage",
-		},
-	}
+	return nil
 }

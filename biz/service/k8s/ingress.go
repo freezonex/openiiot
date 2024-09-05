@@ -1,217 +1,70 @@
 package k8s
 
-func NoderedIngress(name string) *Ingress {
-	return &Ingress{
-		APIVersion: "networking.k8s.io/v1beta1",
-		Kind:       "Ingress",
-		Metadata: Metadata{
-			Name: name + "nodered",
-			Annotations: map[string]string{
-				//"nginx.ingress.kubernetes.io/configuration-snippet": "proxy_set_header X-Custom-Header '" + name + "';",
-				"nginx.ingress.kubernetes.io/rewrite-target": "/$1",
-			},
-		},
-		Spec: IngressSpec{
-			Rules: []Rule{
-				{
-					HTTP: HTTPIngressRuleValue{
-						Paths: []Path{
-							{
-								Path:     "/" + name + "/nodered/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "nodered-openiiot-" + name,
-									ServicePort: 1880,
-								},
-							},
-						},
-					},
-				},
-			},
-		},
+import (
+	"context"
+	"fmt"
+	"time"
+
+	networkingv1 "k8s.io/api/networking/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+// CreateIngress creates a ingress based on the provided ingress name.
+func (a *K8sService) CreateIngress(ctx context.Context, k8sUns K8sUns) error {
+
+	ingress, err := a.getIngressSpec(ctx, k8sUns)
+	if err != nil {
+		return fmt.Errorf("failed to get ingress spec: %w", err)
+	}
+
+	// Create the ingress
+	_, err = a.clientset.NetworkingV1().Ingresses(a.GetNamespaceName(k8sUns)).Create(ctx, ingress, metav1.CreateOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to create ingress: %w", err)
+	}
+
+	return nil
+}
+
+// getIngressSpec returns a Ingress spec based on the ingress name
+func (a *K8sService) getIngressSpec(ctx context.Context, k8sUns K8sUns) (*networkingv1.Ingress, error) {
+
+	switch k8sUns.ComponentName {
+	case "emqx":
+		return a.EmqxIngress(ctx, k8sUns), nil
+	case "grafana":
+		return a.GrafanaIngress(ctx, k8sUns), nil
+	case "nodered":
+		return a.NoderedIngress(ctx, k8sUns), nil
+	default:
+		return nil, fmt.Errorf("ingress %s not found", a.GetIngressName(k8sUns))
 	}
 }
 
-func GrafanaIngress(name string) *Ingress {
-	return &Ingress{
-		APIVersion: "networking.k8s.io/v1beta1",
-		Kind:       "Ingress",
-		Metadata: Metadata{
-			Name: name + "grafana",
-			Annotations: map[string]string{
-				//"nginx.ingress.kubernetes.io/configuration-snippet": "proxy_set_header X-Custom-Header '" + name + "';",
-				"nginx.ingress.kubernetes.io/rewrite-target": "/$1",
-			},
-		},
-		Spec: IngressSpec{
-			Rules: []Rule{
-				{
-					HTTP: HTTPIngressRuleValue{
-						Paths: []Path{
-							{
-								Path:     "/" + name + "/grafana/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "grafana-openiiot-" + name,
-									ServicePort: 3000,
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-}
+func (a *K8sService) DeleteIngress(ctx context.Context, k8sUns K8sUns) error {
+	ingressName := a.GetIngressName(k8sUns)
+	namespaceName := a.GetNamespaceName(k8sUns)
 
-func WebIngress(name string) *Ingress {
-	return &Ingress{
-		APIVersion: "networking.k8s.io/v1beta1",
-		Kind:       "Ingress",
-		Metadata: Metadata{
-			Name: name + "web",
-			Annotations: map[string]string{
-				//"nginx.ingress.kubernetes.io/configuration-snippet": "proxy_set_header X-Custom-Header '" + name + "';",
-				"nginx.ingress.kubernetes.io/rewrite-target": "/$1",
-			},
-		},
-		Spec: IngressSpec{
-			Rules: []Rule{
-				{
-					HTTP: HTTPIngressRuleValue{
-						Paths: []Path{
-							{
-								Path:     "/" + name + "/web/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "web-openiiot-" + name,
-									ServicePort: 80,
-								},
-							},
-						},
-					},
-				},
-			},
-		},
+	err := a.clientset.NetworkingV1().Ingresses(namespaceName).Delete(ctx, ingressName, metav1.DeleteOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to delete ingress %s: %w", ingressName, err)
 	}
-}
 
-func CombinedIngress(name string) *Ingress {
-	return &Ingress{
-		APIVersion: "networking.k8s.io/v1beta1",
-		Kind:       "Ingress",
-		Metadata: Metadata{
-			Name: name + "-combined",
-			Annotations: map[string]string{
-				//"nginx.ingress.kubernetes.io/configuration-snippet": "proxy_set_header X-Custom-Header '" + name + "';",
-				"nginx.ingress.kubernetes.io/rewrite-target": "/$1",
-			},
-		},
-		Spec: IngressSpec{
-			Rules: []Rule{
-				{
-					HTTP: HTTPIngressRuleValue{
-						Paths: []Path{
-							{
-								Path:     "/" + name + "/nodered/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "nodered-openiiot-" + name,
-									ServicePort: 1880,
-								},
-							},
-							{
-								Path:     "/" + name + "/nodered/home",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "nodered-openiiot-" + name,
-									ServicePort: 1880,
-								},
-							},
-							{
-								Path:     "/" + name + "/nodered/home/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "nodered-openiiot-" + name,
-									ServicePort: 1880,
-								},
-							},
-							{
-								Path:     "/" + name + "/grafana/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "grafana-openiiot-" + name,
-									ServicePort: 3000,
-								},
-							},
-							{
-								Path:     "/" + name + "/grafana/home",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "grafana-openiiot-" + name,
-									ServicePort: 3000,
-								},
-							},
-							{
-								Path:     "/" + name + "/grafana/home/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "grafana-openiiot-" + name,
-									ServicePort: 3000,
-								},
-							},
-							{
-								Path:     "/" + name + "/web/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "web-openiiot-" + name,
-									ServicePort: 80,
-								},
-							},
-							{
-								Path:     "/" + name + "/web/home",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "web-openiiot-" + name,
-									ServicePort: 80,
-								},
-							},
-							{
-								Path:     "/" + name + "/web/home/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "web-openiiot-" + name,
-									ServicePort: 80,
-								},
-							},
-							{
-								Path:     "/" + name + "/emqx/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "emqx-openiiot-" + name,
-									ServicePort: 18083,
-								},
-							},
-							{
-								Path:     "/" + name + "/emqx/home",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "emqx-openiiot-" + name,
-									ServicePort: 18083,
-								},
-							},
-							{
-								Path:     "/" + name + "/emqx/home/(.*)",
-								PathType: "Prefix",
-								Backend: Backend{
-									ServiceName: "emqx-openiiot-" + name,
-									ServicePort: 18083,
-								},
-							},
-						},
-					},
-				},
-			},
-		},
+	// Wait until the Ingress is fully deleted
+	for {
+		_, err := a.clientset.NetworkingV1().Ingresses(namespaceName).Get(ctx, ingressName, metav1.GetOptions{})
+		if err != nil {
+			if errors.IsNotFound(err) {
+				// Ingress is fully deleted
+				break
+			}
+			return fmt.Errorf("failed to get ingress status: %w", err)
+		}
+
+		// Ingress is still present, wait and retry
+		time.Sleep(2 * time.Second)
 	}
+
+	return nil
 }

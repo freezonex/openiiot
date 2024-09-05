@@ -6,11 +6,12 @@ import (
 	"freezonex/openiiot/biz/config/consts"
 	"freezonex/openiiot/biz/dal/model_openiiot"
 	"freezonex/openiiot/biz/service/utils/common"
+
 	"gorm.io/gen/field"
 )
 
 // AddTenantDB will add tenant record to the DB.
-func (a *TenantService) AddTenantDB(ctx context.Context, name string, description string, isDefault bool) (int64, error) {
+func (a *TenantService) AddTenantDB(ctx context.Context, name string, description string) (int64, error) {
 	if name == "" {
 		return -1, errors.New("name can not be empty")
 	}
@@ -22,13 +23,7 @@ func (a *TenantService) AddTenantDB(ctx context.Context, name string, descriptio
 		return -1, errors.New("tenant exist")
 	}
 
-	if description == "" {
-		description = "tenant"
-	}
-	if isDefault {
-		isDefault = false
-	}
-
+	isDefault := name == "dt"
 	newRecord := &model_openiiot.Tenant{
 		ID:          id,
 		Name:        name,
@@ -82,24 +77,15 @@ func (a *TenantService) UpdateTenantDB(ctx context.Context, id int64, name strin
 }
 
 // DeleteTenantDB will delete tenant record from the DB.
-func (a *TenantService) DeleteTenantDB(ctx context.Context, id int64) (string, error) {
+func (a *TenantService) DeleteTenantDB(ctx context.Context, name string) error {
 
 	table := a.db.DBOpeniiotQuery.Tenant
 	tx := table.WithContext(ctx)
 
-	ax := table.WithContext(ctx).Select(field.ALL)
-	ax = ax.Where(table.ID.Eq(id))
-	data, err := ax.Find()
-	if err != nil {
-		return "", err
-	}
-	name := data[0].Name
-
-	existRecord, _ := tx.Where(table.ID.Eq(id)).First()
+	existRecord, _ := tx.Where(table.Name.Eq(name)).First()
 	if existRecord == nil {
-		return "", errors.New("tenant does not exist")
+		return errors.New("tenant does not exist")
 	}
-
-	_, err = tx.Where(table.ID.Eq(id)).Delete()
-	return name, err
+	_, err := tx.Where(table.Name.Eq(name)).Delete()
+	return err
 }
