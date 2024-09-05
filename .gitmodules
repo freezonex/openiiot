@@ -2,6 +2,3 @@
 	path = pb_idl
 	url = https://github.com/freezonex/pb_idl.git
 
-[submodule "frontend"]
-	path = frontend
-	url = https://github.com/freezonex/Openiiot-Configuration-Dashboard.git
