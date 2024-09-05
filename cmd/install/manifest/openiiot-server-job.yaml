@@ -1,0 +1,20 @@
+# this job executed in the last
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: openiiot-server-job
+  namespace: openiiot
+spec:
+  ttlSecondsAfterFinished: 100  # The Pod will be removed 100 seconds after completion
+  template:
+    spec:
+      containers:
+      - name: curl-container
+        image: curlimages/curl
+        command: ["curl"]
+        args:
+          ["--location", "openiiot-server-service:8085/tenant/add",
+           "--header", "Content-Type: application/json",
+           "--data", '{"name": "dt", "description": "default tenant"}']
+      restartPolicy: Never
+  backoffLimit: 4

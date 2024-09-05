@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openiiot-server
+  namespace: openiiot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openiiot-server
+  template:
+    metadata:
+      labels:
+        app: openiiot-server
+    spec:
+      serviceAccountName: kube-admin-sa
+      containers:
+        - name: openiiot-server
+          image: openiiot-server:1.0.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: RUNTIME_IDC_NAME
+              value: "sg"
+            - name: SUPOS_SUPOS_ADDRESS
+              value: "http://47.236.10.165:8080/"
+            - name: SUPOS_APP_ACCOUNT_ID
+              value: "c01f69318340143ce7cc9c3870173fa0"
+            - name: SUPOS_SUPOS_APP_SECRET_KEY
+              value: "5d6e241c7962badbc630e1aae6d25a28"
+          ports:
+            - containerPort: 8085
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          volumeMounts:
+            - name: server-data
+              mountPath: "/volumes"
+      volumes:
+        - name: server-data
+          persistentVolumeClaim:
+            claimName: openiiot-server-pvc

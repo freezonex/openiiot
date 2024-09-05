@@ -69,3 +69,33 @@ func (a *TenantHandler) GetAllTenantName(ctx context.Context, c *app.RequestCont
 	}
 	return resp
 }
+
+func (a *TenantHandler) AddTenantComponent(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.AddTenantComponentRequest)
+	resp, err := a.tenantService.AddTenantComponent(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=AddTenantComponent error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}
+
+func (a *TenantHandler) DeleteTenantComponent(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.DeleteTenantComponentRequest)
+	resp, err := a.tenantService.DeleteTenantComponent(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=DeleteTenantComponent error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}
+
+func (a *TenantHandler) GetTenantComponent(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
+	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.GetTenantComponentRequest)
+	resp, err := a.tenantService.GetTenantComponent(ctx, req, c)
+	if err != nil {
+		logs.CtxErrorf(ctx, "event=GetTenantComponent error=%v", err)
+		return middleware.ErrorResp(http.StatusInternalServerError, err)
+	}
+	return resp
+}

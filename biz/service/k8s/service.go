@@ -1,267 +1,83 @@
 package k8s
 
-func NewService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					NodePort:   nodePort,
-					Port:       80,
-					Protocol:   "TCP",
-					TargetPort: 8080,
-				},
-			},
-			Selector: map[string]string{
-				"app": name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
+import (
+	"context"
+	"fmt"
+	"time"
+
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+// CreateService creates a service based on the provided service name.
+func (a *K8sService) CreateService(ctx context.Context, k8sUns K8sUns) error {
+
+	service, err := a.getServiceSpec(ctx, k8sUns)
+	if err != nil {
+		return fmt.Errorf("failed to get service spec: %w", err)
+	}
+
+	// Create the service
+	_, err = a.clientset.CoreV1().Services(a.GetNamespaceName(k8sUns)).Create(ctx, service, metav1.CreateOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to create service: %w", err)
+	}
+
+	return nil
+}
+
+// getServiceSpec returns a Service spec based on the service name
+func (a *K8sService) getServiceSpec(ctx context.Context, k8sUns K8sUns) (*corev1.Service, error) {
+
+	switch k8sUns.ComponentName {
+	case "consolemanager":
+		return a.ConsolemanagerService(ctx, k8sUns), nil
+	case "emqx":
+		return a.EmqxService(ctx, k8sUns), nil
+	case "grafana":
+		return a.GrafanaService(ctx, k8sUns), nil
+	case "mysql":
+		return a.MysqlService(ctx, k8sUns), nil
+	case "nodered":
+		return a.NoderedService(ctx, k8sUns), nil
+	case "pma":
+		return a.PmaService(ctx, k8sUns), nil
+	case "server":
+		return a.ServerService(ctx, k8sUns), nil
+	case "tdengine":
+		return a.TdengineService(ctx, k8sUns), nil
+	default:
+		return nil, fmt.Errorf("service %s not found", a.GetServicName(k8sUns))
 	}
 }
 
-func WebService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: "web-" + name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					NodePort:   nodePort,
-					Port:       80,
-					Protocol:   "TCP",
-					TargetPort: 80,
-				},
-			},
-			Selector: map[string]string{
-				"app": "web-" + name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
-	}
-}
+func (a *K8sService) DeleteService(ctx context.Context, k8sUns K8sUns) error {
 
-func NoderedService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: "nodered-" + name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					NodePort:   nodePort,
-					Port:       1880,
-					Protocol:   "TCP",
-					TargetPort: 1880,
-				},
-			},
-			Selector: map[string]string{
-				"app": "nodered-" + name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
-	}
-}
+	serviceName := a.GetServicName(k8sUns)
+	namespaceName := a.GetNamespaceName(k8sUns)
 
-func ServerService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: "server-" + name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					NodePort:   nodePort,
-					Port:       8085,
-					Protocol:   "TCP",
-					TargetPort: 8085,
-				},
-			},
-			Selector: map[string]string{
-				"app": "server-" + name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
-	}
-}
+	// Delete the service213005
 
-func GrafanaService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: "grafana-" + name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					NodePort:   nodePort,
-					Port:       3000,
-					Protocol:   "TCP",
-					TargetPort: 3000,
-				},
-			},
-			Selector: map[string]string{
-				"app": "grafana-" + name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
+	err := a.clientset.CoreV1().Services(namespaceName).Delete(ctx, serviceName, metav1.DeleteOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to delete service %s: %w", serviceName, err)
 	}
-}
 
-func TdengineService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: "tdengine-" + name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					Name:       "6030",
-					NodePort:   nodePort,
-					Port:       6030,
-					Protocol:   "TCP",
-					TargetPort: 6030,
-				},
-				{
-					Name:       "api",
-					NodePort:   nodePort + 1,
-					Port:       6041,
-					Protocol:   "TCP",
-					TargetPort: 6041,
-				},
-			},
-			Selector: map[string]string{
-				"app": "tdengine-" + name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
-	}
-}
+	// Wait until the Service is fully deleted
+	for {
+		_, err := a.clientset.CoreV1().Services(namespaceName).Get(ctx, serviceName, metav1.GetOptions{})
+		if err != nil {
+			if errors.IsNotFound(err) {
+				// Service is fully deleted
+				break
+			}
+			return fmt.Errorf("failed to get service status: %w", err)
+		}
 
-func EmqxService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: "emqx-" + name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					Name:       "api",
-					NodePort:   nodePort,
-					Port:       1883,
-					Protocol:   "TCP",
-					TargetPort: 1883,
-				},
-				{
-					Name:       "page",
-					NodePort:   nodePort + 1,
-					Port:       18083,
-					Protocol:   "TCP",
-					TargetPort: 18083,
-				},
-			},
-			Selector: map[string]string{
-				"app": "emqx-" + name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
+		// Service is still terminating, wait and retry
+		time.Sleep(2 * time.Second)
 	}
-}
 
-func MysqlService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: "mysql-" + name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					NodePort:   nodePort,
-					Port:       3306,
-					Protocol:   "TCP",
-					TargetPort: 3306,
-				},
-			},
-			Selector: map[string]string{
-				"app": "mysql-" + name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
-	}
-}
-
-func ConsolemanagerService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: "consolemanager-" + name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					NodePort:   nodePort,
-					Port:       81,
-					Protocol:   "TCP",
-					TargetPort: 81,
-				},
-			},
-			Selector: map[string]string{
-				"app": "consolemanager-" + name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
-	}
-}
-
-func NginxService(name string, nodePort int) *Service {
-	return &Service{
-		APIVersion: "v1",
-		Kind:       "Service",
-		Metadata: Metadata{
-			Name: "nginx-" + name,
-		},
-		Spec: ServiceSpec{
-			Ports: []Port{
-				{
-					NodePort:   nodePort,
-					Port:       80,
-					Protocol:   "TCP",
-					TargetPort: 80,
-				},
-			},
-			Selector: map[string]string{
-				"app": "nginx-" + name,
-			},
-			//Type: "ClusterIP",
-			Type: "NodePort",
-		},
-	}
+	return nil
 }

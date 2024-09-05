@@ -3,6 +3,13 @@ package tenant
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"os"
+
+	"github.com/cloudwego/hertz/pkg/app"
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+
 	"freezonex/openiiot/biz/middleware"
 	"freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	application "freezonex/openiiot/biz/service/app"
@@ -11,47 +18,142 @@ import (
 	"freezonex/openiiot/biz/service/flow"
 	"freezonex/openiiot/biz/service/k8s"
 	"freezonex/openiiot/biz/service/utils/common"
-	"github.com/cloudwego/hertz/pkg/app"
-	"strconv"
-
-	logs "github.com/cloudwego/hertz/pkg/common/hlog"
 )
 
 func (a *TenantService) AddTenant(ctx context.Context, req *freezonex_openiiot_api.AddTenantRequest, c *app.RequestContext) (*freezonex_openiiot_api.AddTenantResponse, error) {
-	tenantID, err := a.AddTenantDB(ctx, req.Name, req.Description, req.IsDefault)
+	_, tenantName, err := a.CheckTenant(ctx, "", req.Name)
+	if err == nil {
+		return nil, fmt.Errorf("tenant already exist in database: %s", tenantName)
+	}
+
+	tenantID, err := a.AddTenantDB(ctx, req.Name, req.Description)
 	if err != nil {
 		logs.Error(ctx, "event=AddTenant error=%v", err.Error())
 		return nil, err
 	}
 
-	name := req.Name
-	idStr := strconv.FormatInt(tenantID, 10) // 将 id 转换为 string
+	//tenantID, tenantName, _ := a.CheckTenant(ctx, "", req.Name)
 
-	err = a.AddDefaultFlow(ctx, tenantID, req.Name)
+	tenantName = req.Name
+	ctx = context.WithValue(ctx, "tenantName", tenantName)
 
-	if err != nil {
-		logs.Error(ctx, "event=AddTenant error=%v", err.Error())
+	// err = a.AddDefaultFlow(ctx, tenantID, req.Name)
+
+	/*if tenantName == "dt" {
+		if err := a.k8s.CreateNamespace(ctx, k8s.K8sUns{TenantName: tenantName}); err != nil {
+			return nil, err
+		}
+		if err := a.K8sBasicInstall(ctx); err != nil {
+			return nil, err
+		}
+	}*/
+
+	if err := a.K8sTenantAdd(ctx, tenantName); err != nil {
 		return nil, err
 	}
-
-	_ = k8s.K8sNamespaceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
-
-	//_ = k8s.K8sConfigmapCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
-
-	//_ = k8s.K8sJobCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
-	//time.Sleep(1 * time.Minute)
-
-	_ = k8s.K8sDeploymentPvPvcCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL, idStr)
-
-	_ = k8s.K8sServiceCreate("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
-
-	_ = k8s.K8sIngressCreate(name, ctx, a.S.AuthorizationValue, a.S.K8SURL)
 
 	resp := new(freezonex_openiiot_api.AddTenantResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
 	resp.Id = common.Int64ToString(tenantID)
 
 	return resp, nil
+}
+
+func (a *TenantService) K8sBasicInstall(ctx context.Context) error {
+
+	if err := a.k8s.CreateNamespace(ctx, k8s.K8sUns{}); err != nil {
+		return err
+	}
+
+	k8sUns := k8s.K8sUns{ComponentName: "mysql"}
+	if err := a.k8s.CreateMysqlComponent(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	k8sUns = k8s.K8sUns{ComponentName: "server"}
+	if err := a.k8s.CreateMysqlComponent(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	k8sUns = k8s.K8sUns{ComponentName: "consolemanager"}
+	if err := a.k8s.CreateConsolemanagerComponent(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *TenantService) K8sTenantAdd(ctx context.Context, tenantName string) error {
+
+	// check if tenant already exist
+	k8sUns := k8s.K8sUns{TenantName: tenantName}
+	namespaceName := a.k8s.GetNamespaceName(k8sUns)
+	exist, err := a.k8s.NamespaceExists(ctx, namespaceName)
+	if err != nil {
+		return fmt.Errorf("failed to check namespace existence: %w", err)
+	}
+	if exist {
+		return fmt.Errorf("tenant namespace already exist: %s", namespaceName)
+	}
+
+	if err := a.k8s.CreateNamespace(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	k8sUns = k8s.K8sUns{TenantName: tenantName, ComponentName: "nodered", Number: "1"}
+	if err := a.k8s.CreateNoderedComponent(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	k8sUns = k8s.K8sUns{TenantName: tenantName, ComponentName: "grafana", Number: "1"}
+	if err := a.k8s.CreateGrafanaComponent(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	k8sUns = k8s.K8sUns{TenantName: tenantName, ComponentName: "emqx"}
+	if err := a.k8s.CreateEmqxComponent(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	k8sUns = k8s.K8sUns{TenantName: tenantName, ComponentName: "tdengine"}
+	if err := a.k8s.CreateTdengineComponent(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *TenantService) K8sTenantDelete(ctx context.Context, tenantName string) error {
+
+	// check if tenant already exist
+	k8sUns := k8s.K8sUns{TenantName: tenantName}
+	namespaceName := a.k8s.GetNamespaceName(k8sUns)
+	exist, err := a.k8s.NamespaceExists(ctx, namespaceName)
+	if err != nil {
+		return fmt.Errorf("failed to check namespace existence: %w", err)
+	}
+	if !exist {
+		logs.Error(ctx, "event=DeleteTenant namespace not exists%s", namespaceName)
+		return nil
+	}
+
+	if err := a.k8s.DeleteNamespace(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	// pv not belong to any namespace, need delete separately
+	if err := a.k8s.DeleteTenantPersistentVolume(ctx, tenantName); err != nil {
+		return err
+	}
+
+	runtime_idc_name := os.Getenv("RUNTIME_IDC_NAME")
+	if runtime_idc_name != "ci" && runtime_idc_name != "local" {
+		if err := a.k8s.DeleteTenantPersistentVolumePath(ctx, tenantName); err != nil {
+			return err
+		}
+	}
+
+	return err
 }
 
 // GetTenant will get tenant record in condition
@@ -95,7 +197,7 @@ func (a *TenantService) UpdateTenant(ctx context.Context, req *freezonex_openiio
 	return resp, nil
 }
 
-// DeleteTenant will delete tenant record
+// DeleteTenant will delete tenant namespace from k8s also
 func (a *TenantService) DeleteTenant(ctx context.Context, req *freezonex_openiiot_api.DeleteTenantRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteTenantResponse, error) {
 	//Delete tenant also should delete tenant user, edge pool, core pool, application pool, flow
 	/*err := a.DeleteTenantUserDB(ctx, req.Id)
@@ -103,19 +205,32 @@ func (a *TenantService) DeleteTenant(ctx context.Context, req *freezonex_openiio
 		logs.Error(ctx, "event=DeleteTenant user error=%v", err.Error())
 		return nil, err
 	}*/
-
-	// Delete tenant
 	//delete all the users and flows?
-	//_, err := a.DeleteTenantDB(ctx, common.StringToInt64(req.Id))
-	name, err := a.DeleteTenantDB(ctx, common.StringToInt64(req.Id))
 
-	idStr := strconv.FormatInt(common.StringToInt64(req.Id), 10) // 将 id 转换为 string
-	_ = k8s.K8sNamespacePvDelete("openiiot-"+name, ctx, a.S.AuthorizationValue, a.S.K8SURL, idStr)
-
+	_, tenantName, err := a.CheckTenant(ctx, req.Id, req.Name)
 	if err != nil {
-		logs.Error(ctx, "event=DeleteTenant error=%v", err.Error())
+		logs.Error(ctx, "event=CheckTenant error=%v", err.Error())
 		return nil, err
 	}
+	if tenantName == "" {
+		return nil, fmt.Errorf("tenant not exist in database: %s", tenantName)
+	}
+
+	runtime_idc_name := os.Getenv("RUNTIME_IDC_NAME")
+	if runtime_idc_name != "ci" && runtime_idc_name != "local" {
+		if tenantName == "dt" {
+			return nil, errors.New("Default tenant cannot be deleted")
+		}
+	}
+
+	if err := a.K8sTenantDelete(ctx, req.Name); err != nil {
+		return nil, err
+	}
+
+	if err := a.DeleteTenantDB(ctx, tenantName); err != nil {
+		return nil, err
+	}
+
 	resp := new(freezonex_openiiot_api.DeleteTenantResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
 

@@ -27,6 +27,8 @@ COPY ${SRC_DIR}/node-red-256.png ${DEST_DIR}/node-red-256.png
 COPY ${SRC_DIR}/node-red-icon.svg ${DEST_DIR}/node-red-icon.svg
 COPY ${SRC_DIR}/node-red-icon-black.svg ${DEST_DIR}/node-red-icon-black.svg
 
+# COPY deployment/nodered/images/deploy-full-o.svg /usr/src/node-red/node_modules/@node-red/editor-client/images/node-red-icon-black.svg
+
 # Define argument with default value for theme.js source path
 #ARG SRC_THEME=node-red/packages/node_modules/@node-red/editor-api/lib/editor
 ARG SRC_THEME=deployment/nodered/editor

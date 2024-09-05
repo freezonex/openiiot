@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openiiot-pma
+  namespace: openiiot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openiiot-pma
+  template:
+    metadata:
+      labels:
+        app: openiiot-pma
+    spec:
+      containers:
+        - name: openiiot-pma
+          image: phpmyadmin/phpmyadmin:5.2.1
+          env:
+            - name: PMA_ARBITRARY
+              value: "1"
+            - name: PMA_HOST
+              value: openiiot-mysql-service
+            - name: PMA_ABSOLUTE_URI
+              value: "http://13.212.90.140:30180/pma/"
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "128Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+

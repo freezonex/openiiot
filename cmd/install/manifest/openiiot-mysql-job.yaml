@@ -1,0 +1,26 @@
+# This job executed after deployment created
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: openiiot-mysql-job
+  namespace: openiiot
+spec:
+  ttlSecondsAfterFinished: 100  # The Pod will be removed 100 seconds after completion
+  template:
+    spec:
+      containers:
+      - name: mysql-client
+        image: mysql:latest
+        command: ["sh", "-c"]
+        args:
+          - >
+            mysql -h openiiot-mysql-service -P 3306 -u openiiot -popeniiot1234 openiiot < /scripts/openiiot.sql
+        volumeMounts:
+        - name: sql-script
+          mountPath: /scripts
+      restartPolicy: Never
+      volumes:
+      - name: sql-script
+        configMap:
+          name: openiiot-mysql-cm
+  backoffLimit: 4

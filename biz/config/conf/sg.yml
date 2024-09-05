@@ -14,13 +14,10 @@ SuposConfig:
   #LOGOUT: "https://eco-p54s.beta010.devcloud.supos.net/open-api/user/logout/%s"
   LOGOUT: "http://127.0.0.1:8080/auth/logout/%s"    # cannot use 127.0.0.1 because this url is callback from SupOS server
 
-#K8sConfig: #杭州192.168.31.223
-#  K8SURL: "https://192.168.31.223:6443/"
-#  AuthorizationValue: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkFDc2Z0Yjg3RnkwM1lybDBpb2lYQ0NGTG4yMU91VW8yWkRMMkY2THQ4SjgifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLXN4OG52Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI0Y2UwOGUyYS1mMjRjLTRhZWMtOWJhMy01NDFkYjQ1MzNlMGQiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06YWRtaW4tdXNlciJ9.qM0gY38Y1uSlXDyHy_BExNi-Rjp-t--D9Ig1nPtP6fdWuzcSEjCKkJOXCneTpDUz5Re_OPe44Ipp9XgQzbRbyMmadCNEY26rDSJA3rvWxXw9GaoshIcBl5yL1ePk_5gAkRxqIz-6uN6O5ClUTPselVBJdXB5ZwQEVzoRaznwfuGU7ANIGO8xSOeXfHwmYo0oha6U-aF1Kf98-PN4_GrPAVFnJCV25_v0FTd3POWxC3vmOsgDapjcb-CKrqusAABDLu4zmewcQAhkZOR8aB_37N_o-2G5TttS2jbjfCim3x-l3tubxY87_4YmdglHrHtcDuvx2QJwKCTuRFCb8ghR-w"
-
-K8sConfig: #新加坡47.236.10.165
-  K8SURL: "https://47.236.10.165:6443/"
+K8sConfig:
+  K8SURL: "https://kubernetes.default.svc"
   AuthorizationValue: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IlVZRzBtV19wSmlqcU9FWFNiLU5kTTc5WWhiWkZHLVFocy15djBWNmhLbGMifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLXF6NXg3Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJhNWE3YWEyOC1mOTc5LTQzOGMtOTRhOS0zODdkMzc5MDNlYjUiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06YWRtaW4tdXNlciJ9.ntLt9q1mMEHa-rK7aapAWjJMqomtTrsyIJxASMcJEzmZFiSz15QuY1pGXMElLZ_LlM-YNPfNUcP-0ONyiQF8SgXMHCxnzJ23MJuIRW6nSz1oLnD_5Xtycvg8o-2DP59dhQ83UB5t1I216FquoafC2a6rfV2O69CVy7JB1TKTUZD-vhb3m6L4n7XThHhjVyyb8YuOk-UegDjEnw06lNtEKD-NFb65_0w3H0MtQ9oNvuf3MTl7xUEkaYRU43SpqkLaPZBaKakiRucjFO5BkXYqO-F81Z8LFqUTNiQw8W4ddlgy-4D1FsdR8woB4oRjT5kHACwKJD7q_RiNSNH-pLvZmg"
+  # Volumedir: "/volumes/openiiot/"
 
 GrafanaConfig:
   RedirectUri: "http://localhost:3000/login/generic_oauth"
@@ -32,4 +29,4 @@ HertzConfig:
   MaxRequestBodySize: 50
 
 GeneralConfig:
-  OpeniiotUrl: "http://127.0.0.1"
+  OpeniiotUrl: "http://supcononenorth.fortiddns.com:8080"   # need nginx to map 8080 to ingress controller http port 31024

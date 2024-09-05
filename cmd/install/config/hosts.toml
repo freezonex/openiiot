@@ -1,0 +1,4 @@
+server = "http://registry:5000"
+
+[host."http://registry:5000"]
+  capabilities = ["pull", "resolve", "push"]

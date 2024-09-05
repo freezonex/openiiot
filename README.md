@@ -14,7 +14,7 @@ run below commands to pull the IDL repo automatically to the openiiot_api repo r
 
 ```shell
 git submodule add https://github.com/freezonex/pb_idl.git pb_idl
-git submodule add https://github.com/freezonex/Openiiot-Configuration-Dashboard.git frontend
+git submodule add https://github.com/freezonex/Freeflow-frontend.git frontend
 ```
 
 ```shell

@@ -1,51 +1,42 @@
-# Step 1: Build the application
-# Use an official Node runtime as a parent image
-FROM node:alpine as builder
+# Stage 1: Building the app
+FROM node:21.1.0 AS builder
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json (if available)
 COPY frontend/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Bundle app source inside the docker image
+# Copy the rest of your app's source code
 COPY frontend/. .
 
-# Generate Prisma client
-RUN npx prisma generate
+# Set the environment variable and build your Next.js app
 
-# Build the Next.js application
 RUN npm run build
 
-# Step 2: Run the application
-# Use an official Node runtime as a parent image
-FROM node:alpine
+# Stage 2: Running the app in production
+FROM node:21.1.0
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY frontend/package*.json ./
+# Copy package.json and other necessary files
+# Specifically, we copy only the dependencies required for production
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+
+# Use shell commands to conditionally copy the public directory if it exists
+# RUN if [ -d /app/public ]; then cp -R /app/public ./public; fi
 
 # Install only production dependencies
 RUN npm install --only=production
 
-# Copy the build artifacts from the builder stage
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/src ./src
-COPY --from=builder /app/.env ./.env
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/jsconfig.json ./jsconfig.json
-COPY --from=builder /app/next.config.js ./next.config.js
-COPY --from=builder /app/next.config.js ./next.config.js
-COPY --from=builder /app/node_modules ./node_modules
-# COPY --from=builder /app/public ./public
+# Your app binds to port 3000 by default, expose it
+EXPOSE 3000
 
-# Your app binds to port 81 so you'll use the EXPOSE instruction to have it mapped by the docker daemon
-EXPOSE 81
-
-# Define the command to run your app using CMD which defines your runtime
+# Start the Next.js app
 CMD ["npm", "start"]

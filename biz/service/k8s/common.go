@@ -1,209 +1,230 @@
 package k8s
 
-type Job struct {
-	APIVersion string   `json:"apiVersion"`
-	Kind       string   `json:"kind"`
-	Metadata   Metadata `json:"metadata"`
-	Spec       JobSpec  `json:"spec"`
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"path/filepath"
+	"sync"
+
+	"freezonex/openiiot/biz/config"
+	"freezonex/openiiot/biz/dal/mysql"
+
+	logs "github.com/cloudwego/hertz/pkg/common/hlog"
+	networkingv1 "k8s.io/api/networking/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
+)
+
+type K8sService struct {
+	db        *mysql.MySQL
+	clientset *kubernetes.Clientset
 }
 
-// JobSpec 定义了 Job 的规格
-type JobSpec struct {
-	TTLSecondsAfterFinished *int32          `json:"ttlSecondsAfterFinished,omitempty"`
-	Template                PodTemplateSpec `json:"template"`
+// Tag is only used for more than 1 pv and pvc
+type K8sUns struct {
+	TenantName    string
+	ComponentName string
+	Number        string
+	Tag           string
 }
 
-// PodTemplateSpec 定义了 Pod 的模板
-type PodTemplateSpec struct {
-	Spec PodSpec `json:"spec"`
+var (
+	service *K8sService
+	once    sync.Once
+)
+
+func NewK8sService(db *mysql.MySQL, k8sConfig *config.K8sConfig) (*K8sService, error) {
+	var err error
+	once.Do(func() {
+		clientset, err := loadKubeConfig()
+		if err != nil {
+			service = nil
+			return
+		}
+
+		service = &K8sService{
+			db:        db,
+			clientset: clientset,
+		}
+	})
+	return service, err
 }
 
-// namespace
-type Metadata struct {
-	Name        string            `json:"name"`
-	Namespace   string            `json:"namespace,omitempty"`
-	Labels      map[string]string `json:"labels,omitempty"`
-	Annotations map[string]string `json:"annotations"`
+func DefaultK8sService() *K8sService {
+	return service
 }
 
-// 定义主结构体
-type Namespace struct {
-	APIVersion string   `json:"apiVersion"`
-	Kind       string   `json:"kind"`
-	Metadata   Metadata `json:"metadata"`
+// loadKubeConfig loads the kubeconfig file from the current directory if it exists,
+// otherwise, it falls back to using the InClusterConfig.
+func loadKubeConfig() (*kubernetes.Clientset, error) {
+	// First, check if a kubeconfig file exists in the current directory
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+
+	kubeconfig := filepath.Join(currentDir, "test", "localtest", "kubeconfig")
+	if _, err := os.Stat(kubeconfig); os.IsNotExist(err) {
+		// If the kubeconfig file does not exist in the current directory, use InClusterConfig
+		config, err := rest.InClusterConfig()
+		if err != nil {
+			return nil, err
+		}
+
+		// Create the clientset
+		clientset, err := kubernetes.NewForConfig(config)
+		if err != nil {
+			return nil, err
+		}
+
+		return clientset, nil
+	}
+
+	// If the kubeconfig file exists, use it to build the config
+	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create the clientset
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+
+	return clientset, nil
 }
 
-// Deployment 定义了 Kubernetes Deployment 的结构
-type Deployment struct {
-	APIVersion string   `json:"apiVersion"`
-	Kind       string   `json:"kind"`
-	Metadata   Metadata `json:"metadata"`
-	Spec       Spec     `json:"spec"`
+// int32Ptr is a helper function to create pointers for int32 literals
+func int32Ptr(i int32) *int32 {
+	return &i
 }
 
-type EnvVar struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
+// resourceQuantity is a helper function to create resource.Quantity
+func resourceQuantity(quantity string) resource.Quantity {
+	return resource.MustParse(quantity)
 }
 
-// Spec 定义了 Deployment 的规格
-type Spec struct {
-	Replicas int         `json:"replicas"`
-	Selector Selector    `json:"selector"`
-	Template PodTemplate `json:"template"`
+// Helper function to create a pointer to a string
+func strPtr(s string) *string {
+	return &s
 }
 
-// Selector 定义了如何选择 Pod
-type Selector struct {
-	MatchLabels map[string]string `json:"matchLabels"`
+// Helper function to create a pointer to a PathType
+func pathTypePtr(pathType networkingv1.PathType) *networkingv1.PathType {
+	return &pathType
 }
 
-// PodTemplate 定义了 Pod 的模板
-type PodTemplate struct {
-	Metadata Metadata `json:"metadata"`
-	Spec     PodSpec  `json:"spec"`
+func sendRequest(client *http.Client, method, url string, data interface{}, headers map[string]string, ctx context.Context) (*http.Response, error) {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return resp, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return resp, err
+	}
+	resp.Body.Close()
+
+	logs.CtxInfof(ctx, "%s response status: %s\n%s response body: %s\n", url, resp.Status, url, string(body))
+	return resp, nil
 }
 
-// PodSpec 定义了 Pod 的规格
-type PodSpec struct {
-	Containers     []Container `json:"containers"`
-	Volumes        []Volume    `json:"volumes,omitempty"`
-	InitContainers []Container `json:"initContainers,omitempty"`
-	RestartPolicy  string      `json:"restartPolicy"`
+func (a *K8sService) GetNamespaceName(k8sUns K8sUns) string {
+	if k8sUns.TenantName != "" {
+		return "openiiot-" + k8sUns.TenantName
+	}
+	return "openiiot"
 }
 
-// Container 定义了 Pod 中的容器
-type Container struct {
-	Image        string               `json:"image"`
-	Name         string               `json:"name"`
-	Resources    ResourceRequirements `json:"resources"`
-	VolumeMounts []VolumeMount        `json:"volumeMounts,omitempty"`
-	Env          []EnvVar             `json:"env"`
-	Command      []string             `json:"command,omitempty"`
+func (a *K8sService) GetDeploymentName(k8sUns K8sUns) string {
+	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number
 }
 
-type VolumeMount struct {
-	Name      string `json:"name"`
-	MountPath string `json:"mountPath"`
+func (a *K8sService) GetServicName(k8sUns K8sUns) string {
+	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number + "-service"
 }
 
-// ConfigMap represents a Kubernetes ConfigMap
-type ConfigMap struct {
-	APIVersion string            `json:"apiVersion"`
-	Kind       string            `json:"kind"`
-	Metadata   Metadata          `json:"metadata"`
-	Data       map[string]string `json:"data"`
+func (a *K8sService) GetPersistentVolumeName(k8sUns K8sUns) string {
+	tagSuffix := ""
+	if k8sUns.Tag != "" {
+		tagSuffix = "-" + k8sUns.Tag
+	}
+
+	if k8sUns.TenantName == "" {
+		return "openiiot-" + k8sUns.ComponentName + k8sUns.Number + tagSuffix + "-pv"
+	}
+	return "openiiot-" + k8sUns.TenantName + "-" + k8sUns.ComponentName + k8sUns.Number + tagSuffix + "-pv"
 }
 
-type ConfigMapVolumeSource struct {
-	Name string `json:"name"`
+func (a *K8sService) GetPersistentVolumePath(k8sUns K8sUns) string {
+
+	// server mount /volumes to /volumes/openiiot, used to create and delete pv path for others
+	if k8sUns.ComponentName == "server" {
+		return "/volumes/openiiot"
+	}
+
+	tagSuffix := ""
+	if k8sUns.Tag != "" {
+		tagSuffix = "-" + k8sUns.Tag
+	}
+
+	if k8sUns.TenantName == "" {
+		return "/volumes/openiiot/" + k8sUns.ComponentName + k8sUns.Number + tagSuffix
+	}
+	return "/volumes/openiiot/" + k8sUns.TenantName + "/" + k8sUns.ComponentName + k8sUns.Number + tagSuffix
 }
 
-type Volume struct {
-	Name                  string                `json:"name"`
-	PersistentVolumeClaim PersistentVolumeClaim `json:"persistentVolumeClaim,omitempty"`
+// server already mount /volumes to /volumes/openiiot, only used for delete tenant
+func (a *K8sService) GetTenantPersistentVolumePath(tenantName string) string {
+
+	return "/volumes/openiiot/" + tenantName
 }
 
-type PersistentVolumeClaim struct {
-	ClaimName  string                    `json:"claimName"`
-	APIVersion string                    `json:"apiVersion"`
-	Kind       string                    `json:"kind"`
-	Metadata   Metadata                  `json:"metadata"`
-	Spec       PersistentVolumeClaimSpec `json:"spec"`
+func (a *K8sService) GetPersistentVolumeClaimName(k8sUns K8sUns) string {
+	tagSuffix := ""
+	if k8sUns.Tag != "" {
+		tagSuffix = "-" + k8sUns.Tag
+	}
+
+	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number + tagSuffix + "-pvc"
 }
 
-// Service 结构体代表 Kubernetes Service 资源
-type Service struct {
-	APIVersion string      `json:"apiVersion"`
-	Kind       string      `json:"kind"`
-	Metadata   Metadata    `json:"metadata"`
-	Spec       ServiceSpec `json:"spec"`
+func (a *K8sService) GetIngressName(k8sUns K8sUns) string {
+	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number + "-ingress"
 }
 
-// ServiceSpec 结构体用于描述 Service 的规格
-type ServiceSpec struct {
-	Ports    []Port            `json:"ports"`
-	Selector map[string]string `json:"selector"`
-	Type     string            `json:"type"`
+func (a *K8sService) GetIngressPath(k8sUns K8sUns) string {
+	return "/" + k8sUns.TenantName + "/" + k8sUns.ComponentName + k8sUns.Number + "/(.*)"
 }
 
-// Port 结构体定义了 Service 的端口配置
-type Port struct {
-	Name       string `json:"name"`
-	Port       int    `json:"port"`
-	Protocol   string `json:"protocol"`
-	TargetPort int    `json:"targetPort"`
-	NodePort   int    `json:"nodePort"`
+func (a *K8sService) GetJobName(k8sUns K8sUns) string {
+	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number + "-job"
 }
 
-type ResourceRequirements struct {
-	Requests map[string]string `json:"requests"`
-	Limits   map[string]string `json:"limits"`
-}
+// for grafana only now
+func (a *K8sService) GetComponentRootUrl(k8sUns K8sUns) string {
 
-type PersistentVolumeClaimSpec struct {
-	AccessModes []string `json:"accessModes"`
-	Resources   struct {
-		Requests struct {
-			Storage string `json:"storage"`
-		} `json:"requests"`
-	} `json:"resources"`
-	VolumeName       string `json:"volumeName,omitempty"`
-	StorageClassName string `json:"storageClassName,omitempty"` // 添加这行
-}
-
-type PersistentVolumeSpec struct {
-	Capacity                      map[string]string `json:"capacity"`
-	AccessModes                   []string          `json:"accessModes"`
-	PersistentVolumeReclaimPolicy string            `json:"persistentVolumeReclaimPolicy"`
-	StorageClassName              string            `json:"storageClassName"`
-	HostPath                      struct {
-		Path string `json:"path"`
-	} `json:"hostPath"`
-	// Add other relevant fields based on your requirements
-}
-
-type PersistentVolume struct {
-	APIVersion string `json:"apiVersion"`
-	Kind       string `json:"kind"`
-	Metadata   struct {
-		Name string `json:"name"`
-	} `json:"metadata"`
-	Spec PersistentVolumeSpec `json:"spec"`
-}
-
-// Backend defines the backend service and port for the Ingress path
-type Backend struct {
-	ServiceName string `json:"serviceName"`
-	ServicePort int    `json:"servicePort"`
-}
-
-// Path defines the individual path and its backend
-type Path struct {
-	Path     string  `json:"path"`
-	PathType string  `json:"pathType"`
-	Backend  Backend `json:"backend"`
-}
-
-// HTTPIngressRuleValue holds a list of HTTP paths
-type HTTPIngressRuleValue struct {
-	Paths []Path `json:"paths"`
-}
-
-// Rule defines the rules for the Ingress resource
-type Rule struct {
-	HTTP HTTPIngressRuleValue `json:"http"`
-}
-
-// IngressSpec defines the spec of the Ingress
-type IngressSpec struct {
-	Rules []Rule `json:"rules"`
-}
-
-// Ingress defines the Ingress resource
-type Ingress struct {
-	APIVersion string      `json:"apiVersion"`
-	Kind       string      `json:"kind"`
-	Metadata   Metadata    `json:"metadata"`
-	Spec       IngressSpec `json:"spec"`
+	return "/" + k8sUns.TenantName + "/" + k8sUns.ComponentName + k8sUns.Number
 }
