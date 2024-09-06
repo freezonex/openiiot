@@ -134,3 +134,10 @@ output_js
 pb_idl
 deployment/binary
 frontend
+cmd/install/bin
+cmd/install/volumes
+cmd/install/freeflow
+cmd/install/freeflow.zip
+test/
+/.freeflow
+/.OpenIIoT.json

@@ -1,3 +1,39 @@
+Project Objective:
+To develop a comprehensive industrial platform designed for developers to deploy and manage industry-specific applications. The platform will integrate various IoT protocols to enable seamless connectivity with industrial devices, providing robust data management capabilities through advanced ETL processes and a dedicated data warehouse. It will empower users with tools to visualize data through custom dashboards and HMI (Human-Machine Interface) graphics. With built-in AI capabilities, the platform will offer predictive analytics and act as an AI assistant to enhance operational efficiency. User and tenant management features will ensure multi-level access control and resource management across different organizational layers.
+
+Project Scope:
+1. Platform Core:
+Provide a unified platform for developers to install and manage various industrial applications.
+Integrate with multiple IoT protocols (e.g., MQTT, OPC-UA, Modbus) to connect diverse industrial equipment and sensors.
+Facilitate real-time data acquisition and monitoring from connected devices.
+
+2. Data Management:
+Include an ETL (Extract, Transform, Load) pipeline to process raw data from multiple sources into structured formats.
+Establish a centralized data warehouse for storing historical and real-time data.
+Enable seamless access to organized data for advanced analytics, reporting, and visualization.
+
+3. Visualization and HMI:
+Offer a customizable dashboard tool for developers to create real-time dashboards, reports, and data visualizations.
+Provide HMI (Human-Machine Interface) design tools for graphical representations of industrial processes.
+Support interactive visualizations for monitoring and controlling industrial operations.
+
+4. AI Capabilities:
+Implement AI-powered analytics to predict time-series data for predictive maintenance and operational insights.
+Integrate an AI assistant to provide automated recommendations and decision support based on data patterns.
+
+5. User and Tenant Management:
+Support multi-tenancy with secure user management features to allow role-based access control.
+Provide tenant isolation and resource allocation to ensure effective management of users across different organizational structures.
+
+6. Developer-Focused Tools:
+Deliver a suite of APIs and SDKs for developers to customize and extend platform functionality.
+Facilitate integration with third-party industrial and IoT applications.
+Ensure compatibility with popular development tools and frameworks to accelerate deployment.
+
+7. Scalability and Security:
+Ensure the platform is scalable to handle large datasets and numerous IoT connections.
+Implement robust security measures for data protection, secure communication, and access control across all components.
+
 ## Development
 ### If develop in mainland China, need add use domestic mirror:
 ```shell

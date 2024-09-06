@@ -134,7 +134,7 @@ func install() {
 
 func uninstallNginx() error {
 	fmt.Println("Uninstalling Nginx...")
-	err := executeCommand("docker-compose", "-f", "nginx/docker-compose.yml", "down", "--volumes", "--rmi", "all", "--remove-orphans")
+	err := executeCommand("sudo", "docker-compose", "-f", "nginx/docker-compose.yml", "down", "--volumes", "--rmi", "all", "--remove-orphans")
 	if err != nil {
 		return fmt.Errorf("failed to uninstall Nginx: %v", err)
 	}
@@ -144,7 +144,7 @@ func uninstallNginx() error {
 
 func uninstallSupabase() error {
 	fmt.Println("Uninstalling Supabase...")
-	err := executeCommand("docker-compose", "-f", "supabase/docker-compose.yml", "down", "--volumes", "--rmi", "all", "--remove-orphans")
+	err := executeCommand("sudo", "docker-compose", "-f", "supabase/docker-compose.yml", "down", "--volumes", "--rmi", "all", "--remove-orphans")
 	if err != nil {
 		return fmt.Errorf("failed to uninstall Supabase: %v", err)
 	}
@@ -183,11 +183,11 @@ func uninstallDocker() error {
 
 	// Uninstall Docker registry
 	fmt.Println("Uninstalling Docker registry...")
-	err = executeCommand("kubectl", "delete", "-f", "registry/registry-deployment.yaml")
+	err = executeCommand("sudo", "kubectl", "delete", "-f", "registry/registry-deployment.yaml")
 	if err != nil {
 		fmt.Printf("Error uninstalling Docker registry deployment: %v\n", err)
 	}
-	err = executeCommand("kubectl", "delete", "-f", "registry/registry-pv-pvc.yaml")
+	err = executeCommand("sudo", "kubectl", "delete", "-f", "registry/registry-pv-pvc.yaml")
 	if err != nil {
 		fmt.Printf("Error uninstalling Docker registry PV/PVC: %v\n", err)
 	}
@@ -277,7 +277,7 @@ func uninstallOpeniiot() error {
 	fmt.Println("Uninstalling OpenIIOT...")
 
 	// Delete all namespaces starting with 'openiiot'
-	namespacesOutput, err := exec.Command("kubectl", "get", "namespaces", "--no-headers", "-o", "custom-columns=:metadata.name").Output()
+	namespacesOutput, err := exec.Command("sudo", "kubectl", "get", "namespaces", "--no-headers", "-o", "custom-columns=:metadata.name").Output()
 	if err != nil {
 		fmt.Printf("Error getting namespaces: %v\n", err)
 	} else {
@@ -285,7 +285,7 @@ func uninstallOpeniiot() error {
 		for _, ns := range namespaces {
 			if strings.HasPrefix(ns, "openiiot") {
 				fmt.Printf("Deleting namespace: %s\n", ns)
-				err = executeCommand("kubectl", "delete", "namespace", ns)
+				err = executeCommand("sudo", "kubectl", "delete", "namespace", ns)
 				if err != nil {
 					fmt.Printf("Error deleting namespace %s: %v\n", ns, err)
 				}
@@ -294,7 +294,7 @@ func uninstallOpeniiot() error {
 	}
 
 	// Delete all PersistentVolumes starting with 'openiiot'
-	pvsOutput, err := exec.Command("kubectl", "get", "pv", "--no-headers", "-o", "custom-columns=:metadata.name").Output()
+	pvsOutput, err := exec.Command("sudo", "kubectl", "get", "pv", "--no-headers", "-o", "custom-columns=:metadata.name").Output()
 	if err != nil {
 		fmt.Printf("Error getting persistent volumes: %v\n", err)
 	} else {
@@ -302,7 +302,7 @@ func uninstallOpeniiot() error {
 		for _, pv := range pvs {
 			if strings.HasPrefix(pv, "openiiot") {
 				fmt.Printf("Deleting PersistentVolume: %s\n", pv)
-				err = executeCommand("kubectl", "delete", "pv", pv)
+				err = executeCommand("sudo", "kubectl", "delete", "pv", pv)
 				if err != nil {
 					fmt.Printf("Error deleting PersistentVolume %s: %v\n", pv, err)
 				}
@@ -472,7 +472,7 @@ func waitForJobCompletion(jobName, namespace string, timeoutSeconds int) error {
 	fmt.Printf("Waiting for job %s to complete in namespace %s", jobName, namespace)
 	for {
 		// Check if the job is complete
-		output, err := exec.Command("kubectl", "get", "job", jobName, "-n", namespace, "-o", "jsonpath={.status.succeeded}").Output()
+		output, err := exec.Command("sudo", "kubectl", "get", "job", jobName, "-n", namespace, "-o", "jsonpath={.status.succeeded}").Output()
 		if err != nil {
 			return fmt.Errorf("failed to get status of job %s: %v", jobName, err)
 		}
@@ -500,11 +500,11 @@ func waitForDeploymentCompletion(deploymentName, namespace string, timeoutSecond
 	fmt.Printf("Waiting for deployment %s in namespace %s", deploymentName, namespace)
 	for {
 		// Check the deployment status
-		availableReplicas, err := exec.Command("kubectl", "get", "deployment", deploymentName, "-n", namespace, "-o", "jsonpath={.status.availableReplicas}").Output()
+		availableReplicas, err := exec.Command("sudo", "kubectl", "get", "deployment", deploymentName, "-n", namespace, "-o", "jsonpath={.status.availableReplicas}").Output()
 		if err != nil {
 			return fmt.Errorf("failed to get status of deployment %s: %v", deploymentName, err)
 		}
-		desiredReplicas, err := exec.Command("kubectl", "get", "deployment", deploymentName, "-n", namespace, "-o", "jsonpath={.spec.replicas}").Output()
+		desiredReplicas, err := exec.Command("sudo", "kubectl", "get", "deployment", deploymentName, "-n", namespace, "-o", "jsonpath={.spec.replicas}").Output()
 		if err != nil {
 			return fmt.Errorf("failed to get spec of deployment %s: %v", deploymentName, err)
 		}
@@ -530,19 +530,19 @@ func installOpeniiot() error {
 	fmt.Println("Installing OpenIIOT components...")
 
 	// Check for existing PersistentVolumes
-	output, err := exec.Command("kubectl", "get", "pv").Output()
+	output, err := exec.Command("sudo", "kubectl", "get", "pv").Output()
 	if err == nil && strings.Contains(string(output), "openiiot") {
 		return fmt.Errorf("there are PersistentVolumes for 'openiiot'. Please delete them before proceeding")
 	}
 
 	// Check for existing 'openiiot' namespace
-	_, err = exec.Command("kubectl", "get", "namespace", "openiiot").Output()
+	_, err = exec.Command("sudo", "kubectl", "get", "namespace", "openiiot").Output()
 	if err == nil {
 		return fmt.Errorf("namespace 'openiiot' already exists. Please delete it before proceeding")
 	}
 
 	// Create the 'openiiot' namespace
-	err = executeCommand("kubectl", "create", "namespace", "openiiot")
+	err = executeCommand("sudo", "kubectl", "create", "namespace", "openiiot")
 	if err != nil {
 		return fmt.Errorf("failed to create namespace 'openiiot': %v", err)
 	}
@@ -577,15 +577,15 @@ func installOpeniiot() error {
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-mysql-pv.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-mysql-pv.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-mysql-pvc.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-mysql-pvc.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-mysql-deployment.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-mysql-deployment.yaml")
 	if err != nil {
 		return err
 	}
@@ -593,15 +593,15 @@ func installOpeniiot() error {
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-mysql-service.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-mysql-service.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-mysql-cm.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-mysql-cm.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-mysql-job.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-mysql-job.yaml")
 	if err != nil {
 		return err
 	}
@@ -612,11 +612,11 @@ func installOpeniiot() error {
 
 	// Install database tools
 	fmt.Println("Installing database tools...")
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-pma-deployment.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-pma-deployment.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-pma-service.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-pma-service.yaml")
 	if err != nil {
 		return err
 	}
@@ -635,19 +635,19 @@ func installOpeniiot() error {
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-server-pv.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-server-pv.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-server-pvc.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-server-pvc.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-server-rbac.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-server-rbac.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-server-deployment.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-server-deployment.yaml")
 	if err != nil {
 		return err
 	}
@@ -655,7 +655,7 @@ func installOpeniiot() error {
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-server-service.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-server-service.yaml")
 	if err != nil {
 		return err
 	}
@@ -673,7 +673,7 @@ func installOpeniiot() error {
 
 	// Create default tenant
 	fmt.Println("Creating default tenant...")
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-server-job.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-server-job.yaml")
 	if err != nil {
 		return err
 	}
@@ -684,15 +684,15 @@ func installOpeniiot() error {
 
 	// Install Console Manager
 	fmt.Println("Installing Console Manager...")
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-consolemanager-deployment.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-consolemanager-deployment.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-consolemanager-service.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-consolemanager-service.yaml")
 	if err != nil {
 		return err
 	}
-	err = executeCommand("kubectl", "apply", "-f", "manifest/openiiot-consolemanager-ingress.yaml")
+	err = executeCommand("sudo", "kubectl", "apply", "-f", "manifest/openiiot-consolemanager-ingress.yaml")
 	if err != nil {
 		return err
 	}
@@ -791,7 +791,7 @@ func installDocker() error {
 	}
 
 	// Retrieve the ClusterIP for the registry service
-	clusterIP, err := exec.Command("kubectl", "get", "svc", "registry", "-o", "jsonpath={.spec.clusterIP}").Output()
+	clusterIP, err := exec.Command("sudo", "kubectl", "get", "svc", "registry", "-o", "jsonpath={.spec.clusterIP}").Output()
 	if err != nil || len(clusterIP) == 0 {
 		return fmt.Errorf("failed to retrieve ClusterIP for the 'registry' service")
 	}
@@ -833,13 +833,13 @@ func installSupabase() error {
 	fmt.Println("Installing Supabase...")
 
 	// Load the Supabase Docker image
-	err := executeCommand("docker", "load", "-i", "bin/openiiot-supabase-studio.tar")
+	err := executeCommand("sudo", "docker", "load", "-i", "bin/openiiot-supabase-studio.tar")
 	if err != nil {
 		return fmt.Errorf("failed to load Supabase Docker image: %v", err)
 	}
 
 	// Start the Supabase containers using Docker Compose
-	err = executeCommand("docker-compose", "-f", "supabase/docker-compose.yml", "up", "-d")
+	err = executeCommand("sudo", "docker-compose", "-f", "supabase/docker-compose.yml", "up", "-d")
 	if err != nil {
 		return fmt.Errorf("failed to start Supabase with Docker Compose: %v", err)
 	}
@@ -853,13 +853,13 @@ func installNginx() error {
 	fmt.Println("Installing and configuring Nginx...")
 
 	// Start the Nginx service using Docker Compose
-	err := executeCommand("docker-compose", "-f", "nginx/docker-compose.yml", "up", "-d")
+	err := executeCommand("sudo", "docker-compose", "-f", "nginx/docker-compose.yml", "up", "-d")
 	if err != nil {
 		return fmt.Errorf("failed to start Nginx with Docker Compose: %v", err)
 	}
 
 	// Retrieve the current Ingress Controller's HTTP NodePort
-	nodePort, err := exec.Command("kubectl", "get", "svc", "-n", "ingress-nginx", "ingress-nginx-controller", "-o", "jsonpath={.spec.ports[?(@.port==80)].nodePort}").Output()
+	nodePort, err := exec.Command("sudo", "kubectl", "get", "svc", "-n", "ingress-nginx", "ingress-nginx-controller", "-o", "jsonpath={.spec.ports[?(@.port==80)].nodePort}").Output()
 	if err != nil || len(nodePort) == 0 {
 		return fmt.Errorf("failed to retrieve NodePort for Ingress Controller: %v", err)
 	}
@@ -888,13 +888,13 @@ func installNginx() error {
 
 	// Write the new default.conf content into the Nginx container's configuration file
 	containerName := "nginx-server"
-	err = exec.Command("docker", "exec", containerName, "bash", "-c", fmt.Sprintf("echo '%s' > /etc/nginx/conf.d/default.conf", newConf)).Run()
+	err = exec.Command("sudo", "docker", "exec", containerName, "bash", "-c", fmt.Sprintf("echo '%s' > /etc/nginx/conf.d/default.conf", newConf)).Run()
 	if err != nil {
 		return fmt.Errorf("failed to update Nginx configuration: %v", err)
 	}
 
 	// Reload Nginx to apply the new configuration
-	err = executeCommand("docker", "exec", containerName, "nginx", "-s", "reload")
+	err = executeCommand("sudo", "docker", "exec", containerName, "nginx", "-s", "reload")
 	if err != nil {
 		return fmt.Errorf("failed to reload Nginx: %v", err)
 	}
