@@ -216,6 +216,9 @@ func (a *K8sService) GetIngressName(k8sUns K8sUns) string {
 }
 
 func (a *K8sService) GetIngressPath(k8sUns K8sUns) string {
+	if k8sUns.ComponentName == "server" {
+		return "/api/(.*)"
+	}
 	return "/" + k8sUns.TenantName + "/" + k8sUns.ComponentName + k8sUns.Number + "/(.*)"
 }
 
