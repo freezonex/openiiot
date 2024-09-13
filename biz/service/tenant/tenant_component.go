@@ -151,6 +151,7 @@ func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_o
 		if alias == "" {
 			alias = componentName // Default value if alias label is not present
 		}
+		fmt.Printf("Pod alias: %s\n", alias)
 
 		data = append(data, &freezonex_openiiot_api.TenantComponent{
 			Name:     deploymentName,
