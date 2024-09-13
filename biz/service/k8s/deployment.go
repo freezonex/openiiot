@@ -199,3 +199,32 @@ func (a *K8sService) GetNextAvailableComponentDeploymentNumber(ctx context.Conte
 	// If no number is missing, return the next number
 	return len(numbers) + 1, nil
 }
+
+// UpdateDeployment updates the deployment to add alias to metadata->labels, spec->template->metadata->labels.
+func (a *K8sService) UpdateDeployment(ctx context.Context, k8sUns K8sUns) error {
+	namespaceName := a.GetNamespaceName(k8sUns)
+	deployment, err := a.clientset.AppsV1().Deployments(namespaceName).Get(ctx, a.GetDeploymentName(k8sUns), metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to get deployment: %w", err)
+	}
+
+	// Add or update the alias label in metadata->labels
+	if deployment.ObjectMeta.Labels == nil {
+		deployment.ObjectMeta.Labels = make(map[string]string)
+	}
+	deployment.ObjectMeta.Labels["alias"] = k8sUns.Alias
+
+	// Add or update the alias label in spec->template->metadata->labels
+	if deployment.Spec.Template.ObjectMeta.Labels == nil {
+		deployment.Spec.Template.ObjectMeta.Labels = make(map[string]string)
+	}
+	deployment.Spec.Template.ObjectMeta.Labels["alias"] = k8sUns.Alias
+
+	// Update the deployment with the new labels
+	_, err = a.clientset.AppsV1().Deployments(namespaceName).Update(ctx, deployment, metav1.UpdateOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to update deployment: %w", err)
+	}
+
+	return nil
+}

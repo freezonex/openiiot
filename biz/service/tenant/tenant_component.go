@@ -146,6 +146,12 @@ func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_o
 		// Calculate Pod age
 		age := time.Since(pod.CreationTimestamp.Time).Round(time.Second).String()
 
+		// Retrieve the alias label from pod metadata
+		alias := pod.Labels["alias"]
+		if alias == "" {
+			alias = componentName // Default value if alias label is not present
+		}
+
 		data = append(data, &freezonex_openiiot_api.TenantComponent{
 			Name:     deploymentName,
 			Uri:      uri,
@@ -153,9 +159,45 @@ func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_o
 			Status:   status,
 			Restarts: strconv.Itoa(int(restarts)),
 			Age:      age,
+			Alias:    alias,
 		})
 	}
 	resp.Data = data
+	resp.BaseResp = middleware.SuccessResponseOK
+
+	return resp, nil
+}
+
+func (a *TenantService) UpdateTenantComponent(ctx context.Context, req *freezonex_openiiot_api.UpdateTenantComponentRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateTenantComponentResponse, error) {
+
+	_, tenantName, err := a.CheckTenant(ctx, req.TenantId, req.TenantName)
+	if err != nil {
+		logs.Error(ctx, "event=UpdateTenantComponent error=%v", err.Error())
+		return nil, err
+	}
+	ctx = context.WithValue(ctx, "tenantName", tenantName)
+
+	k8sUns := k8s.K8sUns{TenantName: tenantName}
+	deploymentNames, err := a.k8s.GetRuntimeDeploymentNames(ctx, k8sUns)
+	if err != nil {
+		return nil, fmt.Errorf("failed to list deployments: %w", err)
+	}
+
+	if !a.FindComponentName(deploymentNames, req.ComponentName) {
+		return nil, fmt.Errorf("cannot find component %s in tenant %s", req.ComponentName, req.TenantName)
+	}
+
+	componentName, number, err := a.SplitComponentNameStrict(req.ComponentName)
+	if err != nil {
+		return nil, err
+	}
+
+	k8sUns = k8s.K8sUns{TenantName: tenantName, ComponentName: componentName, Number: number, Alias: req.ComponentAlias}
+	if err := a.k8s.UpdateComponent(ctx, k8sUns); err != nil {
+		return nil, err
+	}
+
+	resp := new(freezonex_openiiot_api.UpdateTenantComponentResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil
