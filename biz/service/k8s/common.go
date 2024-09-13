@@ -32,6 +32,7 @@ type K8sUns struct {
 	ComponentName string
 	Number        string
 	Tag           string
+	Alias         string
 }
 
 var (

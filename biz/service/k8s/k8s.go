@@ -167,3 +167,16 @@ func (a *K8sService) DeleteComponent(ctx context.Context, k8sUns K8sUns) error {
 
 	return nil
 }
+
+// Update component alias
+func (a *K8sService) UpdateComponent(ctx context.Context, k8sUns K8sUns) error {
+
+	if err := a.UpdateDeployment(ctx, k8sUns); err != nil {
+		return err
+	}
+	if err := a.UpdatePod(ctx, k8sUns); err != nil {
+		return err
+	}
+
+	return nil
+}
