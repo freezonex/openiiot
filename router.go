@@ -113,6 +113,12 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/tenant/component/get",
 				tenantHandler.GetTenantComponent,
 				&iiotpb.GetTenantComponentRequest{}))
+		tenantGroup.POST(
+			"/component/update",
+			middleware.Response(
+				"/tenant/component/update",
+				tenantHandler.UpdateTenantComponent,
+				&iiotpb.UpdateTenantComponentRequest{}))
 	}
 
 	userGroup := r.Group("/user", middleware.Access())
