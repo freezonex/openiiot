@@ -139,5 +139,6 @@ cmd/install/volumes
 cmd/install/freeflow
 cmd/install/freeflow.zip
 test/
-/.freeflow
+/freeflow
 /.OpenIIoT.json
+/openiiot
