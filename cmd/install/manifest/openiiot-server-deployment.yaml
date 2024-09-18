@@ -39,7 +39,13 @@ spec:
           volumeMounts:
             - name: server-data
               mountPath: "/volumes"
+            - name: docker-socket
+              mountPath: /var/run/docker.sock
       volumes:
         - name: server-data
           persistentVolumeClaim:
             claimName: openiiot-server-pvc
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket

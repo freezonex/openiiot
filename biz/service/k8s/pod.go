@@ -3,15 +3,15 @@ package k8s
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// Get all pod in specified namespace
 func (a *K8sService) GetRuntimePods(ctx context.Context, k8sUns K8sUns, includeJobPods bool) ([]v1.Pod, error) {
 
-	deploymentName := a.GetDeploymentName(k8sUns)
+	//deploymentName := a.GetDeploymentName(k8sUns)
 	namespaceName := a.GetNamespaceName(k8sUns)
 
 	// Define a list options variable
@@ -36,7 +36,8 @@ func (a *K8sService) GetRuntimePods(ctx context.Context, k8sUns K8sUns, includeJ
 		}
 
 		// Include the pod based on the includeJobPods flag and deployment name
-		if (includeJobPods || !isJobPod) && (deploymentName == "" || strings.HasPrefix(pod.Name, deploymentName)) {
+		//if (includeJobPods || !isJobPod) && (deploymentName == "" || strings.HasPrefix(pod.Name, deploymentName)) {
+		if includeJobPods || !isJobPod {
 			matchedPods = append(matchedPods, pod)
 		}
 	}
@@ -45,7 +46,7 @@ func (a *K8sService) GetRuntimePods(ctx context.Context, k8sUns K8sUns, includeJ
 }
 
 // UpdatePod updates the pods related to the deployment to add alias to metadata->labels
-func (a *K8sService) UpdatePod(ctx context.Context, k8sUns K8sUns) error {
+/*func (a *K8sService) UpdatePod(ctx context.Context, k8sUns K8sUns) error {
 	namespaceName := a.GetNamespaceName(k8sUns)
 
 	// Set the ListOptions to filter pods by the deployment's label, e.g., app: <deployment-name>
@@ -70,6 +71,41 @@ func (a *K8sService) UpdatePod(ctx context.Context, k8sUns K8sUns) error {
 		pod.ObjectMeta.Labels["alias"] = k8sUns.Alias
 
 		// Update the pod with the new labels
+		_, err = a.clientset.CoreV1().Pods(namespaceName).Update(ctx, &pod, metav1.UpdateOptions{})
+		if err != nil {
+			return fmt.Errorf("failed to update pod %s: %w", pod.Name, err)
+		}
+	}
+
+	return nil
+}*/
+
+// UpdatePod updates the pods related to the deployment to add alias to metadata->annotations
+func (a *K8sService) UpdatePod(ctx context.Context, k8sUns K8sUns) error {
+	namespaceName := a.GetNamespaceName(k8sUns)
+
+	// Set the ListOptions to filter pods by the deployment's label, e.g., app: <deployment-name>
+	listOptions := metav1.ListOptions{
+		LabelSelector: fmt.Sprintf("app=%s", a.GetDeploymentName(k8sUns)),
+	}
+
+	// Get the list of pods that belong to the deployment by using the label selector
+	pods, err := a.clientset.CoreV1().Pods(namespaceName).List(ctx, listOptions)
+	if err != nil {
+		return fmt.Errorf("failed to list pods: %w", err)
+	}
+
+	// Iterate over the list of pods and update the alias annotation
+	for _, pod := range pods.Items {
+		// Check if the pod's metadata annotations map is nil and initialize if necessary
+		if pod.ObjectMeta.Annotations == nil {
+			pod.ObjectMeta.Annotations = make(map[string]string)
+		}
+
+		// Add or update the alias annotation
+		pod.ObjectMeta.Annotations["alias"] = k8sUns.Alias
+
+		// Update the pod with the new annotations
 		_, err = a.clientset.CoreV1().Pods(namespaceName).Update(ctx, &pod, metav1.UpdateOptions{})
 		if err != nil {
 			return fmt.Errorf("failed to update pod %s: %w", pod.Name, err)

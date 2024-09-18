@@ -123,7 +123,7 @@ func (a *K8sService) scaleDeployment(ctx context.Context, k8sUns K8sUns, replica
 }
 
 // GetAllDeployments returns all deployments across all namespaces.
-func (a *K8sService) GetAllRuntimeDeployments(ctx context.Context) ([]appsv1.Deployment, error) {
+func (a *K8sService) GetDeploymentInAllNamespaces(ctx context.Context) ([]appsv1.Deployment, error) {
 	// Use an empty string as the namespace to list deployments across all namespaces
 	deployments, err := a.clientset.AppsV1().Deployments("").List(ctx, metav1.ListOptions{})
 	if err != nil {
@@ -134,7 +134,7 @@ func (a *K8sService) GetAllRuntimeDeployments(ctx context.Context) ([]appsv1.Dep
 }
 
 // GetDeploymentsInNamespace returns all deployments in the given namespace.
-func (a *K8sService) GetRunTimeDeploymentsInNamespace(ctx context.Context, k8sUns K8sUns) ([]appsv1.Deployment, error) {
+func (a *K8sService) GetDeployment(ctx context.Context, k8sUns K8sUns) ([]appsv1.Deployment, error) {
 	namespaceName := a.GetNamespaceName(k8sUns)
 	deployments, err := a.clientset.AppsV1().Deployments(namespaceName).List(ctx, metav1.ListOptions{})
 	if err != nil {
@@ -144,8 +144,20 @@ func (a *K8sService) GetRunTimeDeploymentsInNamespace(ctx context.Context, k8sUn
 	return deployments.Items, nil
 }
 
+// GetDeploymentsInNamespace returns all deployments in the given namespace.
+func (a *K8sService) GetDeploymentByName(ctx context.Context, k8sUns K8sUns) (*appsv1.Deployment, error) {
+	namespaceName := a.GetNamespaceName(k8sUns)
+	deploymentName := a.GetDeploymentName(k8sUns)
+	deployment, err := a.clientset.AppsV1().Deployments(namespaceName).Get(ctx, deploymentName, metav1.GetOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list deployments in namespace %s: %w", namespaceName, err)
+	}
+
+	return deployment, nil
+}
+
 // GetDeploymentNamesInNamespace returns the names of all deployments in the given namespace.
-func (a *K8sService) GetRuntimeDeploymentNames(ctx context.Context, k8sUns K8sUns) ([]string, error) {
+func (a *K8sService) GetDeploymentNames(ctx context.Context, k8sUns K8sUns) ([]string, error) {
 	namespaceName := a.GetNamespaceName(k8sUns)
 	deployments, err := a.clientset.AppsV1().Deployments(namespaceName).List(ctx, metav1.ListOptions{})
 	if err != nil {
@@ -164,7 +176,7 @@ func (a *K8sService) GetRuntimeDeploymentNames(ctx context.Context, k8sUns K8sUn
 // GetNextAvailableComponentDeploymentNumber returns the next available number for a specific component, ignoring leading words.
 // If no deployments are found for the component, it returns 1.
 func (a *K8sService) GetNextAvailableComponentDeploymentNumber(ctx context.Context, k8sUns K8sUns) (int, error) {
-	deploymentNames, err := a.GetRuntimeDeploymentNames(ctx, k8sUns)
+	deploymentNames, err := a.GetDeploymentNames(ctx, k8sUns)
 	if err != nil {
 		return 0, fmt.Errorf("failed to list deployments: %w", err)
 	}
@@ -201,7 +213,7 @@ func (a *K8sService) GetNextAvailableComponentDeploymentNumber(ctx context.Conte
 }
 
 // UpdateDeployment updates the deployment to add alias to metadata->labels, spec->template->metadata->labels.
-func (a *K8sService) UpdateDeployment(ctx context.Context, k8sUns K8sUns) error {
+/*func (a *K8sService) UpdateDeployment(ctx context.Context, k8sUns K8sUns) error {
 	namespaceName := a.GetNamespaceName(k8sUns)
 	deployment, err := a.clientset.AppsV1().Deployments(namespaceName).Get(ctx, a.GetDeploymentName(k8sUns), metav1.GetOptions{})
 	if err != nil {
@@ -221,6 +233,35 @@ func (a *K8sService) UpdateDeployment(ctx context.Context, k8sUns K8sUns) error 
 	deployment.Spec.Template.ObjectMeta.Labels["alias"] = k8sUns.Alias
 
 	// Update the deployment with the new labels
+	_, err = a.clientset.AppsV1().Deployments(namespaceName).Update(ctx, deployment, metav1.UpdateOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to update deployment: %w", err)
+	}
+
+	return nil
+}*/
+
+// UpdateDeployment updates the deployment to add alias to metadata->annotations, spec->template->metadata->annotations.
+func (a *K8sService) UpdateDeployment(ctx context.Context, k8sUns K8sUns) error {
+	namespaceName := a.GetNamespaceName(k8sUns)
+	deployment, err := a.clientset.AppsV1().Deployments(namespaceName).Get(ctx, a.GetDeploymentName(k8sUns), metav1.GetOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to get deployment: %w", err)
+	}
+
+	// Add or update the alias annotation in metadata->annotations
+	if deployment.ObjectMeta.Annotations == nil {
+		deployment.ObjectMeta.Annotations = make(map[string]string)
+	}
+	deployment.ObjectMeta.Annotations["alias"] = k8sUns.Alias
+
+	// Add or update the alias annotation in spec->template->metadata->annotations
+	if deployment.Spec.Template.ObjectMeta.Annotations == nil {
+		deployment.Spec.Template.ObjectMeta.Annotations = make(map[string]string)
+	}
+	deployment.Spec.Template.ObjectMeta.Annotations["alias"] = k8sUns.Alias
+
+	// Update the deployment with the new annotations
 	_, err = a.clientset.AppsV1().Deployments(namespaceName).Update(ctx, deployment, metav1.UpdateOptions{})
 	if err != nil {
 		return fmt.Errorf("failed to update deployment: %w", err)

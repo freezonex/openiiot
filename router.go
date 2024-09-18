@@ -12,6 +12,7 @@ import (
 	"freezonex/openiiot/biz/middleware"
 	iiotpb "freezonex/openiiot/biz/model/freezonex_openiiot_api"
 	"freezonex/openiiot/biz/service/app"
+	"freezonex/openiiot/biz/service/application"
 	"freezonex/openiiot/biz/service/core"
 	"freezonex/openiiot/biz/service/edge"
 	"freezonex/openiiot/biz/service/emqx"
@@ -33,6 +34,12 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 	}
 
 	k8s, err := k8s.NewK8sService(db, &c.K8sConfig)
+	if err != nil {
+		logs.Errorf("cannot connect to mysql database, err: %v", err)
+		panic(err)
+	}
+
+	tenant := tenant.NewTenantService(db, &c.GeneralConfig, k8s)
 	if err != nil {
 		logs.Errorf("cannot connect to mysql database, err: %v", err)
 		panic(err)
@@ -64,7 +71,7 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 
 	tenantGroup := r.Group("/tenant", middleware.Access())
 	{
-		tenantHandler := handler.NewTenantHandler(tenant.NewTenantService(db, &c.GeneralConfig, k8s))
+		tenantHandler := handler.NewTenantHandler(tenant)
 		tenantGroup.POST(
 			"/add",
 			middleware.Response(
@@ -395,5 +402,46 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				"/tdengine/query",
 				tdengineHandler.Query,
 				&iiotpb.TDEngineQueryRequest{}))
+	}
+
+	applicationGroup := r.Group("/application", middleware.Access())
+	{
+		applicationHandler := handler.NewApplicationHandler(application.NewApplicationService(db, &c.GeneralConfig, k8s, tenant))
+		applicationGroup.POST(
+			"/add",
+			middleware.Response(
+				"/application/add",
+				applicationHandler.AddApplication,
+				&iiotpb.AddApplicationRequest{}))
+		applicationGroup.GET(
+			"/get",
+			middleware.Response(
+				"/application/get",
+				applicationHandler.GetApplication,
+				&iiotpb.GetApplicationRequest{}))
+		applicationGroup.POST(
+			"/start",
+			middleware.Response(
+				"/application/start",
+				applicationHandler.StartApplication,
+				&iiotpb.StartApplicationRequest{}))
+		applicationGroup.POST(
+			"/stop",
+			middleware.Response(
+				"/application/stop",
+				applicationHandler.StopApplication,
+				&iiotpb.StopApplicationRequest{}))
+		applicationGroup.POST(
+			"/restart",
+			middleware.Response(
+				"/application/restart",
+				applicationHandler.RestartApplication,
+				&iiotpb.RestartApplicationRequest{}))
+		applicationGroup.POST(
+			"/delete",
+			middleware.Response(
+				"/application/delete",
+				applicationHandler.DeleteApplication,
+				&iiotpb.DeleteApplicationRequest{}))
 	}
 }
