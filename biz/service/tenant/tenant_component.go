@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -68,7 +67,7 @@ func (a *TenantService) DeleteTenantComponent(ctx context.Context, req *freezone
 	ctx = context.WithValue(ctx, "tenantName", tenantName)
 
 	k8sUns := k8s.K8sUns{TenantName: tenantName}
-	deploymentNames, err := a.k8s.GetRuntimeDeploymentNames(ctx, k8sUns)
+	deploymentNames, err := a.k8s.GetDeploymentNames(ctx, k8sUns)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list deployments: %w", err)
 	}
@@ -93,7 +92,7 @@ func (a *TenantService) DeleteTenantComponent(ctx context.Context, req *freezone
 	return resp, nil
 }
 
-func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_openiiot_api.GetTenantComponentRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetTenantComponentResponse, error) {
+/*func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_openiiot_api.GetTenantComponentRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetTenantComponentResponse, error) {
 
 	_, tenantName, err := a.CheckTenant(ctx, req.TenantId, req.TenantName)
 	if err != nil {
@@ -114,6 +113,11 @@ func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_o
 	resp := new(freezonex_openiiot_api.GetTenantComponentResponse)
 	data := make([]*freezonex_openiiot_api.TenantComponent, 0)
 	for _, pod := range pods {
+		// filter out crafted app pod
+		if strings.HasPrefix(pod.Name, "openiiot-app") {
+			continue
+		}
+
 		re := regexp.MustCompile(`^(.*)-[^-]+-[^-]+$`)
 		deploymentName := re.ReplaceAllString(pod.Name, `$1`) //extrace deploymentName from openiiot-nodered1-6bcf7f7ffc-nx44x
 
@@ -167,6 +171,82 @@ func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_o
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil
+}*/
+
+func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_openiiot_api.GetTenantComponentRequest, c *app.RequestContext) (*freezonex_openiiot_api.GetTenantComponentResponse, error) {
+
+	_, tenantName, err := a.CheckTenant(ctx, req.TenantId, req.TenantName)
+	if err != nil {
+		logs.Error(ctx, "event=GetTenantComponent error=%v", err.Error())
+		return nil, err
+	}
+	ctx = context.WithValue(ctx, "tenantName", tenantName)
+
+	componentName, number := a.SplitComponentNameLoose(req.ComponentName)
+	k8sUns := k8s.K8sUns{TenantName: tenantName, ComponentName: componentName, Number: number}
+
+	deployments, err := a.k8s.GetDeployment(ctx, k8sUns)
+	if err != nil {
+		logs.Error(ctx, "event=GetTenantComponent error=%v", err.Error())
+		return nil, err
+	}
+
+	resp := new(freezonex_openiiot_api.GetTenantComponentResponse)
+	data := make([]*freezonex_openiiot_api.TenantComponent, 0)
+	for _, deployment := range deployments {
+		// filter out crafted app pod
+		if strings.HasPrefix(deployment.Name, "openiiot-app") {
+			continue
+		}
+
+		// Split the string by dash
+		parts := strings.Split(deployment.Name, "-")
+		componentName := parts[len(parts)-1]
+		uri := "/" + tenantName + "/" + componentName + "/"
+
+		// Calculate Pod age
+		age := time.Since(deployment.CreationTimestamp.Time).Round(time.Second).String()
+
+		// Retrieve the alias label from pod metadata
+		alias := deployment.Labels["alias"]
+		if alias == "" {
+			alias = componentName // Default value if alias label is not present
+		}
+
+		// Extract Ready: number of ready replicas vs desired replicas (e.g., 1/1)
+		ready := fmt.Sprintf("%d/%d", deployment.Status.ReadyReplicas, *deployment.Spec.Replicas)
+
+		// Extract Status: if AVAILABLE >= 1, status is Running, else Stopped
+		status := "Stopped"
+		if deployment.Status.AvailableReplicas >= 1 {
+			status = "Running"
+		}
+
+		// Extract Revision: from annotations (deployment.kubernetes.io/revision)
+		revision := deployment.Annotations["deployment.kubernetes.io/revision"]
+		if revision == "" {
+			revision = "1" // Default revision if annotation not present
+		}
+
+		// Extract CreationTimestamp
+		createTime := deployment.CreationTimestamp.Time.Format("2006-01-02 15:04:05 -0700")
+
+		// Append to response data
+		data = append(data, &freezonex_openiiot_api.TenantComponent{
+			Name:       deployment.Name,
+			Uri:        uri,
+			Ready:      ready,
+			Status:     status,
+			Revision:   revision,
+			CreateTime: createTime,
+			Age:        age,
+			Alias:      alias,
+		})
+	}
+
+	resp.Data = data
+	resp.BaseResp = middleware.SuccessResponseOK
+	return resp, nil
 }
 
 func (a *TenantService) UpdateTenantComponent(ctx context.Context, req *freezonex_openiiot_api.UpdateTenantComponentRequest, c *app.RequestContext) (*freezonex_openiiot_api.UpdateTenantComponentResponse, error) {
@@ -179,7 +259,7 @@ func (a *TenantService) UpdateTenantComponent(ctx context.Context, req *freezone
 	ctx = context.WithValue(ctx, "tenantName", tenantName)
 
 	k8sUns := k8s.K8sUns{TenantName: tenantName}
-	deploymentNames, err := a.k8s.GetRuntimeDeploymentNames(ctx, k8sUns)
+	deploymentNames, err := a.k8s.GetDeploymentNames(ctx, k8sUns)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list deployments: %w", err)
 	}

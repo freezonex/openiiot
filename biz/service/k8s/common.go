@@ -28,11 +28,13 @@ type K8sService struct {
 
 // Tag is only used for more than 1 pv and pvc
 type K8sUns struct {
-	TenantName    string
-	ComponentName string
-	Number        string
-	Tag           string
-	Alias         string
+	TenantName         string // dt, tenant1, tenant2
+	DeploymentCategory string // iot or app, empty string mean iot
+	ComponentName      string // nodered, grafana, emqx
+	ComponentType      string // frontend, backend, db
+	Number             string // 1,2,3,4,5
+	Tag                string // now for TDEngine only, data or log
+	Alias              string // display name
 }
 
 var (
@@ -160,10 +162,16 @@ func (a *K8sService) GetNamespaceName(k8sUns K8sUns) string {
 }
 
 func (a *K8sService) GetDeploymentName(k8sUns K8sUns) string {
+	if k8sUns.DeploymentCategory == "app" {
+		return "openiiot-app" + k8sUns.ComponentName + "-" + k8sUns.ComponentType
+	}
 	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number
 }
 
 func (a *K8sService) GetServicName(k8sUns K8sUns) string {
+	if k8sUns.DeploymentCategory == "app" {
+		return "openiiot-app" + k8sUns.ComponentName + "-" + k8sUns.ComponentType + "-service"
+	}
 	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number + "-service"
 }
 
@@ -213,6 +221,9 @@ func (a *K8sService) GetPersistentVolumeClaimName(k8sUns K8sUns) string {
 }
 
 func (a *K8sService) GetIngressName(k8sUns K8sUns) string {
+	if k8sUns.DeploymentCategory == "app" {
+		return "openiiot-app" + "-" + k8sUns.ComponentName + k8sUns.ComponentType + "-ingress"
+	}
 	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number + "-ingress"
 }
 
@@ -231,4 +242,8 @@ func (a *K8sService) GetJobName(k8sUns K8sUns) string {
 func (a *K8sService) GetComponentRootUrl(k8sUns K8sUns) string {
 
 	return "/" + k8sUns.TenantName + "/" + k8sUns.ComponentName + k8sUns.Number
+}
+
+func (a *K8sService) GetAppImageName(k8sUns K8sUns) string {
+	return "openiiot-app-" + "-" + k8sUns.ComponentName + k8sUns.ComponentType + ":1.0.0"
 }
