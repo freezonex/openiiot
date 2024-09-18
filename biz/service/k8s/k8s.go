@@ -171,13 +171,12 @@ func (a *K8sService) DeleteComponent(ctx context.Context, k8sUns K8sUns) error {
 // Update component alias
 func (a *K8sService) UpdateComponent(ctx context.Context, k8sUns K8sUns) error {
 
-	if err := a.UpdatePod(ctx, k8sUns); err != nil {
+	/*if err := a.UpdatePod(ctx, k8sUns); err != nil {
 		return err
-	}
-
+	}*/
 	//time.Sleep(1 * time.Second) // Sleep for 1 second since UpdateDeployment will make pod restart
 
-	// update annotation in deployment template will not make pod restart, but label in deployment template will restart pod
+	// update annotation in deployment template will make pod restart, so no need update pod separately
 	if err := a.UpdateDeployment(ctx, k8sUns); err != nil {
 		return err
 	}

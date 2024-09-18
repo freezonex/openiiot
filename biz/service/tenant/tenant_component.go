@@ -208,7 +208,7 @@ func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_o
 		age := time.Since(deployment.CreationTimestamp.Time).Round(time.Second).String()
 
 		// Retrieve the alias label from pod metadata
-		alias := deployment.Labels["alias"]
+		alias := deployment.Annotations["alias"]
 		if alias == "" {
 			alias = componentName // Default value if alias label is not present
 		}
