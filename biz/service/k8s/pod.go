@@ -3,6 +3,7 @@ package k8s
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -11,7 +12,7 @@ import (
 // Get all pod in specified namespace
 func (a *K8sService) GetRuntimePods(ctx context.Context, k8sUns K8sUns, includeJobPods bool) ([]v1.Pod, error) {
 
-	//deploymentName := a.GetDeploymentName(k8sUns)
+	deploymentName := a.GetDeploymentName(k8sUns)
 	namespaceName := a.GetNamespaceName(k8sUns)
 
 	// Define a list options variable
@@ -36,8 +37,7 @@ func (a *K8sService) GetRuntimePods(ctx context.Context, k8sUns K8sUns, includeJ
 		}
 
 		// Include the pod based on the includeJobPods flag and deployment name
-		//if (includeJobPods || !isJobPod) && (deploymentName == "" || strings.HasPrefix(pod.Name, deploymentName)) {
-		if includeJobPods || !isJobPod {
+		if (includeJobPods || !isJobPod) && (deploymentName == "" || strings.HasPrefix(pod.Name, deploymentName)) {
 			matchedPods = append(matchedPods, pod)
 		}
 	}

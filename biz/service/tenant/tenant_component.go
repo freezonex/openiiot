@@ -185,7 +185,7 @@ func (a *TenantService) GetTenantComponent(ctx context.Context, req *freezonex_o
 	componentName, number := a.SplitComponentNameLoose(req.ComponentName)
 	k8sUns := k8s.K8sUns{TenantName: tenantName, ComponentName: componentName, Number: number}
 
-	deployments, err := a.k8s.GetDeployment(ctx, k8sUns)
+	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
 	if err != nil {
 		logs.Error(ctx, "event=GetTenantComponent error=%v", err.Error())
 		return nil, err
