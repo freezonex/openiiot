@@ -76,7 +76,7 @@ func (a *ApplicationService) GetApplication(ctx context.Context, req *freezonex_
 
 	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: req.ApplicationName, ComponentType: req.ComponentType}
 
-	deployments, err := a.k8s.GetDeployment(ctx, k8sUns)
+	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
 	if err != nil {
 		logs.Error(ctx, "event=GetApplication error=%v", err.Error())
 		return nil, err
@@ -170,16 +170,16 @@ func (a *ApplicationService) StartApplication(ctx context.Context, req *freezone
 
 	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: req.ApplicationName, ComponentType: req.ComponentType}
 
-	deployments, err := a.k8s.GetDeployment(ctx, k8sUns)
+	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
 	if err != nil {
 		logs.Error(ctx, "event=StartApplication error=%v", err.Error())
 		return nil, err
 	}
 
 	for _, deployment := range deployments {
-		if !strings.HasPrefix(deployment.Name, "openiiot-app-"+req.ApplicationName) {
+		/*if !strings.HasPrefix(deployment.Name, "openiiot-app-"+req.ApplicationName) {
 			continue
-		}
+		}*/
 		re := regexp.MustCompile(`^openiiot-app-([a-z0-9-]+)-(frontend|backend|db)$`)
 		match := re.FindStringSubmatch(deployment.Name)
 		if match == nil {
@@ -208,16 +208,16 @@ func (a *ApplicationService) StopApplication(ctx context.Context, req *freezonex
 
 	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: req.ApplicationName, ComponentType: req.ComponentType}
 
-	deployments, err := a.k8s.GetDeployment(ctx, k8sUns)
+	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
 	if err != nil {
 		logs.Error(ctx, "event=StopApplication error=%v", err.Error())
 		return nil, err
 	}
 
 	for _, deployment := range deployments {
-		if !strings.HasPrefix(deployment.Name, "openiiot-app-"+req.ApplicationName) {
+		/*if !strings.HasPrefix(deployment.Name, "openiiot-app-"+req.ApplicationName) {
 			continue
-		}
+		}*/
 		re := regexp.MustCompile(`^openiiot-app-([a-z0-9-]+)-(frontend|backend|db)$`)
 		match := re.FindStringSubmatch(deployment.Name)
 		if match == nil {
@@ -246,16 +246,16 @@ func (a *ApplicationService) RestartApplication(ctx context.Context, req *freezo
 
 	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: req.ApplicationName, ComponentType: req.ComponentType}
 
-	deployments, err := a.k8s.GetDeployment(ctx, k8sUns)
+	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
 	if err != nil {
 		logs.Error(ctx, "event=RestartApplication error=%v", err.Error())
 		return nil, err
 	}
 
 	for _, deployment := range deployments {
-		if !strings.HasPrefix(deployment.Name, "openiiot-app-"+req.ApplicationName) {
+		/*if !strings.HasPrefix(deployment.Name, "openiiot-app-"+req.ApplicationName) {
 			continue
-		}
+		}*/
 		re := regexp.MustCompile(`^openiiot-app-([a-z0-9-]+)-(frontend|backend|db)$`)
 		match := re.FindStringSubmatch(deployment.Name)
 		if match == nil {
@@ -284,17 +284,16 @@ func (a *ApplicationService) DeleteApplication(ctx context.Context, req *freezon
 
 	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: req.ApplicationName, ComponentType: req.ComponentType}
 
-	deployments, err := a.k8s.GetDeployment(ctx, k8sUns)
+	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
 	if err != nil {
 		logs.Error(ctx, "event=DeleteApplication error=%v", err.Error())
 		return nil, err
 	}
 
 	for _, deployment := range deployments {
-		if !strings.HasPrefix(deployment.Name, "openiiot-app-"+req.ApplicationName) {
+		/*if !strings.HasPrefix(deployment.Name, "openiiot-app-"+req.ApplicationName) {
 			continue
-		}
-
+		}*/
 		re := regexp.MustCompile(`^openiiot-app-([a-z0-9-]+)-(frontend|backend|db)$`)
 		match := re.FindStringSubmatch(deployment.Name)
 		if match == nil {

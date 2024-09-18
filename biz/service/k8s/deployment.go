@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -133,7 +134,7 @@ func (a *K8sService) GetDeploymentInAllNamespaces(ctx context.Context) ([]appsv1
 	return deployments.Items, nil
 }
 
-// GetDeploymentsInNamespace returns all deployments in the given namespace.
+// GetDeployment returns all deployments in the given namespace.
 func (a *K8sService) GetDeployment(ctx context.Context, k8sUns K8sUns) ([]appsv1.Deployment, error) {
 	namespaceName := a.GetNamespaceName(k8sUns)
 	deployments, err := a.clientset.AppsV1().Deployments(namespaceName).List(ctx, metav1.ListOptions{})
@@ -144,7 +145,7 @@ func (a *K8sService) GetDeployment(ctx context.Context, k8sUns K8sUns) ([]appsv1
 	return deployments.Items, nil
 }
 
-// GetDeploymentsInNamespace returns all deployments in the given namespace.
+// GetDeploymentByName returns all deployments in the given namespace which their name exact match deploymentName
 func (a *K8sService) GetDeploymentByName(ctx context.Context, k8sUns K8sUns) (*appsv1.Deployment, error) {
 	namespaceName := a.GetNamespaceName(k8sUns)
 	deploymentName := a.GetDeploymentName(k8sUns)
@@ -154,6 +155,32 @@ func (a *K8sService) GetDeploymentByName(ctx context.Context, k8sUns K8sUns) (*a
 	}
 
 	return deployment, nil
+}
+
+// GetDeploymentsByFuzzyName returns all deployments in the given namespace whose names include the given deploymentName.
+func (a *K8sService) GetDeploymentsByFuzzyName(ctx context.Context, k8sUns K8sUns) ([]appsv1.Deployment, error) {
+	namespaceName := a.GetNamespaceName(k8sUns)
+	deploymentName := a.GetDeploymentName(k8sUns)
+
+	// List all deployments in the given namespace
+	deployments, err := a.clientset.AppsV1().Deployments(namespaceName).List(ctx, metav1.ListOptions{})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list deployments in namespace %s: %w", namespaceName, err)
+	}
+
+	// Filter deployments whose names contain the given deploymentName (fuzzy match)
+	var filteredDeployments []appsv1.Deployment
+	for _, deployment := range deployments.Items {
+		if strings.Contains(deployment.Name, deploymentName) {
+			filteredDeployments = append(filteredDeployments, deployment)
+		}
+	}
+
+	if len(filteredDeployments) == 0 {
+		return nil, fmt.Errorf("no deployments found matching the name %s", deploymentName)
+	}
+
+	return filteredDeployments, nil
 }
 
 // GetDeploymentNamesInNamespace returns the names of all deployments in the given namespace.
