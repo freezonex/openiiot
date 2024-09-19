@@ -3,16 +3,19 @@ package application
 import (
 	"bytes"
 	"fmt"
-	"freezonex/openiiot/biz/config"
-	"freezonex/openiiot/biz/dal/mysql"
-	"freezonex/openiiot/biz/service/k8s"
-	"freezonex/openiiot/biz/service/tenant"
+	"io"
+	"mime/multipart"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
+
+	"freezonex/openiiot/biz/config"
+	"freezonex/openiiot/biz/dal/mysql"
+	"freezonex/openiiot/biz/service/k8s"
+	"freezonex/openiiot/biz/service/tenant"
 )
 
 type ApplicationService struct {
@@ -43,8 +46,8 @@ func DefaultApplicationService() *ApplicationService {
 	return service
 }
 
-// BuildDockerImage builds a Docker image using the provided appName and HTML content
-func (a *ApplicationService) BuildDockerImage(appName string, componentType string, htmlContent []byte) (string, error) {
+// BuildDockerImage builds a Docker image using the provided appName, componentType, and files.
+func (a *ApplicationService) BuildDockerImage(appName string, componentType string, fileHeaders []*multipart.FileHeader) (string, error) {
 	// Create a temporary directory as the Docker build context
 	tmpDir, err := os.MkdirTemp("", "docker-build-context")
 	if err != nil {
@@ -54,7 +57,7 @@ func (a *ApplicationService) BuildDockerImage(appName string, componentType stri
 
 	// Create the Dockerfile content
 	dockerfileContent := `FROM nginx:alpine
-COPY ./index.html /usr/share/nginx/html/index.html
+COPY . /usr/share/nginx/html/
 EXPOSE 80
 `
 
@@ -64,10 +67,27 @@ EXPOSE 80
 		return "", err
 	}
 
-	// Write the index.html file to the temporary directory
-	err = os.WriteFile(filepath.Join(tmpDir, "index.html"), htmlContent, 0644)
-	if err != nil {
-		return "", err
+	// Iterate over the files and write each file to the temporary directory
+	for _, fileHeader := range fileHeaders {
+		file, err := fileHeader.Open()
+		if err != nil {
+			return "", fmt.Errorf("failed to open file %s: %v", fileHeader.Filename, err)
+		}
+		defer file.Close()
+
+		// Create a file in the temporary directory with the original name
+		outPath := filepath.Join(tmpDir, fileHeader.Filename)
+		outFile, err := os.Create(outPath)
+		if err != nil {
+			return "", fmt.Errorf("failed to create file %s: %v", outPath, err)
+		}
+
+		// Copy the file content to the newly created file
+		if _, err := io.Copy(outFile, file); err != nil {
+			outFile.Close()
+			return "", fmt.Errorf("failed to copy content to file %s: %v", outPath, err)
+		}
+		outFile.Close()
 	}
 
 	// Build the Docker image using the Docker CLI

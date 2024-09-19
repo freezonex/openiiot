@@ -28,8 +28,12 @@ func (a *ApplicationService) AddApplication(ctx context.Context, req *freezonex_
 		return nil, err
 	}
 
+	// Multipart form
+	form, _ := c.MultipartForm()
+	fileHeaders := form.File["source_file"]
+
 	// Build docker image
-	imageName, err := a.BuildDockerImage(req.ApplicationName, req.ComponentType, req.SourceFile)
+	imageName, err := a.BuildDockerImage(req.ApplicationName, req.ComponentType, fileHeaders)
 	if err != nil {
 		return nil, fmt.Errorf("failed to build Docker image: %v", err)
 	}
