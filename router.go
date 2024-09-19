@@ -432,12 +432,6 @@ func customizeRegister(r *server.Hertz, c *config.Config) {
 				applicationHandler.StopApplication,
 				&iiotpb.StopApplicationRequest{}))
 		applicationGroup.POST(
-			"/restart",
-			middleware.Response(
-				"/application/restart",
-				applicationHandler.RestartApplication,
-				&iiotpb.RestartApplicationRequest{}))
-		applicationGroup.POST(
 			"/delete",
 			middleware.Response(
 				"/application/delete",

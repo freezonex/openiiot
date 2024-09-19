@@ -79,13 +79,3 @@ func (a *ApplicationHandler) StopApplication(ctx context.Context, c *app.Request
 	}
 	return resp
 }
-
-func (a *ApplicationHandler) RestartApplication(ctx context.Context, c *app.RequestContext) middleware.HandlerResponse {
-	req := ctx.Value(middleware.REQUEST).(*freezonex_openiiot_api.RestartApplicationRequest)
-	resp, err := a.applicationService.RestartApplication(ctx, req, c)
-	if err != nil {
-		logs.CtxErrorf(ctx, "event=RestartApplication error=%v", err)
-		return middleware.ErrorResp(http.StatusInternalServerError, err)
-	}
-	return resp
-}
