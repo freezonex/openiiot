@@ -30,6 +30,17 @@ func (a *K8sService) CreateService(ctx context.Context, k8sUns K8sUns) error {
 // getServiceSpec returns a Service spec based on the service name
 func (a *K8sService) getServiceSpec(ctx context.Context, k8sUns K8sUns) (*corev1.Service, error) {
 
+	if k8sUns.DeploymentCategory == "app" {
+		switch k8sUns.ComponentType {
+		case "frontend":
+			return a.ApplicationFrontendService(ctx, k8sUns), nil
+		case "backend":
+		case "db":
+		default:
+			return nil, fmt.Errorf("getServiceSpec: deployment type %s not found", k8sUns.ComponentType)
+		}
+	}
+
 	switch k8sUns.ComponentName {
 	case "consolemanager":
 		return a.ConsolemanagerService(ctx, k8sUns), nil
