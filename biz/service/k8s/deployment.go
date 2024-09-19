@@ -188,9 +188,9 @@ func (a *K8sService) GetDeploymentsByFuzzyName(ctx context.Context, k8sUns K8sUn
 		}
 	}
 
-	if len(filteredDeployments) == 0 {
+	/*if len(filteredDeployments) == 0 {
 		return nil, fmt.Errorf("no deployments found matching the name %s", deploymentName)
-	}
+	}*/
 
 	return filteredDeployments, nil
 }
