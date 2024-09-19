@@ -177,7 +177,7 @@ func (a *ApplicationService) GetApplication(ctx context.Context, req *freezonex_
 // GetApplication will get application record in condition
 func (a *ApplicationService) ExistApplication(ctx context.Context, tenantName string, applicationName string) (bool, error) {
 
-	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: applicationName, ComponentType: componentType}
+	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: applicationName}
 
 	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
 	if err != nil {
