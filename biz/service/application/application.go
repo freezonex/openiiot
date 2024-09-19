@@ -65,6 +65,7 @@ func (a *ApplicationService) AddApplication(ctx context.Context, req *freezonex_
 
 	resp := new(freezonex_openiiot_api.AddApplicationResponse)
 	resp.BaseResp = middleware.SuccessResponseOK
+	resp.ApplicationUri = a.k8s.GetComponentRootUrl(k8sUns) + "/"
 
 	return resp, nil
 }
