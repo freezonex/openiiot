@@ -38,7 +38,7 @@ func (a *K8sService) ApplicationFrontendDeployment(ctx context.Context, k8sUns K
 					Containers: []corev1.Container{
 						{
 							Name:            deploymentName,
-							Image:           a.GetAppImageName(k8sUns),
+							Image:           a.GetAppImageFullName(k8sUns),
 							ImagePullPolicy: corev1.PullAlways,
 							Ports: []corev1.ContainerPort{
 								{ContainerPort: 81},

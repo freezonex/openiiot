@@ -276,7 +276,7 @@ func (a *ApplicationService) RestartApplication(ctx context.Context, req *freezo
 	return resp, nil
 }
 
-// DeleteApplication will delete application, if component_type is empty, then it will delete all component of this application
+// DeleteApplication will delete application and related image, if component_type is empty, then it will delete all component of this application
 func (a *ApplicationService) DeleteApplication(ctx context.Context, req *freezonex_openiiot_api.DeleteApplicationRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteApplicationResponse, error) {
 
 	_, tenantName, err := a.tenant.CheckTenant(ctx, req.TenantId, req.TenantName)
@@ -318,6 +318,18 @@ func (a *ApplicationService) DeleteApplication(ctx context.Context, req *freezon
 			logs.Error(ctx, "event=DeleteApplication error=%v", err.Error())
 			return nil, err
 		}
+
+		//delete docker image, ignore error
+		err = a.DeleteDockerImage(a.k8s.GetAppImageFullName(k8sUns))
+		if err != nil {
+			logs.Error(ctx, "event=DeleteApplication error=%v", err.Error())
+		}
+
+		err = a.DeleteDockerImage(a.k8s.GetAppImageName(k8sUns))
+		if err != nil {
+			logs.Error(ctx, "event=DeleteApplication error=%v", err.Error())
+		}
+
 	}
 
 	resp := new(freezonex_openiiot_api.DeleteApplicationResponse)

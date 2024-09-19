@@ -137,6 +137,23 @@ func (a *ApplicationService) TagAndPushDockerImage(imageName string, registry st
 	return nil
 }
 
+// DeleteDockerImage removes a Docker image using the provided imageName.
+func (a *ApplicationService) DeleteDockerImage(imageName string) error {
+	// Delete the Docker image using the Docker CLI
+	cmd := exec.Command("docker", "rmi", imageName)
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+
+	// Run the Docker remove image command
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("failed to delete Docker image: %v, output: %s", err, out.String())
+	}
+
+	fmt.Printf("Delete output: %s\n", out.String())
+	return nil
+}
+
 // checkApplicationName checks if the application_name is a valid Kubernetes deployment name
 func (a *ApplicationService) CheckApplicationName(applicationName string) error {
 	// Rule: Maximum length of 240 characters

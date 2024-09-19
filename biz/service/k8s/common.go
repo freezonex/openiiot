@@ -244,6 +244,10 @@ func (a *K8sService) GetComponentRootUrl(k8sUns K8sUns) string {
 	return "/" + k8sUns.TenantName + "/" + k8sUns.ComponentName + k8sUns.Number
 }
 
+func (a *K8sService) GetAppImageFullName(k8sUns K8sUns) string {
+	return "registry:5000/openiiot-app-" + k8sUns.ComponentName + "-" + k8sUns.ComponentType + ":1.0.0"
+}
+
 func (a *K8sService) GetAppImageName(k8sUns K8sUns) string {
-	return "openiiot-app-" + "-" + k8sUns.ComponentName + k8sUns.ComponentType + ":1.0.0"
+	return "openiiot-app-" + k8sUns.ComponentName + "-" + k8sUns.ComponentType + ":1.0.0"
 }
