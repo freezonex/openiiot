@@ -301,7 +301,7 @@ func (a *ApplicationService) StopApplication(ctx context.Context, req *freezonex
 }
 
 // RestartApplication will restart application, if component_type is empty, then it will restart all component of this application
-func (a *ApplicationService) RestartApplication(ctx context.Context, req *freezonex_openiiot_api.RestartApplicationRequest, c *app.RequestContext) (*freezonex_openiiot_api.RestartApplicationResponse, error) {
+/*func (a *ApplicationService) RestartApplication(ctx context.Context, req *freezonex_openiiot_api.RestartApplicationRequest, c *app.RequestContext) (*freezonex_openiiot_api.RestartApplicationResponse, error) {
 
 	_, tenantName, err := a.tenant.CheckTenant(ctx, req.TenantId, req.TenantName)
 	if err != nil {
@@ -329,9 +329,7 @@ func (a *ApplicationService) RestartApplication(ctx context.Context, req *freezo
 	}
 
 	for _, deployment := range deployments {
-		/*if !strings.HasPrefix(deployment.Name, "openiiot-app-"+req.ApplicationName) {
-			continue
-		}*/
+
 		re := regexp.MustCompile(`^openiiot-app-([a-z0-9-]+)-(frontend|backend|db)$`)
 		match := re.FindStringSubmatch(deployment.Name)
 		if match == nil {
@@ -346,7 +344,7 @@ func (a *ApplicationService) RestartApplication(ctx context.Context, req *freezo
 	resp.BaseResp = middleware.SuccessResponseOK
 
 	return resp, nil
-}
+}*/
 
 // DeleteApplication will delete application and related image, if component_type is empty, then it will delete all component of this application
 func (a *ApplicationService) DeleteApplication(ctx context.Context, req *freezonex_openiiot_api.DeleteApplicationRequest, c *app.RequestContext) (*freezonex_openiiot_api.DeleteApplicationResponse, error) {
