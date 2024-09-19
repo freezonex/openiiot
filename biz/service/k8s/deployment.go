@@ -32,6 +32,18 @@ func (a *K8sService) CreateDeployment(ctx context.Context, k8sUns K8sUns) error 
 
 // getDeploymentSpec returns a Deployment spec based on the deployment name
 func (a *K8sService) getDeploymentSpec(ctx context.Context, k8sUns K8sUns) (*appsv1.Deployment, error) {
+
+	if k8sUns.DeploymentCategory == "app" {
+		switch k8sUns.ComponentType {
+		case "frontend":
+			return a.ApplicationFrontendDeployment(ctx, k8sUns), nil
+		case "backend":
+		case "db":
+		default:
+			return nil, fmt.Errorf("deployment type %s not found", k8sUns.ComponentType)
+		}
+	}
+
 	switch k8sUns.ComponentName {
 	case "consolemanager":
 		return a.ConsolemanagerDeployment(ctx, k8sUns), nil

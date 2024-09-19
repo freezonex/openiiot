@@ -163,14 +163,14 @@ func (a *K8sService) GetNamespaceName(k8sUns K8sUns) string {
 
 func (a *K8sService) GetDeploymentName(k8sUns K8sUns) string {
 	if k8sUns.DeploymentCategory == "app" {
-		return "openiiot-app" + k8sUns.ComponentName + "-" + k8sUns.ComponentType
+		return "openiiot-app-" + k8sUns.ComponentName + "-" + k8sUns.ComponentType
 	}
 	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number
 }
 
 func (a *K8sService) GetServicName(k8sUns K8sUns) string {
 	if k8sUns.DeploymentCategory == "app" {
-		return "openiiot-app" + k8sUns.ComponentName + "-" + k8sUns.ComponentType + "-service"
+		return "openiiot-app-" + k8sUns.ComponentName + "-" + k8sUns.ComponentType + "-service"
 	}
 	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number + "-service"
 }
@@ -222,7 +222,7 @@ func (a *K8sService) GetPersistentVolumeClaimName(k8sUns K8sUns) string {
 
 func (a *K8sService) GetIngressName(k8sUns K8sUns) string {
 	if k8sUns.DeploymentCategory == "app" {
-		return "openiiot-app" + "-" + k8sUns.ComponentName + k8sUns.ComponentType + "-ingress"
+		return "openiiot-app-" + k8sUns.ComponentName + "-" + k8sUns.ComponentType + "-ingress"
 	}
 	return "openiiot-" + k8sUns.ComponentName + k8sUns.Number + "-ingress"
 }

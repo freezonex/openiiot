@@ -30,6 +30,17 @@ func (a *K8sService) CreateIngress(ctx context.Context, k8sUns K8sUns) error {
 // getIngressSpec returns a Ingress spec based on the ingress name
 func (a *K8sService) getIngressSpec(ctx context.Context, k8sUns K8sUns) (*networkingv1.Ingress, error) {
 
+	if k8sUns.DeploymentCategory == "app" {
+		switch k8sUns.ComponentType {
+		case "frontend":
+			return a.ApplicationFrontendIngress(ctx, k8sUns), nil
+		case "backend":
+		case "db":
+		default:
+			return nil, fmt.Errorf("getIngressSpec: deployment type %s not found", k8sUns.ComponentType)
+		}
+	}
+
 	switch k8sUns.ComponentName {
 	case "emqx":
 		return a.EmqxIngress(ctx, k8sUns), nil
