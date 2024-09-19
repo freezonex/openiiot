@@ -76,7 +76,7 @@ services:
     restart: unless-stopped
 
   openiiot-mysql:
-    image: openiiot-mysql:1.0.0
+    image: mysql:8.4.2
     container_name: openiiot-mysql
     environment:
       MYSQL_ROOT_PASSWORD: root1234
