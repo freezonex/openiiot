@@ -22,10 +22,21 @@ func (a *ApplicationService) AddApplication(ctx context.Context, req *freezonex_
 		return nil, err
 	}
 
+	// check application name if meet requirement
 	err = a.CheckApplicationName(req.ApplicationName)
 	if err != nil {
 		logs.Error(ctx, "event=AddApplication error=%v", err.Error())
 		return nil, err
+	}
+
+	// check if application exist
+	exist, err := a.ExistApplication(ctx, tenantName, req.ApplicationName)
+	if err != nil {
+		logs.Error(ctx, "event=AddApplication error=%v", err.Error())
+		return nil, err
+	}
+	if exist {
+		return nil, fmt.Errorf("application name already exist: %s", req.ApplicationName)
 	}
 
 	// Multipart form
@@ -163,6 +174,36 @@ func (a *ApplicationService) GetApplication(ctx context.Context, req *freezonex_
 	return resp, nil
 }
 
+// GetApplication will get application record in condition
+func (a *ApplicationService) ExistApplication(ctx context.Context, tenantName string, applicationName string) (bool, error) {
+
+	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: applicationName, ComponentType: componentType}
+
+	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
+	if err != nil {
+		logs.Error(ctx, "event=ExistApplication error=%v", err.Error())
+		return false, err
+	}
+
+	for _, deployment := range deployments {
+		if !strings.HasPrefix(deployment.Name, "openiiot-app") {
+			continue
+		}
+
+		re := regexp.MustCompile(`^openiiot-app-([a-z0-9-]+)-(frontend|backend|db)$`)
+		match := re.FindStringSubmatch(deployment.Name)
+		if match == nil {
+			return false, fmt.Errorf("deployment name does not match the expected pattern")
+		}
+
+		if applicationName == match[1] {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
 // StartApplication will start application, if component_type is empty, then it will start all component of this application
 func (a *ApplicationService) StartApplication(ctx context.Context, req *freezonex_openiiot_api.StartApplicationRequest, c *app.RequestContext) (*freezonex_openiiot_api.StartApplicationResponse, error) {
 
@@ -172,6 +213,16 @@ func (a *ApplicationService) StartApplication(ctx context.Context, req *freezone
 		return nil, err
 	}
 	ctx = context.WithValue(ctx, "tenantName", tenantName)
+
+	// check if application exist
+	exist, err := a.ExistApplication(ctx, tenantName, req.ApplicationName)
+	if err != nil {
+		logs.Error(ctx, "event=Startpplication error=%v", err.Error())
+		return nil, err
+	}
+	if !exist {
+		return nil, fmt.Errorf("application name does not exist: %s", req.ApplicationName)
+	}
 
 	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: req.ApplicationName, ComponentType: req.ComponentType}
 
@@ -211,6 +262,16 @@ func (a *ApplicationService) StopApplication(ctx context.Context, req *freezonex
 	}
 	ctx = context.WithValue(ctx, "tenantName", tenantName)
 
+	// check if application exist
+	exist, err := a.ExistApplication(ctx, tenantName, req.ApplicationName)
+	if err != nil {
+		logs.Error(ctx, "event=StopApplication error=%v", err.Error())
+		return nil, err
+	}
+	if !exist {
+		return nil, fmt.Errorf("application name already not exist: %s", req.ApplicationName)
+	}
+
 	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: req.ApplicationName, ComponentType: req.ComponentType}
 
 	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
@@ -249,6 +310,16 @@ func (a *ApplicationService) RestartApplication(ctx context.Context, req *freezo
 	}
 	ctx = context.WithValue(ctx, "tenantName", tenantName)
 
+	// check if application exist
+	exist, err := a.ExistApplication(ctx, tenantName, req.ApplicationName)
+	if err != nil {
+		logs.Error(ctx, "event=Restartpplication error=%v", err.Error())
+		return nil, err
+	}
+	if !exist {
+		return nil, fmt.Errorf("application name does not exist: %s", req.ApplicationName)
+	}
+
 	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: req.ApplicationName, ComponentType: req.ComponentType}
 
 	deployments, err := a.k8s.GetDeploymentsByFuzzyName(ctx, k8sUns)
@@ -286,6 +357,16 @@ func (a *ApplicationService) DeleteApplication(ctx context.Context, req *freezon
 		return nil, err
 	}
 	ctx = context.WithValue(ctx, "tenantName", tenantName)
+
+	// check if application exist
+	exist, err := a.ExistApplication(ctx, tenantName, req.ApplicationName)
+	if err != nil {
+		logs.Error(ctx, "event=DeleteApplication error=%v", err.Error())
+		return nil, err
+	}
+	if !exist {
+		return nil, fmt.Errorf("application name does not exist: %s", req.ApplicationName)
+	}
 
 	k8sUns := k8s.K8sUns{TenantName: tenantName, DeploymentCategory: "app", ComponentName: req.ApplicationName, ComponentType: req.ComponentType}
 
